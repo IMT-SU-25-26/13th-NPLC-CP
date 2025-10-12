@@ -1,0 +1,147 @@
+// Prisma Client
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Models
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  image         String?
+  role          Role     @default(USER)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  sessions    Session[]
+  submissions Submission[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?   @db.Text
+  refreshToken          String?   @db.Text
+  idToken               String?   @db.Text
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?   @db.Text
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([providerId, accountId])
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, value])
+}
+
+// Competitive Programming Models
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum Status {
+  PENDING
+  PROCESSING
+  ACCEPTED
+  WRONG_ANSWER
+  TIME_LIMIT_EXCEEDED
+  COMPILATION_ERROR
+  RUNTIME_ERROR_SIGSEGV
+  RUNTIME_ERROR_SIGXFSZ
+  RUNTIME_ERROR_SIGFPE
+  RUNTIME_ERROR_SIGABRT
+  RUNTIME_ERROR_NZEC
+  RUNTIME_ERROR_OTHER
+  INTERNAL_ERROR
+  EXEC_FORMAT_ERROR
+}
+
+model Problem {
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  title       String
+  description String     @db.Text
+  timeLimit   Float
+  memoryLimit Int
+  difficulty  Difficulty
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  testCases   TestCase[]
+  submissions Submission[]
+}
+
+model TestCase {
+  id             String  @id @default(cuid())
+  input          String  @db.Text
+  expectedOutput String  @db.Text
+  isSample       Boolean @default(false)
+
+  problemId String
+  problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+}
+
+model Submission {
+  id          String  @id @default(cuid())
+  sourceCode  String  @db.Text
+  judge0Token String?
+  time        Float?
+  memory      Int?
+  status      Status  @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId     String
+  problemId  String
+  languageId Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem    Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  language   Language @relation(fields: [languageId], references: [id])
+}
+
+model Language {
+  id   Int    @id
+  name String @unique
+
+  submissions Submission[]
+}
