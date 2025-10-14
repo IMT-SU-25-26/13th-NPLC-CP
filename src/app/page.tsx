@@ -10,7 +10,6 @@ export default async function Home() {
     <div className="min-h-screen bg-gradient-to-b from-[#111114] to-[#090A1E] flex flex-col justify-center items-center overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Auth buttons in top right */}
-        <AuthButtons />
 
         <div className="text-center mb-16 mt-8 flex flex-col items-center justify-center">
           <h1 className="text-6xl font-bold text-white mb-4">

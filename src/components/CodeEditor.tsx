@@ -91,15 +91,15 @@ export default function CodeEditor({
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6 space-y-4">
-      <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-        <h2 className="text-2xl font-bold mb-4 text-gray-900">
+    <div className="w-full max-w-6xl mx-auto space-y-4">
+      <div className="bg-white/25 rounded-lg p-6 backdrop-blur-2xl border-gray-200 border-[1.5px] shadow-white/15 shadow-2xl drop-shadow-2xl glow">
+        <h2 className="text-2xl font-bold mb-4 text-white">
           {problemTitle}
         </h2>
 
         {/* Language Selector */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-900 mb-2">
+          <label className="block text-sm font-medium text-white mb-2">
             Language
           </label>
           <select
@@ -118,10 +118,10 @@ export default function CodeEditor({
 
         {/* Code Editor */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-900 mb-2">
+          <label className="block text-sm font-medium text-white mb-2">
             Your Code
           </label>
-          <div className="relative border border-gray-300 rounded-md bg-gray-50 focus-within:ring-2 focus-within:ring-blue-500 focus-within:bg-white">
+          <div className="relative border border-gray-300 rounded-md bg-gray-50 focus-within:ring-2 focus-within:ring-white focus-within:bg-white">
             <div className="flex">
               {/* Line Numbers */}
               <div className="flex-shrink-0 p-3 bg-gray-100 border-r border-gray-300 text-xs font-mono text-gray-500 select-none">
@@ -148,7 +148,7 @@ export default function CodeEditor({
         <button
           onClick={handleSubmit}
           disabled={isSubmitting}
-          className="w-full bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium transition-colors"
+          className="w-full bg-[#d92fa3] text-white py-3 px-6 rounded-md hover:bg-[#752088] disabled:bg-gray-400 disabled:cursor-not-allowed font-medium transition-colors"
         >
           {isSubmitting ? "Submitting..." : "Submit Code"}
         </button>
