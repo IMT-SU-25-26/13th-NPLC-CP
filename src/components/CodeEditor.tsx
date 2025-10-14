@@ -121,13 +121,27 @@ export default function CodeEditor({
           <label className="block text-sm font-medium text-gray-900 mb-2">
             Your Code
           </label>
-          <textarea
-            value={sourceCode}
-            onChange={(e) => setSourceCode(e.target.value)}
-            className="w-full h-96 px-3 py-2 font-mono text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
-            placeholder="Write your code here..."
-            disabled={isSubmitting}
-          />
+          <div className="relative border border-gray-300 rounded-md bg-gray-50 focus-within:ring-2 focus-within:ring-blue-500 focus-within:bg-white">
+            <div className="flex">
+              {/* Line Numbers */}
+              <div className="flex-shrink-0 p-3 bg-gray-100 border-r border-gray-300 text-xs font-mono text-gray-500 select-none">
+          {sourceCode.split('\n').map((_, index) => (
+            <div key={index} className="leading-5 text-right pr-2 min-w-[30px]">
+              {index + 1}
+            </div>
+          ))}
+              </div>
+              {/* Code Editor */}
+              <textarea
+          value={sourceCode}
+          onChange={(e) => setSourceCode(e.target.value)}
+          className="flex-1 h-96 px-3 py-2 font-mono text-sm text-gray-900 bg-transparent border-0 resize-none focus:outline-none leading-5"
+          placeholder="Write your code here..."
+          disabled={isSubmitting}
+          style={{ lineHeight: '1.25rem' }}
+              />
+            </div>
+          </div>
         </div>
 
         {/* Submit Button */}
