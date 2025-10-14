@@ -94,30 +94,30 @@ export default async function Home() {
             <div className="text-4xl font-bold text-blue-600 mb-2">
               {problemCount}
             </div>
-            <div className="text-white">Problems Available</div>
+            <div className="text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">Problems Available</div>
           </div>
           <div className="relative z-[10] backdrop-blur-2xl flex w-full flex-col items-center justify-center gap-4 lg:gap-6 p-6 lg:p-12 rounded-xl shadow-lg border-[8px] border-[#FCE551]">
             <div className="text-4xl font-bold text-green-600 mb-2">
               {submissionCount}
             </div>
-            <div className="text-white">Total Submissions</div>
+            <div className="text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">Total Submissions</div>
           </div>
           <div className="relative z-[10] backdrop-blur-2xl flex w-full flex-col items-center justify-center gap-4 lg:gap-6 p-6 lg:p-12 rounded-xl shadow-lg border-[8px] border-[#FCE551]">
             <div className="text-4xl font-bold text-purple-600 mb-2">5</div>
-            <div className="text-white">Supported Languages</div>
+            <div className="text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">Supported Languages</div>
           </div>
         </div>
 
         <div className="relative z-[10] backdrop-blur-2xl flex flex-col items-center justify-center gap-4 lg:gap-6 p-6 lg:p-12 rounded-xl shadow-lg border-[8px] border-[#FCE551] w-full ">
-          <h2 className="text-3xl font-bold text-white mb-6">Features</h2>
+          <h2 className="text-3xl font-bold text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] mb-6">Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex items-start gap-4">
               <div className="text-2xl">💻</div>
               <div>
-                <h3 className="font-semibold text-lg mb-1">
+                <h3 className="font-semibold text-lg mb-1 text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">
                   Online Code Editor
                 </h3>
-                <p className="text-white">
+                <p className="text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">
                   Write and submit code directly in your browser with syntax
                   highlighting
                 </p>
@@ -126,10 +126,10 @@ export default async function Home() {
             <div className="flex items-start gap-4">
               <div className="text-2xl">⚡</div>
               <div>
-                <h3 className="font-semibold text-lg mb-1">
+                <h3 className="font-semibold text-lg mb-1 text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">
                   Real-time Judging
                 </h3>
-                <p className="text-white">
+                <p className="text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">
                   Get instant feedback on your submissions with Judge0
                   integration
                 </p>
@@ -138,10 +138,10 @@ export default async function Home() {
             <div className="flex items-start gap-4">
               <div className="text-2xl">📊</div>
               <div>
-                <h3 className="font-semibold text-lg mb-1">
+                <h3 className="font-semibold text-lg mb-1 text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">
                   Multiple Languages
                 </h3>
-                <p className="text-white">
+                <p className="text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">
                   Support for C++, C, Python, Java, and JavaScript
                 </p>
               </div>
@@ -149,8 +149,8 @@ export default async function Home() {
             <div className="flex items-start gap-4">
               <div className="text-2xl">🎯</div>
               <div>
-                <h3 className="font-semibold text-lg mb-1">Test Cases</h3>
-                <p className="text-white">
+                <h3 className="font-semibold text-lg mb-1 text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">Test Cases</h3>
+                <p className="text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">
                   Sample and hidden test cases to validate your solutions
                 </p>
               </div>
@@ -161,7 +161,7 @@ export default async function Home() {
         <div className="mt-16 text-center">
           <Link
             href="/problems"
-            className="text-blue-600 hover:text-blue-800 font-semibold text-lg"
+            className="text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-semibold text-lg"
           >
             View All Problems →
           </Link>

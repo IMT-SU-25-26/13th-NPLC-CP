@@ -48,7 +48,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
             {/* Problem Description */}
             <div className=" rounded-lg p-6 backdrop-blur-2xl border-[#FCF551] border-3 shadow-white/15 shadow-2xl drop-shadow-2xl glow">
               <div className="mb-6">
-                <h1 className="text-3xl font-bold mb-4 text-[#75E8F0]">
+                <h1 className="text-3xl font-bold mb-4 text-white">
                   {problem.title}
                 </h1>
                 <div className="flex items-center gap-3">
@@ -59,37 +59,37 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
                   >
                     {problem.difficulty}
                   </span>
-                  <span className="text-sm text-[#75E8F0] font-medium">
+                  <span className="text-sm text-white font-medium">
                     ⏱️ Time Limit: {problem.timeLimit}s
                   </span>
-                  <span className="text-sm text-[#75E8F0] font-medium">
+                  <span className="text-sm text-white font-medium">
                     💾 Memory: {problem.memoryLimit}MB
                   </span>
                 </div>
               </div>
 
               <div className="prose max-w-none">
-                <div className="whitespace-pre-wrap text-[#75E8F0] leading-relaxed">
+                <div className="whitespace-pre-wrap text-white leading-relaxed">
                   {problem.description}
                 </div>
               </div>
 
               {problem.testCases.length > 0 && (
                 <div className="mt-8">
-                  <h3 className="text-xl font-semibold mb-4 text-[#75E8F0]">
+                  <h3 className="text-xl font-semibold mb-4 text-white">
                     Sample Test Cases
                   </h3>
                   {problem.testCases.map((testCase, index) => (
                     <div
                       key={testCase.id}
-                      className="mb-6 p-6 cursor-target w-full text-md md:text-2xl bg-[#18182a]/80 border-2 border-[#FCF551] rounded-none text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] overflow-x-auto whitespace-nowrap"
+                      className="mb-6 p-6 cursor-target w-full text-md md:text-2xl bg-[#18182a]/80 border-2 border-[#FCF551] rounded-none text-[#75E8F0] overflow-x-auto whitespace-nowrap"
                     >
-                      <p className="font-semibold text-[#75E8F0] mb-4">
+                      <p className="font-semibold text-white mb-4">
                         Sample {index + 1}:
                       </p>
                       <div className="space-y-4">
                         <div>
-                          <p className="text-sm font-semibold text-[#75E8F0] mb-2">
+                          <p className="text-sm font-semibold text-white mb-2">
                             Input:
                           </p>
                           <pre className="p-4 rounded border border-[#FCF551] text-sm overflow-x-auto text-[#75E8F0]">
@@ -97,7 +97,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
                           </pre>
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-[#75E8F0] mb-2">
+                          <p className="text-sm font-semibold text-white mb-2">
                             Expected Output:
                           </p>
                           <pre className="p-4 rounded border border-[#FCF551] text-sm overflow-x-auto text-[#75E8F0]">

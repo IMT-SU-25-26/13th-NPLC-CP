@@ -92,7 +92,7 @@ export default function CodeEditor({
 
   return (
     <div className="w-full max-w-6xl mx-auto space-y-4">
-      <div className="bg-white/25 rounded-lg p-6 backdrop-blur-2xl border-gray-200 border-[1.5px] shadow-white/15 shadow-2xl drop-shadow-2xl glow">
+      <div className="p-6 backdrop-blur-2xl border-[#FCF551] border-3 shadow-white/15 shadow-2xl drop-shadow-2xl glow">
         <h2 className="text-2xl font-bold mb-4 text-white">
           {problemTitle}
         </h2>
@@ -105,7 +105,7 @@ export default function CodeEditor({
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="w-full px-3 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="p-3 cursor-target w-full  bg-[#18182a]/80 border-2 border-[#FCF551] rounded-none text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] overflow-x-auto whitespace-nowrap"
             disabled={isSubmitting}
           >
             {LANGUAGES.map((lang) => (
@@ -121,10 +121,10 @@ export default function CodeEditor({
           <label className="block text-sm font-medium text-white mb-2">
             Your Code
           </label>
-          <div className="relative border border-gray-300 rounded-md bg-gray-50 focus-within:ring-2 focus-within:ring-white focus-within:bg-white">
+          <div className="relative bg-[#18182a]/80 border-2 border-[#FCF551] rounded-none text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] overflow-x-auto whitespace-nowrap">
             <div className="flex">
               {/* Line Numbers */}
-              <div className="flex-shrink-0 p-3 bg-gray-100 border-r border-gray-300 text-xs font-mono text-gray-500 select-none">
+              <div className="flex-shrink-0 p-3 bg-[#18182a]/80 border-r-2 border-[#FCF551] rounded-none text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] overflow-x-auto whitespace-nowrap">
           {sourceCode.split('\n').map((_, index) => (
             <div key={index} className="leading-5 text-right pr-2 min-w-[30px]">
               {index + 1}
@@ -135,7 +135,7 @@ export default function CodeEditor({
               <textarea
           value={sourceCode}
           onChange={(e) => setSourceCode(e.target.value)}
-          className="flex-1 h-96 px-3 py-2 font-mono text-sm text-gray-900 bg-transparent border-0 resize-none focus:outline-none leading-5"
+          className="flex-1 h-96 px-3 py-2 font-mono text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] bg-transparent border-0 resize-none focus:outline-none leading-5"
           placeholder="Write your code here..."
           disabled={isSubmitting}
           style={{ lineHeight: '1.25rem' }}

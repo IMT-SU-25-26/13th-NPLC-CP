@@ -19,13 +19,13 @@ export default async function ProblemsPage() {
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case "EASY":
-        return "text-green-600 bg-green-100";
+        return "text-green-600 border-1 border-green-500";
       case "MEDIUM":
-        return "text-yellow-600 bg-yellow-100";
+        return "text-yellow-600 border-1 border-yellow-500";
       case "HARD":
-        return "text-red-600 bg-red-100";
+        return "text-red-600 border-1 border-red-500";
       default:
-        return "text-gray-600 bg-gray-100";
+        return "text-gray-600 border-1 border-gray-500";
     }
   };
 
@@ -37,45 +37,45 @@ export default async function ProblemsPage() {
         <div className="max-w-[75%] w-full mx-auto py-8 px-4">
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-white mb-2">Problems</h1>
-            <p className="text-gray-200 text-lg">
+            <p className="text-white text-lg">
               Practice your coding skills with {problems.length} problems
             </p>
           </div>
 
-          <div className="bg-white/75 rounded-lg shadow-md overflow-hidden border border-gray-200">
-            <table className="min-w-full divide-y divide-gray-200 /75">
-              <thead className="bg-gray-100 /75">
+          <div className="w-full text-md md:text-2xl bg-[#18182a]/80 border-2 border-[#FCF551] rounded-none text-[#75E8F0] overflow-x-auto whitespace-nowrap">
+            <table className="min-w-full divide-y divide-[#FCF551] w-full ">
+              <thead className="bg-[#18182a]/80">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] uppercase tracking-wider">
                     Title
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] uppercase tracking-wider">
                     Difficulty
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] uppercase tracking-wider">
                     Time Limit
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] uppercase tracking-wider">
                     Memory
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] uppercase tracking-wider">
                     Submissions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white/75 divide-y divide-gray-200/75">
+              <tbody className="bg-[#18182a]/80 divide-y divide-[#FCF551]/75">
                 {problems.map((problem) => (
                   <tr
                     key={problem.id}
-                    className="hover:bg-blue-50 transition-colors"
+                    className="hover:bg-[#222251] hover:cursor-pointer transition-colors"
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <Link
+                        <Link
                         href={`/problems/${problem.slug}`}
-                        className="text-blue-600 hover:text-blue-800 font-semibold text-base"
-                      >
+                        className="text-[#75E8F0] hover:underline [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-semibold text-base"
+                        >
                         {problem.title}
-                      </Link>
+                        </Link>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
@@ -86,13 +86,13 @@ export default async function ProblemsPage() {
                         {problem.difficulty}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-medium">
                       {problem.timeLimit}s
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-medium">
                       {problem.memoryLimit}MB
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-medium">
                       {problem._count.submissions}
                     </td>
                   </tr>
