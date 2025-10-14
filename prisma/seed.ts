@@ -3,12 +3,12 @@ import { Difficulty } from "@prisma/client";
 
 const languages = [
   { id: 54, name: "C++ (GCC 9.2.0)" },
-  { id: 93, name: "JavaScript (Node.js 18.15.0)" },
+  // { id: 93, name: "JavaScript (Node.js 18.15.0)" },
   { id: 71, name: "Python (3.8.1)" },
   { id: 62, name: "Java (OpenJDK 13.0.1)" },
-  { id: 73, name: "Rust (1.40.0)" },
-  { id: 50, name: "C (GCC 9.2.0)" },
-  { id: 63, name: "JavaScript (Node.js 12.14.0)" },
+  // { id: 73, name: "Rust (1.40.0)" },
+  // { id: 50, name: "C (GCC 9.2.0)" },
+  // { id: 63, name: "JavaScript (Node.js 12.14.0)" },
 ];
 
 const problems = [

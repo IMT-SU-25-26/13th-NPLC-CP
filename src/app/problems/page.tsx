@@ -57,13 +57,14 @@ export default async function ProblemsPage() {
       <div className="z-[1] absolute w-full h-full bg-gradient-to-b from-[0%] from-[#2a0335]/50 via-[43%] via-[#6258D1]/50 to-[100%] to-[#00CBC1]/50 blue-light-top"></div>
       <div className="z-[0] absolute bottom-[-5rem] bg-[#97156A] w-[1100px] h-[900px] rounded-full blur-[100px]"></div>
       <div className="z-[3] w-full justify-start items-center flex flex-col">
-        <div className="max-w-[75%] w-full mx-auto py-8 px-4">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-white mb-2">Problems</h1>
-            <p className="text-white text-lg">
-              Practice your coding skills with {problems.length} problems
-            </p>
-          </div>
+        <div className="max-w-[75%] flex flex-col justify-center items-center gap-4 w-full mx-auto py-8 px-4">
+          <Image
+            src={"/logos/ProblemsTitle.svg"}
+            alt="purple"
+            width={100}
+            height={100}
+            className="z-[2] w-1/3 h-auto"
+          ></Image>
 
           <div className="w-full text-md md:text-2xl bg-[#18182a]/80 border-2 border-[#FCF551] rounded-none text-[#75E8F0] overflow-x-auto whitespace-nowrap">
             <table className="min-w-full divide-y divide-[#FCF551] w-full ">

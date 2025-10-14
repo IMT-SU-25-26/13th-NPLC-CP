@@ -25,10 +25,10 @@ interface SubmissionResult {
 
 const LANGUAGES = [
   { id: "cpp", name: "C++" },
-  { id: "c", name: "C" },
+  // { id: "c", name: "C" },
   { id: "python", name: "Python" },
   { id: "java", name: "Java" },
-  { id: "javascript", name: "JavaScript" },
+  // { id: "javascript", name: "JavaScript" },
 ];
 
 export default function CodeEditor({
