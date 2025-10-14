@@ -55,7 +55,7 @@ export default function AuthButtons() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-end gap-4">
+      <div className="relative z-[500] flex justify-end gap-4">
         <div className="h-10 w-24 bg-gray-200 rounded-lg animate-pulse"></div>
         <div className="h-10 w-24 bg-gray-200 rounded-lg animate-pulse"></div>
       </div>
@@ -64,8 +64,8 @@ export default function AuthButtons() {
 
   if (user) {
     return (
-      <div className="flex justify-end items-center gap-4">
-        <div className="text-gray-900 font-medium">
+      <div className="elative z-[500] flex justify-end items-center gap-4">
+        <div className="text-white font-medium">
           Welcome, <span className="font-bold">{user.name}</span>!
         </div>
         <button
@@ -79,7 +79,7 @@ export default function AuthButtons() {
   }
 
   return (
-    <div className="flex justify-end gap-4">
+    <div className="relative z-[500] flex justify-end gap-4">
       <Link
         href="/auth/login"
         className="px-6 py-2 text-blue-600 bg-white border border-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors shadow-sm"
