@@ -1,17 +1,36 @@
 import Link from "next/link";
-import prisma from "@/lib/prisma";
-import AuthButtons from "@/components/AuthButtons";
+import Image from "next/image";
 
 export default async function Home() {
-  const problemCount = await prisma.problem.count();
-  const submissionCount = await prisma.submission.count();
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#111114] to-[#090A1E] flex flex-col justify-center items-center overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="min-h-screen relative bg-gradient-to-b from-[#111114] to-[#090A1E] flex flex-col justify-center items-center overflow-hidden">
+      <div className="z-[3] absolute w-full h-full bg-gradient-to-b from-[0%] from-[#2a0335]/50 via-[43%] via-[#6258D1]/50 to-[100%] to-[#00CBC1]/50 blue-light-top"></div>
+      <div className="z-[0] absolute bottom-[-5rem] bg-[#97156A] w-full h-[90%] rounded-full blur-[100px]"></div>
+      <Image
+        src={"/backgrounds/BangunanDepanUngu.svg"}
+        alt="purple"
+        width={100}
+        height={100}
+        className="z-[2] w-full h-auto absolute bottom-[0]"
+      ></Image>
+      <Image
+        src={"/backgrounds/BangunanBelakangBiru.svg"}
+        alt="purple"
+        width={100}
+        height={100}
+        className=" z-[1] w-full h-auto absolute bottom-[0]"
+      ></Image>
+      <Image
+        src={"/backgrounds/Stairs.svg"}
+        alt="purple"
+        width={100}
+        height={100}
+        className="z-[4] w-full h-auto absolute bottom-[-2.5%]"
+      ></Image>
+      <div className="relative z-[100] backdrop-blur-2xl flex w-[80%] md:w-[70%] lg:w-[70%] xl:w-[45%] flex-col items-center justify-center gap-4 lg:gap-6 p-6 lg:p-12 rounded-xl shadow-lg border-[8px] border-[#FCE551]">
         {/* Auth buttons in top right */}
 
-        <div className="text-center mb-16 mt-8 flex flex-col items-center justify-center">
+        <div className="text-center flex flex-col items-center justify-center">
           <h1 className="text-6xl font-bold text-white mb-4">
             13th NPLC Competitive Programming
           </h1>
@@ -21,7 +40,7 @@ export default async function Home() {
           <Link
             href="/problems"
             className="multiple-regis-button group flex 
-              w-[60%] sm:w-[20%] lg:w-[25%] sm:mt-[-1rem] md:mt-[0rem] lg:mt-[0rem]"
+              w-[60%] sm:w-[25%] lg:w-[30%] sm:mt-[-1rem] md:mt-[0rem] lg:mt-[0rem]"
           >
             <svg
               width="100%"
@@ -69,19 +88,19 @@ export default async function Home() {
                 fill="currentColor"
                 fontSize="18"
                 fontWeight="500"
-                className="text-[#D787DF] text-5xl sm:text-5xl md:text-5xl lg:text-5xl font-rubik-glitch group-hover:text-[#D787DF]"
+                className="text-[#D787DF] text-4xl font-rubik-glitch group-hover:text-[#D787DF]"
               >
                 Solve Problem
               </text>
               <text
-                x="210"
+                x="205"
                 y="70"
                 textAnchor="middle"
                 dominantBaseline="middle"
                 fill="currentColor"
                 fontSize="18"
                 fontWeight="500"
-                className="text-[#75E7F0] text-5xl sm:text-5xl md:text-5xl lg:text-5xl font-rubik-glitch group-hover:text-[#75E7F0]"
+                className="text-[#75E7F0] text-4xl font-rubik-glitch group-hover:text-[#75E7F0]"
               >
                 Solve Problem
               </text>
@@ -89,7 +108,7 @@ export default async function Home() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <div className="relative z-[10] backdrop-blur-2xl flex w-full flex-col items-center justify-center gap-4 lg:gap-6 p-6 lg:p-12 rounded-xl shadow-lg border-[8px] border-[#FCE551]">
             <div className="text-4xl font-bold text-blue-600 mb-2">
               {problemCount}
@@ -165,7 +184,7 @@ export default async function Home() {
           >
             View All Problems →
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import CodeEditor from "@/components/CodeEditor";
-import NavigationBar from "@/components/NavigationBar";
+import Image from "next/image";
 
 interface ProblemPageProps {
   params: Promise<{
@@ -39,11 +39,15 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <div className="z-[1] absolute w-full h-full bg-gradient-to-b from-[0%] from-[#2a0335]/50 via-[43%] via-[#6258D1]/50 to-[100%] to-[#00CBC1]/50 blue-light-top"></div>
-      <div className="z-[0] absolute bottom-[-5rem] bg-[#97156A] w-[1100px] h-[900px] rounded-full blur-[100px]"></div>
-      <div className="relative z-[3] w-full flex flex-col justify-start items-start">
-        <div className="max-w-7xl mx-auto p-8 w-full">
+   <div className="relative min-h-screen bg-gradient-to-b from-[#111114] to-[#090A1E] flex flex-col justify-start items-center overflow-hidden">
+      <div className="h-[7vh]"></div>
+      <div className="z-[3] absolute w-full h-full bg-gradient-to-b from-[0%] from-[#2a0335]/50 via-[43%] via-[#6258D1]/50 to-[100%] to-[#00CBC1]/50 blue-light-top"></div>
+      <div className="z-[0] absolute bottom-[-5rem] bg-[#97156A] w-full h-[90%] rounded-full blur-[100px]"></div>
+      <Image src={"/backgrounds/BangunanDepanUngu.svg"} alt="purple" width={100} height={100} className="z-[2] w-full h-auto absolute bottom-[0]"></Image>
+      <Image src={"/backgrounds/BangunanBelakangBiru.svg"} alt="purple" width={100} height={100} className=" z-[1] w-full h-auto absolute bottom-[0]"></Image>
+      <Image src={"/backgrounds/Stairs.svg"} alt="purple" width={100} height={100} className="z-[4] w-full h-auto absolute bottom-[-2.5%]"></Image>
+      <div className="relative mt-[5%] z-[10] w-full flex flex-col justify-start items-start">
+        <div className="max-w-[77%] mx-auto p-8 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start justify-start">
             {/* Problem Description */}
             <div className=" rounded-lg p-6 backdrop-blur-2xl border-[#FCF551] border-3 shadow-white/15 shadow-2xl drop-shadow-2xl glow">
