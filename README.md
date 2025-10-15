@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## 📝 Example: Fibonacci Problem
 
-## Getting Started
+### Problem Statement
 
-First, run the development server:
+Write a program that calculates the nth Fibonacci number.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**Input Format:**
+- A single integer `n` (0 ≤ n ≤ 30)
+
+**Output Format:**
+- A single integer representing the nth Fibonacci number
+
+**Sample Input:**
+```
+5
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Sample Output:**
+```
+5
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Explanation:**
+The Fibonacci sequence is: 0, 1, 1, 2, 3, 5, 8, 13...
+The 5th Fibonacci number (0-indexed) is 5.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Python Solution Examples
 
-## Learn More
+#### Solution 1: Iterative Approach (Recommended)
 
-To learn more about Next.js, take a look at the following resources:
+```python
+def fibonacci(n):
+    if n <= 1:
+        return n
+    
+    a, b = 0, 1
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    
+    return b
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+n = int(input())
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+print(fibonacci(n))
+```
 
-## Deploy on Vercel
+**Time Complexity:** O(n)  
+**Space Complexity:** O(1)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### Solution 2: Recursive Approach (Educational)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```python
+def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+# Read input
+n = int(input())
+
+# Calculate and print result
+print(fibonacci(n))
+```
+
+**Time Complexity:** O(2^n)  
+**Space Complexity:** O(n)  
+⚠️ **Note:** This solution may get Time Limit Exceeded for larger inputs.
+
+#### Solution 3: Dynamic Programming (Memoization)
+
+```python
+def fibonacci(n, memo={}):
+    if n in memo:
+        return memo[n]
+    
+    if n <= 1:
+        return n
+    
+    memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo)
+    return memo[n]
+
+# Read input
+n = int(input())
+
+# Calculate and print result
+print(fibonacci(n))
+```
+
+**Time Complexity:** O(n)  
+**Space Complexity:** O(n)
+
+### Testing the Fibonacci Solutions
+
+#### Test Case 1: Basic Test
+**Input:**
+```
+0
+```
+**Expected Output:**
+```
+0
+```
+
+#### Test Case 2: Small Number
+**Input:**
+```
+5
+```
+**Expected Output:**
+```
+5
+```
+
+#### Test Case 3: Larger Number
+**Input:**
+```
+10
+```
+**Expected Output:**
+```
+55
+```
+
+#### Test Case 4: Edge Case
+**Input:**
+```
+1
+```
+**Expected Output:**
+```
+1
+```

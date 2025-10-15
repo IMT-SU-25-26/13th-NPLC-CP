@@ -27,15 +27,26 @@ interface Judge0Response {
     id: number;
     description: string;
   };
-  stdout?: string;
-  stderr?: string;
-  compile_output?: string;
-  time?: string;
-  memory?: number;
+  status_id?: number; // Judge0 also returns status_id directly
+  stdout?: string | null;
+  stderr?: string | null;
+  compile_output?: string | null;
+  time?: string | null;
+  memory?: number | null;
+  message?: string; // Error messages from Judge0
 }
 
 export async function POST(request: NextRequest) {
   try {
+    // Verify Judge0 configuration
+    if (!process.env.JUDGE0_API_URL) {
+      console.error("JUDGE0_API_URL is not configured");
+      return NextResponse.json(
+        { error: "Judge0 service is not configured" },
+        { status: 500 }
+      );
+    }
+
     const session = await auth.api.getSession({
       headers: await headers(),
     });
@@ -104,32 +115,62 @@ export async function POST(request: NextRequest) {
         memory_limit: problem.memoryLimit * 1024,
       };
 
+      // Build headers for local Judge0 (no RapidAPI headers needed)
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
+      // Only add RapidAPI headers if they exist (for backwards compatibility)
+      if (process.env.JUDGE0_API_KEY) {
+        headers["X-RapidAPI-Key"] = process.env.JUDGE0_API_KEY;
+      }
+      if (process.env.JUDGE0_API_HOST) {
+        headers["X-RapidAPI-Host"] = process.env.JUDGE0_API_HOST;
+      }
+
       const submitResponse = await fetch(
-        `${process.env.JUDGE0_API_URL}/submissions?base64_encoded=false&wait=true`,
+        `${process.env.JUDGE0_API_URL}/submissions?base64_encoded=false&wait=true&fields=*`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-RapidAPI-Key": process.env.JUDGE0_API_KEY || "",
-            "X-RapidAPI-Host": process.env.JUDGE0_API_HOST || "",
-          },
+          headers,
           body: JSON.stringify(judge0Submission),
         }
       );
 
       if (!submitResponse.ok) {
-        throw new Error("Judge0 submission failed");
+        const errorText = await submitResponse.text();
+        console.error("Judge0 submission failed:", {
+          status: submitResponse.status,
+          statusText: submitResponse.statusText,
+          error: errorText,
+        });
+        throw new Error(
+          `Judge0 submission failed: ${submitResponse.status} ${submitResponse.statusText}`
+        );
       }
 
       const result: Judge0Response = await submitResponse.json();
 
-      const status = mapJudge0Status(result.status?.id || 0);
-      const passed = result.status?.id === 3;
+      // Get status ID from either status.id or status_id field
+      const statusId = result.status?.id || result.status_id || 0;
+      
+      // Check for Judge0 internal errors
+      if (result.message) {
+        console.error("Judge0 execution error:", {
+          message: result.message,
+          statusId,
+          token: result.token,
+        });
+        throw new Error(`Judge0 execution error: ${result.message}`);
+      }
+
+      const status = mapJudge0Status(statusId);
+      const passed = statusId === 3;
 
       testResults.push({
         passed,
         time: result.time ? parseFloat(result.time) : undefined,
-        memory: result.memory,
+        memory: result.memory ?? undefined,
         status,
       });
 
@@ -139,7 +180,7 @@ export async function POST(request: NextRequest) {
           data: {
             status,
             time: result.time ? parseFloat(result.time) : undefined,
-            memory: result.memory,
+            memory: result.memory ?? undefined,
             judge0Token: result.token,
           },
         });
@@ -177,8 +218,16 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Submission error:", error);
+    
+    // Provide more specific error messages
+    const errorMessage =
+      error instanceof Error ? error.message : "Internal server error";
+    
     return NextResponse.json(
-      { error: "Internal server error" },
+      { 
+        error: "Submission processing failed",
+        details: errorMessage,
+      },
       { status: 500 }
     );
   }
