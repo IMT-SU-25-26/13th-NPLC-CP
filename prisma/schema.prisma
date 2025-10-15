@@ -145,3 +145,26 @@ model Language {
 
   submissions Submission[]
 }
+
+// Contest Models
+enum ContestStatus {
+  PENDING
+  RUNNING
+  FROZEN
+  PAUSED
+  FINISHED
+}
+
+model Contest {
+  id                  String         @id @default(cuid())
+  name                String
+  startTime           DateTime
+  endTime             DateTime
+  pausedTime          DateTime?
+  totalPausedDuration Int            @default(0)
+  statusBeforePause   ContestStatus?
+  status              ContestStatus  @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

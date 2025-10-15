@@ -1,14 +1,10 @@
 import prisma from "@/lib/prisma";
-import { Difficulty } from "@prisma/client";
+import { Difficulty, ContestStatus } from "@prisma/client";
 
 const languages = [
   { id: 54, name: "C++ (GCC 9.2.0)" },
-  // { id: 93, name: "JavaScript (Node.js 18.15.0)" },
   { id: 71, name: "Python (3.8.1)" },
   { id: 62, name: "Java (OpenJDK 13.0.1)" },
-  // { id: 73, name: "Rust (1.40.0)" },
-  // { id: 50, name: "C (GCC 9.2.0)" },
-  // { id: 63, name: "JavaScript (Node.js 12.14.0)" },
 ];
 
 const problems = [
@@ -216,6 +212,7 @@ export async function main() {
     console.log(`✓ Created or found language: ${language.name}`);
   }
 
+  // Seed problems and their test cases
   for (const problemData of problems) {
     const { testCases, ...problemInfo } = problemData;
 
@@ -233,6 +230,22 @@ export async function main() {
     console.log(
       `✓ Created or found problem: ${problem.title} (${testCases.length} test cases)`
     );
+  }
+
+  // Seed a default contest if none exists
+  const existingContest = await prisma.contest.findFirst();
+  if (!existingContest) {
+    const contest = await prisma.contest.create({
+      data: {
+        name: "NPLC 13",
+        startTime: new Date(),
+        endTime: new Date(),
+        status: ContestStatus.PENDING,
+      },
+    });
+    console.log(`Created contest: ${contest.name}`);
+  } else {
+    console.log("Contest already exists, skipping creation.");
   }
 
   console.log(`\n✅ Seeding finished successfully!`);
