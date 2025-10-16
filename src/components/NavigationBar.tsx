@@ -30,8 +30,8 @@ export default function NavigationBar() {
         if (text) {
           const data = JSON.parse(text);
           if (data.user) {
-            setUser(data.user);
-          }
+              setUser(data.user);
+            }
         }
       }
     } catch (error) {
