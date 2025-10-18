@@ -1,15 +1,14 @@
 import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { pusherServer } from "@/lib/pusher";
 import { Status } from "@prisma/client";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 const LANGUAGE_MAP: Record<string, number> = {
   cpp: 54, // C++ (GCC 9.2.0)
-  // c: 50, // C (GCC 9.2.0)
   java: 62, // Java (OpenJDK 13.0.1)
   python: 71, // Python (3.8.1)
-  // javascript: 63, // JavaScript (Node.js 12.14.0)
 };
 
 interface Judge0Submission {
@@ -27,18 +26,17 @@ interface Judge0Response {
     id: number;
     description: string;
   };
-  status_id?: number; // Judge0 also returns status_id directly
+  status_id?: number;
   stdout?: string | null;
   stderr?: string | null;
   compile_output?: string | null;
   time?: string | null;
   memory?: number | null;
-  message?: string; // Error messages from Judge0
+  message?: string;
 }
 
 export async function POST(request: NextRequest) {
   try {
-    // Verify Judge0 configuration
     if (!process.env.JUDGE0_API_URL) {
       console.error("JUDGE0_API_URL is not configured");
       return NextResponse.json(
@@ -82,6 +80,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Problem not found" }, { status: 404 });
     }
 
+    if (!problem) {
+      return NextResponse.json({ error: "Problem not found" }, { status: 404 });
+    }
+
     await prisma.language.upsert({
       where: { id: languageId },
       update: {},
@@ -115,12 +117,10 @@ export async function POST(request: NextRequest) {
         memory_limit: problem.memoryLimit * 1024,
       };
 
-      // Build headers for local Judge0 (no RapidAPI headers needed)
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
       };
 
-      // Only add RapidAPI headers if they exist (for backwards compatibility)
       if (process.env.JUDGE0_API_KEY) {
         headers["X-RapidAPI-Key"] = process.env.JUDGE0_API_KEY;
       }
@@ -151,10 +151,8 @@ export async function POST(request: NextRequest) {
 
       const result: Judge0Response = await submitResponse.json();
 
-      // Get status ID from either status.id or status_id field
       const statusId = result.status?.id || result.status_id || 0;
-      
-      // Check for Judge0 internal errors
+
       if (result.message) {
         console.error("Judge0 execution error:", {
           message: result.message,
@@ -199,13 +197,54 @@ export async function POST(request: NextRequest) {
       testResults.length;
     const maxMemory = Math.max(...testResults.map((r) => r.memory || 0));
 
-    await prisma.submission.update({
-      where: { id: submission.id },
-      data: {
-        status: Status.ACCEPTED,
-        time: avgTime,
-        memory: maxMemory,
-      },
+    await prisma.$transaction(async (prisma) => {
+      await prisma.submission.update({
+        where: { id: submission.id },
+        data: {
+          status: Status.ACCEPTED,
+          time: avgTime,
+          memory: maxMemory,
+        },
+      });
+
+      const priorSolves = await prisma.submission.count({
+        where: {
+          userId: session.user.id,
+          problemId: problem.id,
+          status: Status.ACCEPTED,
+          id: { not: submission.id },
+        },
+      });
+
+      if (priorSolves > 0) {
+        return;
+      }
+
+      const PENALTY_POINTS = 10;
+      
+      const wrongAttempts = await prisma.submission.count({
+        where: {
+          userId: session.user.id,
+          problemId: problem.id,
+          status: Status.WRONG_ANSWER,
+          createdAt: { lt: submission.createdAt },
+        },
+      });
+
+      const pointsEarned = Math.max(
+        0,
+        problem.points - wrongAttempts * PENALTY_POINTS,
+      );
+
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: {
+          score: { increment: pointsEarned },
+          lastSubmission: submission.createdAt,
+        },
+      });
+
+      await pusherServer.trigger("leaderboard-channel", "leaderboard-update", {});
     });
 
     return NextResponse.json({
@@ -218,13 +257,12 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Submission error:", error);
-    
-    // Provide more specific error messages
+
     const errorMessage =
       error instanceof Error ? error.message : "Internal server error";
-    
+
     return NextResponse.json(
-      { 
+      {
         error: "Submission processing failed",
         details: errorMessage,
       },
