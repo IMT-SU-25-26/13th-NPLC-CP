@@ -21,6 +21,18 @@ const users = [
     password: "user123456",
     role: Role.USER,
   },
+  {
+    name: "Another User",
+    email: "another@example.com",
+    password: "another123456",
+    role: Role.USER,
+  },
+  {
+    name: "Yet Another User",
+    email: "yetanother@example.com",
+    password: "yetanother123456",
+    role: Role.USER,
+  },
 ];
 
 const problems = [

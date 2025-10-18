@@ -1,8 +1,17 @@
 import Link from "next/link";
 import prisma from "@/lib/prisma";
 import Image from "next/image";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function ProblemsPage() {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (!session) {
+    redirect("/auth/login");
+  }
+
   const problems = await prisma.problem.findMany({
     orderBy: {
       createdAt: "desc",

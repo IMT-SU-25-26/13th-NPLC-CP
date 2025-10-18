@@ -24,14 +24,13 @@ export default function NavigationBar() {
 
   const checkAuth = async () => {
     try {
-      const response = await fetch("/api/auth/get-session");
+      const response = await fetch("/api/auth/get-session", {
+        credentials: "include",
+      });
       if (response.ok) {
-        const text = await response.text();
-        if (text) {
-          const data = JSON.parse(text);
-          if (data && data.user) {
-            setUser(data.user);
-          }
+        const data = await response.json();
+        if (data && data.user) {
+          setUser(data.user);
         }
       }
     } catch (error) {
@@ -57,7 +56,7 @@ export default function NavigationBar() {
 
   return (
     <nav className="z-[1000] fixed w-screen">
-      <div className="max-w-[76%] mx-auto px-4 py-4">
+      <div className="max-w-[90%] mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-6">
             <Link href="/">

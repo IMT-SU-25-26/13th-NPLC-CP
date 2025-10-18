@@ -1,7 +1,9 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import CodeEditor from "@/components/CodeEditor";
 import Image from "next/image";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 interface ProblemPageProps {
   params: Promise<{
@@ -10,6 +12,12 @@ interface ProblemPageProps {
 }
 
 export default async function ProblemPage({ params }: ProblemPageProps) {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (!session) {
+    redirect("/auth/login");
+  }
+
   const { slug } = await params;
 
   const problem = await prisma.problem.findUnique({
