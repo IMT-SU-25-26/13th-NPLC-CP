@@ -23,23 +23,31 @@ export default function NavigationBar() {
   }, [pathname]);
 
   const checkAuth = async () => {
-    try {
-      const response = await fetch("/api/auth/get-session");
-      if (response.ok) {
-        const text = await response.text();
-        if (text) {
+  try {
+    const response = await fetch("/api/auth/get-session");
+    if (response.ok) {
+      const text = await response.text();
+      if (text) {
+        try {
           const data = JSON.parse(text);
-          if (data.user) {
-              setUser(data.user);
-            }
+          // Check if data exists before accessing data.user
+          if (data && data.user) {
+            setUser(data.user);
+          }
+        } catch (e) {
+          console.error("Failed to parse JSON:", e);
+          // Handle JSON parsing error
         }
       }
-    } catch (error) {
-      console.error("Auth check failed:", error);
-    } finally {
-      setIsLoading(false);
+    } else {
+      console.log("Not authenticated");
     }
-  };
+  } catch (error) {
+    console.error("Error checking authentication:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleLogout = async () => {
     try {
