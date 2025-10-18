@@ -15,14 +15,17 @@ enum Role {
 }
 
 model User {
-  id            String   @id @default(cuid())
-  name          String
-  email         String   @unique
-  emailVerified Boolean  @default(false)
-  image         String?
-  role          Role     @default(USER)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id             String    @id @default(cuid())
+  name           String
+  email          String    @unique
+  image          String?
+  score          Int       @default(0)
+  lastSubmission DateTime?
+  emailVerified  Boolean   @default(false)
+  role           Role      @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   sessions    Session[]
   submissions Submission[]
@@ -30,12 +33,13 @@ model User {
 
 model Session {
   id        String   @id @default(cuid())
-  expiresAt DateTime
   token     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
   ipAddress String?
   userAgent String?
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -46,15 +50,16 @@ model Account {
   accountId             String
   providerId            String
   userId                String
+  scope                 String?
   accessToken           String?   @db.Text
   refreshToken          String?   @db.Text
   idToken               String?   @db.Text
+  password              String?   @db.Text
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
-  scope                 String?
-  password              String?   @db.Text
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([providerId, accountId])
 }
@@ -64,8 +69,9 @@ model Verification {
   identifier String
   value      String
   expiresAt  DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([identifier, value])
 }
@@ -101,6 +107,7 @@ model Problem {
   description String     @db.Text
   timeLimit   Float
   memoryLimit Int
+  points      Int
   difficulty  Difficulty
 
   createdAt DateTime @default(now())
@@ -122,6 +129,9 @@ model TestCase {
 
 model Submission {
   id          String  @id @default(cuid())
+  userId      String
+  problemId   String
+  languageId  Int
   sourceCode  String  @db.Text
   judge0Token String?
   time        Float?
@@ -131,12 +141,9 @@ model Submission {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId     String
-  problemId  String
-  languageId Int
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  problem    Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
-  language   Language @relation(fields: [languageId], references: [id])
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem  Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  language Language @relation(fields: [languageId], references: [id])
 }
 
 model Language {

@@ -1,10 +1,26 @@
 import prisma from "@/lib/prisma";
-import { Difficulty, ContestStatus } from "@prisma/client";
+import { Difficulty, ContestStatus, Role } from "@prisma/client";
+import { auth } from "@/lib/auth";
 
 const languages = [
   { id: 54, name: "C++ (GCC 9.2.0)" },
   { id: 71, name: "Python (3.8.1)" },
   { id: 62, name: "Java (OpenJDK 13.0.1)" },
+];
+
+const users = [
+  {
+    name: "Admin User",
+    email: "admin@example.com",
+    password: "admin123456",
+    role: Role.ADMIN,
+  },
+  {
+    name: "Test User",
+    email: "user@example.com",
+    password: "user123456",
+    role: Role.USER,
+  },
 ];
 
 const problems = [
@@ -32,6 +48,7 @@ Output: [1,2]
 - -10^9 <= target <= 10^9
 - Only one valid answer exists.`,
     difficulty: Difficulty.EASY,
+    points: 100,
     timeLimit: 2.0,
     memoryLimit: 256,
     testCases: [
@@ -71,6 +88,7 @@ Output: ["h","a","n","n","a","H"]
 - 1 <= s.length <= 10^5
 - s[i] is a printable ascii character.`,
     difficulty: Difficulty.EASY,
+    points: 100,
     timeLimit: 1.0,
     memoryLimit: 128,
     testCases: [
@@ -116,6 +134,7 @@ Explanation: Reads 01 from right to left. Therefore it is not a palindrome.
 **Constraints:**
 - -2^31 <= x <= 2^31 - 1`,
     difficulty: Difficulty.EASY,
+    points: 100,
     timeLimit: 1.5,
     memoryLimit: 128,
     testCases: [
@@ -169,6 +188,7 @@ Explanation: F(4) = F(3) + F(2) = 2 + 1 = 3.
 **Constraints:**
 - 0 <= n <= 30`,
     difficulty: Difficulty.EASY,
+    points: 100,
     timeLimit: 1.0,
     memoryLimit: 128,
     testCases: [
@@ -197,7 +217,39 @@ Explanation: F(4) = F(3) + F(2) = 2 + 1 = 3.
 ];
 
 export async function main() {
-  console.log("Seeding database...");
+  console.log("\nSeeding database...\n");
+
+  // Seed users
+  for (const userData of users) {
+    const existingUser = await prisma.user.findUnique({
+      where: { email: userData.email },
+    });
+
+    if (!existingUser) {
+      try {
+        await auth.api.signUpEmail({
+          body: {
+            email: userData.email,
+            password: userData.password,
+            name: userData.name,
+          },
+        });
+
+        await prisma.user.update({
+          where: { email: userData.email },
+          data: { role: userData.role },
+        });
+
+        console.log(`Created user: ${userData.name} (${userData.email})`);
+      } catch (error) {
+        console.error(`Failed to create user ${userData.email}:`, error);
+      }
+    } else {
+      console.log(`User already exists: ${userData.name} (${userData.email})`);
+    }
+  }
+
+  console.log("");
 
   // Seed languages
   for (const lang of languages) {
@@ -209,8 +261,10 @@ export async function main() {
         name: lang.name,
       },
     });
-    console.log(`✓ Created or found language: ${language.name}`);
+    console.log(`Created language: ${language.name}`);
   }
+
+  console.log("");
 
   // Seed problems and their test cases
   for (const problemData of problems) {
@@ -228,9 +282,11 @@ export async function main() {
     });
 
     console.log(
-      `✓ Created or found problem: ${problem.title} (${testCases.length} test cases)`
+      `Created problem: ${problem.title} (${testCases.length} test cases)`
     );
   }
+
+  console.log("");
 
   // Seed a default contest if none exists
   const existingContest = await prisma.contest.findFirst();
@@ -248,7 +304,7 @@ export async function main() {
     console.log("Contest already exists, skipping creation.");
   }
 
-  console.log(`\n✅ Seeding finished successfully!`);
+  console.log(`\nSeeding finished successfully`);
 }
 
 main()
