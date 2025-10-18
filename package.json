@@ -7,7 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate",
+    "postinstall": "prisma generate --no-engine",
     "prisma:migrate": "prisma migrate dev",
     "prisma:reset": "prisma migrate reset",
     "prisma:deploy": "prisma migrate deploy",
