@@ -27,7 +27,7 @@ export default async function Home() {
         height={100}
         className="z-[4] w-full h-auto absolute bottom-[-2.5%]"
       ></Image>
-      <div className="relative z-[100] backdrop-blur-2xl flex w-[80%] md:w-[70%] lg:w-[70%] xl:w-[45%] flex-col items-center justify-center gap-4 lg:gap-6 p-6 lg:p-12 rounded-xl shadow-lg border-[8px] border-[#FCE551]">
+      <div className="relative z-[100] w-[80%] md:w-[70%] lg:w-[70%] xl:w-[45%] backdrop-blur-2xl flex  flex-col items-center justify-center gap-4 lg:gap-6 p-6 lg:p-12 rounded-xl shadow-lg border-[8px] border-[#FCE551]">
         {/* Auth buttons in top right */}
 
         <div className="text-center flex flex-col items-center justify-center">
