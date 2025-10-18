@@ -23,10 +23,10 @@ export async function GET() {
       endTime: contest.endTime.toISOString(),
       serverTime: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Failed to fetch contest status:", error);
     return NextResponse.json(
-      { error: "Failed to fetch contest status", details: error.message },
+      { error: "Failed to fetch contest status", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }

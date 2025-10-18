@@ -29,8 +29,8 @@ export async function POST(request: NextRequest) {
   let updatedContest;
   try {
     const body = await request.json();
-    const { action, durationHours } = body; 
-    let contest = await getActiveContest();
+    const { action, durationHours } = body;
+    const contest = await getActiveContest();
     const now = new Date();
 
     switch (action) {
@@ -129,9 +129,9 @@ export async function POST(request: NextRequest) {
     } else {
       return NextResponse.json(contest);
     }
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { error: error.message || "An unexpected error occurred" },
+      { error: error instanceof Error ? error.message : "An unexpected error occurred" },
       { status: 500 }
     );
   }
