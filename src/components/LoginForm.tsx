@@ -54,11 +54,9 @@ export default function LoginForm() {
         return;
       }
 
-      // Wait a bit for the session cookie to be set
       await new Promise(resolve => setTimeout(resolve, 100));
       
       const redirect = searchParams.get("redirect") || "/problems";
-      // Use window.location for a hard refresh to ensure cookies are loaded
       window.location.href = redirect;
     } catch (err) {
       setError(
