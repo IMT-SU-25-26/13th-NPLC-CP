@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -13,6 +14,7 @@ export default function LoginForm() {
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const getAuthError = (status: number): string => {
     if (status === 429) return "Too many attempts. Please try again later.";
@@ -32,6 +34,7 @@ export default function LoginForm() {
       return;
     }
 
+    setLoading(true);
     setIsLoading(true);
 
     try {
@@ -62,6 +65,7 @@ export default function LoginForm() {
       );
     } finally {
       setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -155,72 +159,100 @@ export default function LoginForm() {
           <div className="flex justify-center w-full">
             <button
               type="submit"
-              disabled={isLoading}
-              className="group relative w-[80%] flex justify-center py-3 px-4 hover:cursor-pointer"
+              disabled={isLoading || loading}
+              className={`group relative w-[80%] flex justify-center py-3 px-4 hover:cursor-pointer ${
+                loading ? "opacity-70 cursor-not-allowed" : ""
+              }`}
             >
-              <svg
-                width="100%"
-                height="100%"
-                viewBox="0 0 417 138"
-                className="cursor-target"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 117.09H41.3058L0 96.9246V117.09Z"
-                  fill="#661109"
-                  className={`${"group-hover:fill-[#000000]"} transition-colors duration-200`}
-                />
-                <path
-                  d="M98.49 0L0 38.8754V85.6927L64.3021 117.09H309.815L408.305 78.2145V0H98.49Z"
-                  fill="#661109"
-                  className={`${"group-hover:fill-[#000000] "} transition-colors duration-200`}
-                />
-                <path
-                  d="M8.69482 126.217H50.0006L8.69482 106.044V126.217Z"
-                  fill={`#FCF551`}
-                  className={`${"group-hover:fill-[#c651fc]"} transition-colors duration-200`}
-                />
-                <path
-                  d="M107.177 9.12653L8.69482 47.9947V94.8193L72.9969 126.216H318.51L417 87.341V9.12653H107.177Z"
-                  fill={`#FCF551`}
-                  className={`${"group-hover:fill-[#c651fc] "} transition-colors duration-200`}
-                />
-                <path
-                  d="M72.6392 132.396H271.941V137.262H72.6392"
-                  fill={`#FCF551`}
-                  className={`${"group-hover:fill-[#c651fc] "} transition-colors duration-200`}
-                />
-                <path
-                  d="M8.56348 132.396H49.8693V137.262H8.56348"
-                  fill={`#FCF551`}
-                  className={`${"group-hover:fill-[#c651fc] "} transition-colors duration-200`}
-                />
-                <text
-                  x="200"
-                  y="75"
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fill="currentColor"
-                  fontSize="18"
-                  fontWeight="500"
-                  className="text-[#D787DF] text-4xl font-rubik-glitch group-hover:text-[#D787DF]"
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <svg
+                    className="animate-spin h-6 w-6 text-[#D787DF]"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                  Loading...
+                </span>
+              ) : (
+                <svg
+                  width="100%"
+                  height="100%"
+                  viewBox="0 0 417 138"
+                  className="cursor-target"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  Log in
-                </text>
-                <text
-                  x="205"
-                  y="70"
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fill="currentColor"
-                  fontSize="18"
-                  fontWeight="500"
-                  className="text-[#75E7F0] text-4xl font-rubik-glitch group-hover:text-[#75E7F0]"
-                >
-                  Log in
-                </text>
-              </svg>
+                  <path
+                    d="M0 117.09H41.3058L0 96.9246V117.09Z"
+                    fill="#661109"
+                    className={`${"group-hover:fill-[#000000]"} transition-colors duration-200`}
+                  />
+                  <path
+                    d="M98.49 0L0 38.8754V85.6927L64.3021 117.09H309.815L408.305 78.2145V0H98.49Z"
+                    fill="#661109"
+                    className={`${"group-hover:fill-[#000000] "} transition-colors duration-200`}
+                  />
+                  <path
+                    d="M8.69482 126.217H50.0006L8.69482 106.044V126.217Z"
+                    fill={`#FCF551`}
+                    className={`${"group-hover:fill-[#c651fc]"} transition-colors duration-200`}
+                  />
+                  <path
+                    d="M107.177 9.12653L8.69482 47.9947V94.8193L72.9969 126.216H318.51L417 87.341V9.12653H107.177Z"
+                    fill={`#FCF551`}
+                    className={`${"group-hover:fill-[#c651fc] "} transition-colors duration-200`}
+                  />
+                  <path
+                    d="M72.6392 132.396H271.941V137.262H72.6392"
+                    fill={`#FCF551`}
+                    className={`${"group-hover:fill-[#c651fc] "} transition-colors duration-200`}
+                  />
+                  <path
+                    d="M8.56348 132.396H49.8693V137.262H8.56348"
+                    fill={`#FCF551`}
+                    className={`${"group-hover:fill-[#c651fc] "} transition-colors duration-200`}
+                  />
+                  <text
+                    x="200"
+                    y="75"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="currentColor"
+                    fontSize="18"
+                    fontWeight="500"
+                    className="text-[#D787DF] text-4xl font-rubik-glitch group-hover:text-[#D787DF]"
+                  >
+                    Log in
+                  </text>
+                  <text
+                    x="205"
+                    y="70"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="currentColor"
+                    fontSize="18"
+                    fontWeight="500"
+                    className="text-[#75E7F0] text-4xl font-rubik-glitch group-hover:text-[#75E7F0]"
+                  >
+                    Log in
+                  </text>
+                </svg>
+              )}
             </button>
           </div>
         </form>
