@@ -3,7 +3,11 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 
 const baseURL = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
+  ? `https://${
+      process.env.VERCEL_ENV === "production"
+        ? "nplc-cp.vercel.app"
+        : process.env.VERCEL_URL
+    }`
   : process.env.BETTER_AUTH_URL || "http://localhost:3000";
 
 export const auth = betterAuth({
@@ -31,8 +35,10 @@ export const auth = betterAuth({
   },
   trustedOrigins: [
     baseURL,
-    "https://nplc-cp.vercel.app",
-    ...(process.env.NODE_ENV === "development" ? ["http://localhost:3000"] : []),
+    ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
+    ...(process.env.NODE_ENV === "development"
+      ? ["http://localhost:3000"]
+      : []),
   ],
 });
 
