@@ -1,17 +1,21 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { auth } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
-  const sessionCookie = request.cookies.get("better-auth.session_token");
-  const hasSession = !!sessionCookie?.value;
+  // Use better-auth's session verification instead of just checking cookies
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
 
-  // Debug logging for production
+  const hasSession = !!session;
+
   if (process.env.NODE_ENV === "production") {
     console.log("[Middleware] Path:", pathname);
     console.log("[Middleware] Has session:", hasSession);
-    console.log("[Middleware] All cookies:", request.cookies.getAll().map(c => c.name));
+    console.log("[Middleware] Session user:", session?.user?.email);
   }
 
   const isOnLoginPage = pathname.startsWith("/auth/login");

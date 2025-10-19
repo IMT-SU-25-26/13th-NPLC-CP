@@ -54,9 +54,19 @@ export default function LoginForm() {
         return;
       }
 
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Parse response to ensure session was created
+      const data = await response.json();
+      
+      if (!data || !data.session) {
+        setError("Login succeeded but session was not created. Please try again.");
+        return;
+      }
+
+      // Give more time for cookie to be set in production
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       const redirect = searchParams.get("redirect") || "/problems";
+      // Force a full page reload to ensure cookies are loaded
       window.location.href = redirect;
     } catch (err) {
       setError(
