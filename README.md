@@ -1,32 +1,28 @@
-## 📝 Example: Fibonacci Problem
+# Imports Order Rules
 
-### Problem Statement
+1. Default Imports First
+2. Named Imports Second
+3. Components First
+4. Default Library Imports Second
+5. Named Library Imports Third
+6. Next Imports Fourth
+7. React Imports Fifth
+8. Other Imports Last
 
-Write a program that calculates the nth Fibonacci number.
+a. Always use @/ for absolute imports from the src directory.
+b. Use relative imports for local files within the same directory or nearby directories.
 
-**Input Format:**
-- A single integer `n` (0 ≤ n ≤ 30)
+# Code Structure Rules
 
-**Output Format:**
-- A single integer representing the nth Fibonacci number
+1. Components must start with a capital letter.
+2. Components must be exported as default exports (export default function ComponentName).
+3. Files must use .tsx extension for React components.
 
-**Sample Input:**
-```
-5
-```
+# Problem Solving Example
 
-**Sample Output:**
-```
-5
-```
+## Example: Fibonacci Problem
 
-**Explanation:**
-The Fibonacci sequence is: 0, 1, 1, 2, 3, 5, 8, 13...
-The 5th Fibonacci number (0-indexed) is 5.
-
-### Python Solution Examples
-
-#### Solution 1: Iterative Approach (Recommended)
+### Solution Example
 
 ```python
 def fibonacci(n):
@@ -42,91 +38,4 @@ def fibonacci(n):
 n = int(input())
 
 print(fibonacci(n))
-```
-
-**Time Complexity:** O(n)  
-**Space Complexity:** O(1)
-
-#### Solution 2: Recursive Approach (Educational)
-
-```python
-def fibonacci(n):
-    if n <= 1:
-        return n
-    return fibonacci(n - 1) + fibonacci(n - 2)
-
-# Read input
-n = int(input())
-
-# Calculate and print result
-print(fibonacci(n))
-```
-
-**Time Complexity:** O(2^n)  
-**Space Complexity:** O(n)  
-⚠️ **Note:** This solution may get Time Limit Exceeded for larger inputs.
-
-#### Solution 3: Dynamic Programming (Memoization)
-
-```python
-def fibonacci(n, memo={}):
-    if n in memo:
-        return memo[n]
-    
-    if n <= 1:
-        return n
-    
-    memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo)
-    return memo[n]
-
-# Read input
-n = int(input())
-
-# Calculate and print result
-print(fibonacci(n))
-```
-
-**Time Complexity:** O(n)  
-**Space Complexity:** O(n)
-
-### Testing the Fibonacci Solutions
-
-#### Test Case 1: Basic Test
-**Input:**
-```
-0
-```
-**Expected Output:**
-```
-0
-```
-
-#### Test Case 2: Small Number
-**Input:**
-```
-5
-```
-**Expected Output:**
-```
-5
-```
-
-#### Test Case 3: Larger Number
-**Input:**
-```
-10
-```
-**Expected Output:**
-```
-55
-```
-
-#### Test Case 4: Edge Case
-**Input:**
-```
-1
-```
-**Expected Output:**
-```
-1
 ```

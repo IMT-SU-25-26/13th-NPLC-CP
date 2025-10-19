@@ -1,57 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
 import Image from "next/image";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-}
+import { useSession, signOut } from "next-auth/react";
 
 export default function NavigationBar() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    checkAuth();
-  }, [pathname]);
-
-  const checkAuth = async () => {
-    try {
-      const response = await fetch("/api/auth/get-session", {
-        credentials: "include",
-      });
-      if (response.ok) {
-        const data = await response.json();
-        if (data && data.user) {
-          setUser(data.user);
-        }
-      }
-    } catch (error) {
-      console.error("Auth check failed:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { data: session, status } = useSession();
 
   const handleLogout = async () => {
-    try {
-      await fetch("/api/auth/sign-out", {
-        method: "POST",
-        credentials: "include",
-      });
-      setUser(null);
-      router.push("/");
-      router.refresh();
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
+    await signOut({ callbackUrl: "/" });
   };
 
   return (
@@ -70,12 +27,12 @@ export default function NavigationBar() {
             </Link>
           </div>
 
-          {isLoading ? (
+          {status === "loading" ? (
             <div className="flex gap-4">
               <div className="h-10 w-24 bg-gray-200 rounded-lg animate-pulse"></div>
               <div className="h-10 w-24 bg-gray-200 rounded-lg animate-pulse"></div>
             </div>
-          ) : user ? (
+          ) : session ? (
             <div className="flex items-center gap-4">
               <Link
                 className="cursor-target pointer-events-auto w-full flex items-center"

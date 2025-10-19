@@ -1,10 +1,10 @@
-import prisma from "@/lib/prisma";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import { Contest } from "@prisma/client";
 import AdminDashboard from "@/components/AdminDashboard";
 import ContestTimer from "@/components/ContestTimer";
+import prisma from "@/lib/prisma";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { Contest } from "@prisma/client";
 
 async function getActiveContest(): Promise<Contest> {
   let contest = await prisma.contest.findFirst();
@@ -24,7 +24,7 @@ async function getActiveContest(): Promise<Contest> {
 }
 
 export default async function AdminPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getServerSession(authOptions);
 
   if (session?.user?.role !== "ADMIN") {
     redirect("/");

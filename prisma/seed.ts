@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { Difficulty, ContestStatus, Role } from "@prisma/client";
-import { auth } from "@/lib/auth";
+import { hashSync } from "@node-rs/bcrypt";
 
 const languages = [
   { id: 54, name: "C++ (GCC 9.2.0)" },
@@ -229,9 +229,10 @@ Explanation: F(4) = F(3) + F(2) = 2 + 1 = 3.
 ];
 
 export async function main() {
-  console.log("\nSeeding database...\n");
-
   // Seed users
+  console.log("\n" + "=".repeat(50));
+  console.log("Seeding users...");
+  console.log("=".repeat(50));
   for (const userData of users) {
     const existingUser = await prisma.user.findUnique({
       where: { email: userData.email },
@@ -239,17 +240,16 @@ export async function main() {
 
     if (!existingUser) {
       try {
-        await auth.api.signUpEmail({
-          body: {
-            email: userData.email,
-            password: userData.password,
-            name: userData.name,
-          },
-        });
+        const hashedPassword = hashSync(userData.password, 10);
 
-        await prisma.user.update({
-          where: { email: userData.email },
-          data: { role: userData.role },
+        await prisma.user.create({
+          data: {
+            email: userData.email,
+            name: userData.name,
+            password: hashedPassword,
+            role: userData.role,
+            emailVerified: new Date(),
+          },
         });
 
         console.log(`Created user: ${userData.name} (${userData.email})`);
@@ -261,9 +261,10 @@ export async function main() {
     }
   }
 
-  console.log("");
-
   // Seed languages
+  console.log("\n" + "=".repeat(50));
+  console.log("Seeding languages...");
+  console.log("=".repeat(50));
   for (const lang of languages) {
     const language = await prisma.language.upsert({
       where: { id: lang.id },
@@ -276,9 +277,10 @@ export async function main() {
     console.log(`Created language: ${language.name}`);
   }
 
-  console.log("");
-
   // Seed problems and their test cases
+  console.log("\n" + "=".repeat(50));
+  console.log("Seeding problems and test cases...");
+  console.log("=".repeat(50));
   for (const problemData of problems) {
     const { testCases, ...problemInfo } = problemData;
 
@@ -298,9 +300,10 @@ export async function main() {
     );
   }
 
-  console.log("");
-
   // Seed a default contest if none exists
+  console.log("\n" + "=".repeat(50));
+  console.log("Seeding contest...");
+  console.log("=".repeat(50));
   const existingContest = await prisma.contest.findFirst();
   if (!existingContest) {
     const contest = await prisma.contest.create({
@@ -313,10 +316,8 @@ export async function main() {
     });
     console.log(`Created contest: ${contest.name}`);
   } else {
-    console.log("Contest already exists, skipping creation.");
+    console.log(`Contest already exists, skipping creation.`);
   }
-
-  console.log(`\nSeeding finished successfully`);
 }
 
 main()

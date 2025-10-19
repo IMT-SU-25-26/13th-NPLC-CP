@@ -1,8 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import { pusherClient } from "@/lib/pusher";
 import useSWR, { useSWRConfig } from "swr";
-import { useEffect } from "react";
 
 interface LeaderboardUser {
   id: string;

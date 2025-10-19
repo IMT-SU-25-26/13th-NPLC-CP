@@ -1,8 +1,8 @@
 import prisma from "@/lib/prisma";
-import { auth } from "@/lib/auth";
+import { authOptions } from "@/lib/auth";
 import { pusherServer } from "@/lib/pusher";
 import { Status } from "@prisma/client";
-import { headers } from "next/headers";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 const LANGUAGE_MAP: Record<string, number> = {
@@ -45,9 +45,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await getServerSession(authOptions);
 
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -221,7 +219,7 @@ export async function POST(request: NextRequest) {
       }
 
       const PENALTY_POINTS = 10;
-      
+
       const wrongAttempts = await prisma.submission.count({
         where: {
           userId: session.user.id,
@@ -233,7 +231,7 @@ export async function POST(request: NextRequest) {
 
       const pointsEarned = Math.max(
         0,
-        problem.points - wrongAttempts * PENALTY_POINTS,
+        problem.points - wrongAttempts * PENALTY_POINTS
       );
 
       await prisma.user.update({
@@ -244,7 +242,11 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      await pusherServer.trigger("leaderboard-channel", "leaderboard-update", {});
+      await pusherServer.trigger(
+        "leaderboard-channel",
+        "leaderboard-update",
+        {}
+      );
     });
 
     return NextResponse.json({

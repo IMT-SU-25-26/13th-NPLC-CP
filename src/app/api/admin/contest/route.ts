@@ -1,8 +1,8 @@
 import prisma from "@/lib/prisma";
-import { auth } from "@/lib/auth";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 import { pusherServer } from "@/lib/pusher";
 import { ContestStatus } from "@prisma/client";
-import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 async function getActiveContest() {
@@ -21,7 +21,7 @@ async function getActiveContest() {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getServerSession(authOptions);
   if (session?.user?.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }

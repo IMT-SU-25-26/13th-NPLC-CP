@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { useState } from "react";
 
 export default function LoginForm() {
@@ -15,15 +16,6 @@ export default function LoginForm() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const getAuthError = (status: number): string => {
-    if (status === 429) return "Too many attempts. Please try again later.";
-    if (status === 404) return "User not found.";
-    if (status === 401 || status === 403) return "Incorrect email or password.";
-    if (status === 500 || status === 502 || status === 503)
-      return "Server error. Please try again later.";
-    return "Login failed. Please try again.";
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,36 +30,25 @@ export default function LoginForm() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/auth/sign-in/email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
+      const result = await signIn("credentials", {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
       });
 
-      if (!response.ok) {
-        setError(getAuthError(response.status));
+      if (result?.error) {
+        setError(result.error);
         return;
       }
 
-      // Parse response to ensure session was created
-      const data = await response.json();
-      
-      if (!data || !data.session) {
-        setError("Login succeeded but session was not created. Please try again.");
+      if (!result?.ok) {
+        setError("Login failed. Please try again.");
         return;
       }
 
-      // Give more time for cookie to be set in production
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
       const redirect = searchParams.get("redirect") || "/problems";
-      // Force a full page reload to ensure cookies are loaded
-      window.location.href = redirect;
+      router.push(redirect);
+      router.refresh();
     } catch (err) {
       setError(
         err instanceof Error

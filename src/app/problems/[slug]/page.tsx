@@ -1,9 +1,7 @@
-import { notFound, redirect } from "next/navigation";
-import prisma from "@/lib/prisma";
 import CodeEditor from "@/components/CodeEditor";
+import prisma from "@/lib/prisma";
 import Image from "next/image";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 
 interface ProblemPageProps {
   params: Promise<{
@@ -12,12 +10,6 @@ interface ProblemPageProps {
 }
 
 export default async function ProblemPage({ params }: ProblemPageProps) {
-  const session = await auth.api.getSession({ headers: await headers() });
-
-  if (!session) {
-    redirect("/auth/login");
-  }
-
   const { slug } = await params;
 
   const problem = await prisma.problem.findUnique({
@@ -47,13 +39,31 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
   };
 
   return (
-   <div className="relative min-h-screen bg-gradient-to-b from-[#111114] to-[#090A1E] flex flex-col justify-start items-center overflow-hidden">
+    <div className="relative min-h-screen bg-gradient-to-b from-[#111114] to-[#090A1E] flex flex-col justify-start items-center overflow-hidden">
       <div className="h-[7vh]"></div>
       <div className="z-[3] absolute w-full h-full bg-gradient-to-b from-[0%] from-[#2a0335]/50 via-[43%] via-[#6258D1]/50 to-[100%] to-[#00CBC1]/50 blue-light-top"></div>
       <div className="z-[0] absolute bottom-[-5rem] bg-[#97156A] w-full h-[90%] rounded-full blur-[100px]"></div>
-      <Image src={"/backgrounds/BangunanDepanUngu.svg"} alt="purple" width={100} height={100} className="z-[2] w-full h-auto absolute bottom-[0]"></Image>
-      <Image src={"/backgrounds/BangunanBelakangBiru.svg"} alt="purple" width={100} height={100} className=" z-[1] w-full h-auto absolute bottom-[0]"></Image>
-      <Image src={"/backgrounds/Stairs.svg"} alt="purple" width={100} height={100} className="z-[4] w-full h-auto absolute bottom-[-2.5%]"></Image>
+      <Image
+        src={"/backgrounds/BangunanDepanUngu.svg"}
+        alt="purple"
+        width={100}
+        height={100}
+        className="z-[2] w-full h-auto absolute bottom-[0]"
+      ></Image>
+      <Image
+        src={"/backgrounds/BangunanBelakangBiru.svg"}
+        alt="purple"
+        width={100}
+        height={100}
+        className=" z-[1] w-full h-auto absolute bottom-[0]"
+      ></Image>
+      <Image
+        src={"/backgrounds/Stairs.svg"}
+        alt="purple"
+        width={100}
+        height={100}
+        className="z-[4] w-full h-auto absolute bottom-[-2.5%]"
+      ></Image>
       <div className="relative mt-[5%] z-[10] w-full flex flex-col justify-start items-start">
         <div className="max-w-[77%] mx-auto p-8 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start justify-start">

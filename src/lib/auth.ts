@@ -1,62 +1,75 @@
 import prisma from "./prisma";
-import { betterAuth } from "better-auth";
-import { prismaAdapter } from "better-auth/adapters/prisma";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { NextAuthOptions } from "next-auth";
+import { verifySync } from "@node-rs/bcrypt";
+import { Role } from "@prisma/client";
 
-const getBaseUrl = () => {
-  if (process.env.VERCEL_URL) {
-    if (process.env.VERCEL_ENV === "production") {
-      return "https://nplc-cp.vercel.app";
-    }
-    return `https://${process.env.VERCEL_URL}`;
-  }
-
-  return process.env.BETTER_AUTH_URL || "http://localhost:3000";
-};
-
-const baseURL = getBaseUrl();
-
-export const auth = betterAuth({
-  database: prismaAdapter(prisma, {
-    provider: "postgresql",
-  }),
-  baseURL: baseURL,
-  secret: process.env.BETTER_AUTH_SECRET!,
-  emailAndPassword: {
-    enabled: true,
-    requireEmailVerification: false,
-  },
-  session: {
-    expiresIn: 60 * 60 * 24 * 7, // 7 days
-    updateAge: 60 * 60 * 24, // 1 day
-    cookieCache: {
-      enabled: true,
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    },
-  },
-  advanced: {
-    cookiePrefix: "better-auth",
-    crossSubDomainCookies: {
-      enabled: false,
-    },
-    useSecureCookies: process.env.NODE_ENV === "production",
-    generateId: undefined,
-    defaultCookieAttributes: {
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      httpOnly: true,
-      path: "/",
-    },
-  },
-  user: {
-    additionalFields: {
-      role: {
-        type: "string",
-        defaultValue: "USER",
-        required: false,
+export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
+  providers: [
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Invalid credentials");
+        }
+
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        if (!user.password) {
+          throw new Error("No password set for this user");
+        }
+
+        const isPasswordValid = verifySync(credentials.password, user.password);
+
+        if (!isPasswordValid) {
+          throw new Error("Invalid password");
+        }
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        };
+      },
+    }),
+  ],
+  session: {
+    strategy: "jwt",
+  },
+  pages: {
+    signIn: "/auth/login",
+    error: "/auth/error",
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+      }
+
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as Role;
+      }
+
+      return session;
     },
   },
-  trustedOrigins: [baseURL],
-});
-
-export type Session = typeof auth.$Infer.Session;
+  secret: process.env.NEXTAUTH_SECRET,
+};
