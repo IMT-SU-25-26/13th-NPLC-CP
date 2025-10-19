@@ -2,11 +2,10 @@
 
 import React from "react";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export default function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     email: "",
@@ -55,8 +54,7 @@ export default function LoginForm() {
       }
 
       const redirect = searchParams.get("redirect") || "/problems";
-      router.push(redirect);
-      router.refresh();
+      window.location.href = redirect;
     } catch (err) {
       setError(
         err instanceof Error
