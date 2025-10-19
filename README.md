@@ -1,4 +1,4 @@
-# Imports Order Rules
+# Import Order Rules
 
 1. Default Imports First
 2. Named Imports Second
@@ -9,8 +9,9 @@
 7. React Imports Fifth
 8. Other Imports Last
 
-a. Always use @/ for absolute imports from the src directory.
-b. Use relative imports for local files within the same directory or nearby directories.
+# Import Path Rules
+1. Always use @/ for absolute imports from the src directory.
+2. Use relative imports for local files within the same directory or nearby directories.
 
 # Code Structure Rules
 
