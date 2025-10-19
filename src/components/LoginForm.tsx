@@ -2,13 +2,10 @@
 
 import React from "react";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 
 export default function LoginForm() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -33,22 +30,14 @@ export default function LoginForm() {
       const result = await signIn("credentials", {
         email: formData.email,
         password: formData.password,
-        redirect: false,
+        callbackUrl: "/problems",
+        redirect: true,
       });
 
       if (result?.error) {
         setError(result.error);
         return;
       }
-
-      if (!result?.ok) {
-        setError("Login failed. Please try again.");
-        return;
-      }
-
-      const redirect = searchParams.get("redirect") || "/problems";
-      router.push(redirect);
-      router.refresh();
     } catch (err) {
       setError(
         err instanceof Error
