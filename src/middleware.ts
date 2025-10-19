@@ -3,18 +3,24 @@ import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  
+  // Check for better-auth session cookie
   const sessionCookie = request.cookies.get("better-auth.session_token");
-  const hasSession = !!sessionCookie;
+  const hasSession = !!sessionCookie?.value;
 
   const isOnLoginPage = pathname.startsWith("/auth/login");
 
+  // If user has a session and tries to access login, redirect to problems
+  if (hasSession && isOnLoginPage) {
+    return NextResponse.redirect(new URL("/problems", request.url));
+  }
+
+  // If user has a session, allow access to all pages
   if (hasSession) {
-    if (isOnLoginPage) {
-      return NextResponse.redirect(new URL("/problems", request.url));
-    }
     return NextResponse.next();
   }
 
+  // If no session, protect certain routes
   if (!hasSession) {
     const protectedRoutes = ["/problems", "/leaderboard", "/admin"];
     const isProtectedRoute = protectedRoutes.some((route) =>

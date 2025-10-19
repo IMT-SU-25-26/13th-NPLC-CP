@@ -2,10 +2,11 @@
 
 import React from "react";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export default function LoginForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     email: "",
@@ -53,7 +54,11 @@ export default function LoginForm() {
         return;
       }
 
+      // Wait a bit for the session cookie to be set
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const redirect = searchParams.get("redirect") || "/problems";
+      // Use window.location for a hard refresh to ensure cookies are loaded
       window.location.href = redirect;
     } catch (err) {
       setError(
