@@ -2,13 +2,18 @@ import prisma from "./prisma";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 
-const baseURL = process.env.VERCEL_URL
-  ? `https://${
-      process.env.VERCEL_ENV === "production"
-        ? "nplc-cp.vercel.app"
-        : process.env.VERCEL_URL
-    }`
-  : process.env.BETTER_AUTH_URL || "http://localhost:3000";
+const getBaseUrl = () => {
+  if (process.env.VERCEL_URL) {
+    if (process.env.VERCEL_ENV === "production") {
+      return "https://nplc-cp.vercel.app";
+    }
+    return `https://${process.env.VERCEL_URL}`;
+  }
+
+  return process.env.BETTER_AUTH_URL || "http://localhost:3000";
+};
+
+const baseURL = getBaseUrl();
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -33,13 +38,7 @@ export const auth = betterAuth({
       },
     },
   },
-  trustedOrigins: [
-    baseURL,
-    ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
-    ...(process.env.NODE_ENV === "development"
-      ? ["http://localhost:3000"]
-      : []),
-  ],
+  trustedOrigins: [baseURL],
 });
 
 export type Session = typeof auth.$Infer.Session;
