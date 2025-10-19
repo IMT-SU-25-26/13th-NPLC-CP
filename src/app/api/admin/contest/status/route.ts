@@ -26,7 +26,10 @@ export async function GET() {
   } catch (error) {
     console.error("Failed to fetch contest status:", error);
     return NextResponse.json(
-      { error: "Failed to fetch contest status", details: error instanceof Error ? error.message : "Unknown error" },
+      {
+        error: "Failed to fetch contest status",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 }
     );
   }

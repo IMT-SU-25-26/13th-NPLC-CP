@@ -1,9 +1,9 @@
 import prisma from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
 import { pusherServer } from "@/lib/pusher";
-import { ContestStatus } from "@prisma/client";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { ContestStatus } from "@prisma/client";
 
 async function getActiveContest() {
   let contest = await prisma.contest.findFirst();
@@ -131,7 +131,12 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "An unexpected error occurred" },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred",
+      },
       { status: 500 }
     );
   }

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Contest, ContestStatus } from "@prisma/client";
 import useSWR from "swr";
 import Pusher from "pusher-js";
+import { useState, useEffect } from "react";
+import { Contest, ContestStatus } from "@prisma/client";
 
 type Action = "start" | "pause" | "resume" | "freeze" | "unfreeze" | "end";
 

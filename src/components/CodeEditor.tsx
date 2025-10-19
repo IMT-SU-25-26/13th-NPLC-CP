@@ -93,9 +93,7 @@ export default function CodeEditor({
   return (
     <div className="w-full max-w-6xl mx-auto space-y-4">
       <div className="p-6 backdrop-blur-2xl border-[#FCF551] border-3 shadow-white/15 shadow-2xl drop-shadow-2xl glow">
-        <h2 className="text-2xl font-bold mb-4 text-white">
-          {problemTitle}
-        </h2>
+        <h2 className="text-2xl font-bold mb-4 text-white">{problemTitle}</h2>
 
         {/* Language Selector */}
         <div className="mb-4">
@@ -125,20 +123,23 @@ export default function CodeEditor({
             <div className="flex">
               {/* Line Numbers */}
               <div className="flex-shrink-0 p-3 bg-[#18182a]/80 border-r-2 border-[#FCF551] rounded-none text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] overflow-x-auto whitespace-nowrap">
-          {sourceCode.split('\n').map((_, index) => (
-            <div key={index} className="leading-5 text-right pr-2 min-w-[30px]">
-              {index + 1}
-            </div>
-          ))}
+                {sourceCode.split("\n").map((_, index) => (
+                  <div
+                    key={index}
+                    className="leading-5 text-right pr-2 min-w-[30px]"
+                  >
+                    {index + 1}
+                  </div>
+                ))}
               </div>
               {/* Code Editor */}
               <textarea
-          value={sourceCode}
-          onChange={(e) => setSourceCode(e.target.value)}
-          className="flex-1 h-96 px-3 py-2 font-mono text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] bg-transparent border-0 resize-none focus:outline-none leading-5"
-          placeholder="Write your code here..."
-          disabled={isSubmitting}
-          style={{ lineHeight: '1.25rem' }}
+                value={sourceCode}
+                onChange={(e) => setSourceCode(e.target.value)}
+                className="flex-1 h-96 px-3 py-2 font-mono text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] bg-transparent border-0 resize-none focus:outline-none leading-5"
+                placeholder="Write your code here..."
+                disabled={isSubmitting}
+                style={{ lineHeight: "1.25rem" }}
               />
             </div>
           </div>
