@@ -6,7 +6,7 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
-  baseURL: process.env.NEXTAUTH_URL || "http://localhost:3000",
+  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
   secret: process.env.BETTER_AUTH_SECRET!,
   emailAndPassword: {
     enabled: true,
@@ -25,7 +25,7 @@ export const auth = betterAuth({
       },
     },
   },
-  trustedOrigins: [process.env.NEXTAUTH_URL || "http://localhost:3000"],
+  trustedOrigins: [process.env.BETTER_AUTH_URL || "http://localhost:3000"],
 });
 
 export type Session = typeof auth.$Infer.Session;
