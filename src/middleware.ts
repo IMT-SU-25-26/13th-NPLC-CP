@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
   const sessionCookie = request.cookies.get("better-auth.session_token");
   const hasSession = !!sessionCookie;
 
-  const protectedRoutes = ["/problems", "/leaderboard", "/"];
+  const protectedRoutes = ["/problems", "/leaderboard"];
   const adminRoutes = ["/admin"];
 
   const isProtectedRoute = protectedRoutes.some((route) =>

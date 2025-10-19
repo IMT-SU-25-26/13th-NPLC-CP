@@ -1,16 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 
 export default async function Home() {
-  const session = await auth.api.getSession({ headers: await headers() });
-
-  if (!session) {
-    redirect("/auth/login");
-  }
-
   return (
     <div className="min-h-screen relative bg-gradient-to-b from-[#111114] to-[#090A1E] flex flex-col justify-center items-center overflow-hidden">
       <div className="z-[3] absolute w-full h-full bg-gradient-to-b from-[0%] from-[#2a0335]/50 via-[43%] via-[#6258D1]/50 to-[100%] to-[#00CBC1]/50 blue-light-top"></div>
@@ -116,84 +107,6 @@ export default async function Home() {
             </svg>
           </Link>
         </div>
-
-        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <div className="relative z-[10] backdrop-blur-2xl flex w-full flex-col items-center justify-center gap-4 lg:gap-6 p-6 lg:p-12 rounded-xl shadow-lg border-[8px] border-[#FCE551]">
-            <div className="text-4xl font-bold text-blue-600 mb-2">
-              {problemCount}
-            </div>
-            <div className="text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">Problems Available</div>
-          </div>
-          <div className="relative z-[10] backdrop-blur-2xl flex w-full flex-col items-center justify-center gap-4 lg:gap-6 p-6 lg:p-12 rounded-xl shadow-lg border-[8px] border-[#FCE551]">
-            <div className="text-4xl font-bold text-green-600 mb-2">
-              {submissionCount}
-            </div>
-            <div className="text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">Total Submissions</div>
-          </div>
-          <div className="relative z-[10] backdrop-blur-2xl flex w-full flex-col items-center justify-center gap-4 lg:gap-6 p-6 lg:p-12 rounded-xl shadow-lg border-[8px] border-[#FCE551]">
-            <div className="text-4xl font-bold text-purple-600 mb-2">5</div>
-            <div className="text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">Supported Languages</div>
-          </div>
-        </div>
-
-        <div className="relative z-[10] backdrop-blur-2xl flex flex-col items-center justify-center gap-4 lg:gap-6 p-6 lg:p-12 rounded-xl shadow-lg border-[8px] border-[#FCE551] w-full ">
-          <h2 className="text-3xl font-bold text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] mb-6">Features</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex items-start gap-4">
-              <div className="text-2xl">💻</div>
-              <div>
-                <h3 className="font-semibold text-lg mb-1 text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">
-                  Online Code Editor
-                </h3>
-                <p className="text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">
-                  Write and submit code directly in your browser with syntax
-                  highlighting
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="text-2xl">⚡</div>
-              <div>
-                <h3 className="font-semibold text-lg mb-1 text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">
-                  Real-time Judging
-                </h3>
-                <p className="text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">
-                  Get instant feedback on your submissions with Judge0
-                  integration
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="text-2xl">📊</div>
-              <div>
-                <h3 className="font-semibold text-lg mb-1 text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">
-                  Multiple Languages
-                </h3>
-                <p className="text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">
-                  Support for C++, C, Python, Java, and JavaScript
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="text-2xl">🎯</div>
-              <div>
-                <h3 className="font-semibold text-lg mb-1 text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">Test Cases</h3>
-                <p className="text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">
-                  Sample and hidden test cases to validate your solutions
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-16 text-center">
-          <Link
-            href="/problems"
-            className="text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-semibold text-lg"
-          >
-            View All Problems →
-          </Link>
-        </div> */}
       </div>
     </div>
   );
