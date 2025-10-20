@@ -33,6 +33,18 @@ const users = [
     password: "yetanother123456",
     role: Role.USER,
   },
+  {
+    name: "Bryan",
+    email: "bfernando@student.ciputra.ac.id",
+    password: "123456",
+    role: Role.ADMIN,
+  },
+  {
+    name: "Obie",
+    email: "ozuriel07@student.ciputra.ac.id",
+    password: "123456",
+    role: Role.ADMIN,
+  },
 ];
 
 const problems = [

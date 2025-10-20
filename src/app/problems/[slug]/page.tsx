@@ -66,9 +66,9 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
       ></Image>
       <div className="relative mt-[5%] z-[10] w-full flex flex-col justify-start items-start">
         <div className="max-w-[77%] mx-auto p-8 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start justify-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch justify-start">
             {/* Problem Description */}
-            <div className=" rounded-lg p-6 backdrop-blur-2xl border-[#FCF551] border-3 shadow-white/15 shadow-2xl drop-shadow-2xl glow">
+            <div className="rounded-lg p-6 bg-black/15 backdrop-blur-2xl border-[#FCF551] border-3 shadow-white/15 shadow-2xl drop-shadow-2xl glow overflow-auto max-h-[calc(100vh-8rem)] lg:max-h-[calc(100vh-18rem)]">
               <div className="mb-6">
                 <h1 className="text-3xl font-bold mb-4 text-white">
                   {problem.title}
@@ -134,7 +134,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
             </div>
 
             {/* Code Editor */}
-            <div className="lg:sticky lg:top-8 h-fit">
+            <div className="lg:sticky lg:top-8">
               <CodeEditor problemId={problem.id} problemTitle={problem.title} />
             </div>
           </div>

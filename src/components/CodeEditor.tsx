@@ -92,7 +92,7 @@ export default function CodeEditor({
 
   return (
     <div className="w-full max-w-6xl mx-auto space-y-4">
-      <div className="p-6 backdrop-blur-2xl border-[#FCF551] border-3 shadow-white/15 shadow-2xl drop-shadow-2xl glow">
+      <div className="p-6 bg-black/15 backdrop-blur-2xl border-[#FCF551] border-3 shadow-white/15 shadow-2xl drop-shadow-2xl glow">
         <h2 className="text-2xl font-bold mb-4 text-white">{problemTitle}</h2>
 
         {/* Language Selector */}
