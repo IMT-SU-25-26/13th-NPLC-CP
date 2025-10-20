@@ -98,12 +98,23 @@ export default function CodeEditor({
 
       // Show success toast
       if (data.passed) {
-        toast.success("✅ All Test Cases Passed!", {
+        toast.success("All Test Cases Passed!", {
           description: `Status: ${data.status}`,
         });
       } else {
-        toast.error("❌ Some Test Cases Failed", {
-          description: `Status: ${data.status}`,
+        // Get failed test cases
+        const failedTests = data.testResults
+          .map((test: TestResult, index: number) => 
+            !test.passed ? `Test Case ${index + 1}: ${test.status}` : null
+          )
+          .filter(Boolean);
+
+        const failedDescription = failedTests.slice(0, 3).join("\n");
+        const moreTests = failedTests.length > 3 ? `\n...and ${failedTests.length - 3} more` : "";
+
+        toast.error("Some Test Cases Failed", {
+          description: `${failedDescription}${moreTests}`,
+          duration: 6000, // Lebih lama untuk membaca info
         });
       }
     } catch (err) {
@@ -118,17 +129,17 @@ export default function CodeEditor({
     }
   };
 
-  const getStatusColor = (status: string) => {
-    if (status === "ACCEPTED") return "text-green-600";
-    if (status.includes("ERROR")) return "text-red-600";
-    if (status === "WRONG_ANSWER") return "text-orange-600";
-    if (status === "TIME_LIMIT_EXCEEDED") return "text-yellow-600";
-    return "text-gray-600";
-  };
+  // const getStatusColor = (status: string) => {
+  //   if (status === "ACCEPTED") return "text-green-600";
+  //   if (status.includes("ERROR")) return "text-red-600";
+  //   if (status === "WRONG_ANSWER") return "text-orange-600";
+  //   if (status === "TIME_LIMIT_EXCEEDED") return "text-yellow-600";
+  //   return "text-gray-600";
+  // };
 
-  const formatStatus = (status: string) => {
-    return status.replace(/_/g, " ");
-  };
+  // const formatStatus = (status: string) => {
+  //   return status.replace(/_/g, " ");
+  // };
 
   return (
     <div className="w-full max-w-6xl mx-auto h-full min-h-0 flex flex-col space-y-4">
