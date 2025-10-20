@@ -1,12 +1,11 @@
 import prisma from "./prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextAuthOptions } from "next-auth";
 import { verifySync } from "@node-rs/bcrypt";
 import { Role } from "@prisma/client";
+import { createId } from "@paralleldrive/cuid2";
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -37,11 +36,29 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid password");
         }
 
+        if (user.activeSessionToken) {
+          throw new Error(
+            "This account is already logged in on another device. Please log out from the other device first."
+          );
+        }
+
+        const sessionToken = createId();
+
+        const updatedUser = await prisma.user.update({
+          where: { id: user.id },
+          data: { activeSessionToken: sessionToken },
+        });
+
+        if (!updatedUser) {
+          throw new Error("Failed to update user session");
+        }
+
         return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
+          id: updatedUser.id,
+          email: updatedUser.email,
+          name: updatedUser.name,
+          role: updatedUser.role,
+          activeSessionToken: updatedUser.activeSessionToken,
         };
       },
     }),
@@ -52,6 +69,16 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/login",
   },
+  events: {
+    async signOut({ token }) {
+      if (token.id) {
+        await prisma.user.update({
+          where: { id: token.id as string },
+          data: { activeSessionToken: null },
+        });
+      }
+    },
+  },
   callbacks: {
     async redirect({ baseUrl }) {
       return `${baseUrl}/problems`;
@@ -60,6 +87,15 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.role = user.role;
+        token.activeSessionToken = user.activeSessionToken;
+      } else {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
+        });
+
+        if (!dbUser || dbUser.activeSessionToken !== token.activeSessionToken) {
+          throw new Error("Invalid session");
+        }
       }
 
       return token;
