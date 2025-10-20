@@ -1,6 +1,7 @@
 import "./globals.css";
 import Provider from "@/components/SessionProvider";
 import NavigationBar from "@/components/NavigationBar";
+import { Toaster } from "sonner";
 import { Geist, Geist_Mono } from "next/font/google";
 import type { Metadata } from "next";
 
@@ -32,6 +33,12 @@ export default function RootLayout({
         <Provider>
           <NavigationBar />
           {children}
+          <Toaster
+            position="bottom-right"
+            theme="dark"
+            richColors
+            duration={5000}
+          />
         </Provider>
       </body>
     </html>

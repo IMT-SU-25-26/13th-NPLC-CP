@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { toast } from "sonner";
 
 interface SubmitCodeProps {
   problemId: string;
@@ -47,7 +48,7 @@ export default function CodeEditor({
 
   const handleSubmit = async () => {
     if (!sourceCode.trim()) {
-      setError("Please write some code first!");
+      toast.error("Please write some code first!");
       return;
     }
 
@@ -68,15 +69,50 @@ export default function CodeEditor({
         }),
       });
 
-      const data = await response.json();
+      const contentType = response.headers.get("content-type") || "";
+      let data: any;
+
+      if (contentType.includes("application/json")) {
+        try {
+          data = await response.json();
+        } catch (err) {
+          const text = await response.text();
+          throw new Error(
+            `Invalid JSON response from server. Response preview: ${text.slice(0, 1000)}`
+          );
+        }
+      } else {
+        const text = await response.text();
+        throw new Error(
+          `Server returned non-JSON response (content-type: ${contentType}). Preview: ${text
+            .replace(/\s+/g, " ")
+            .slice(0, 1000)}`
+        );
+      }
 
       if (!response.ok) {
-        throw new Error(data.error || "Submission failed");
+        throw new Error(data?.error || `Submission failed (${response.status})`);
       }
 
       setResult(data);
+
+      // Show success toast
+      if (data.passed) {
+        toast.success("✅ All Test Cases Passed!", {
+          description: `Status: ${data.status}`,
+        });
+      } else {
+        toast.error("❌ Some Test Cases Failed", {
+          description: `Status: ${data.status}`,
+        });
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      const errorMessage =
+        err instanceof Error ? err.message : "An error occurred";
+      setError(errorMessage);
+      toast.error("Submission Failed", {
+        description: errorMessage,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -95,8 +131,8 @@ export default function CodeEditor({
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto h-full space-y-4">
-      <div className="p-6 w-full h-full bg-black/15 backdrop-blur-2xl border-[#FCF551] border-3 shadow-white/15 shadow-2xl drop-shadow-2xl glow">
+    <div className="w-full max-w-6xl mx-auto h-full min-h-0 flex flex-col space-y-4">
+      <div className="p-6 w-full flex-1 min-h-0 flex flex-col bg-black/15 backdrop-blur-2xl border-[#FCF551] border-3 shadow-white/15 shadow-2xl drop-shadow-2xl glow">
         <h2 className="text-2xl font-bold mb-4 text-white">{problemTitle}</h2>
 
         {/* Language Selector */}
@@ -107,7 +143,7 @@ export default function CodeEditor({
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="p-3 cursor-target w-full  bg-[#18182a]/80 border-2 border-[#FCF551] rounded-none text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] overflow-x-auto whitespace-nowrap"
+            className="p-3 cursor-target w-full bg-[#18182a]/80 border-2 border-[#FCF551] rounded-none text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] overflow-x-auto whitespace-nowrap"
             disabled={isSubmitting}
           >
             {LANGUAGES.map((lang) => (
@@ -118,41 +154,52 @@ export default function CodeEditor({
           </select>
         </div>
 
-        {/* Code Editor */}
+        {/* Code Editor - with fixed height */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-white mb-2">
             Your Code
           </label>
-          <div className="relative bg-[#18182a]/80 border-2 border-[#FCF551] rounded-none text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] overflow-x-auto whitespace-nowrap">
-            <div className="flex">
-              {/* Line Numbers */}
+          <div className="relative bg-[#18182a]/80 border-2 border-[#FCF551] rounded-none text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] overflow-hidden h-[400px]">
+            <div className="flex h-full">
+              {/* Line Numbers - fixed height with overflow hidden */}
               <div
                 ref={lineNumbersRef}
-                className="flex-shrink-0 p-3 bg-[#18182a]/80 border-r-2 border-[#FCF551] rounded-none text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] overflow-auto h-96 select-none"
-                style={{ lineHeight: "1.25rem" }}
+                tabIndex={-1}
+                onWheel={(e) => {
+                  // Prevent scrollbar on line numbers and forward wheel events to textarea
+                  e.preventDefault();
+                  if (textareaRef.current) {
+                    textareaRef.current.scrollTop += e.deltaY;
+                  }
+                }}
+                className="flex-shrink-0 p-0 pt-2 bg-[#18182a]/80 border-r-2 border-[#FCF551] rounded-none text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] overflow-hidden select-none h-full font-mono text-sm"
+                style={{ lineHeight: "1.5rem" }}
               >
-                {sourceCode.split("\n").map((_, index) => (
-                  <div key={index} className="leading-5 text-right pr-2 min-w-[30px]">
-                    {index + 1}
-                  </div>
-                ))}
+                <div className="px-3">
+                  {Array.from({ length: Math.max(sourceCode.split('\n').length, 1) }, (_, i) => (
+                    <div key={i} className="h-[1.5rem] text-right pr-2 min-w-[30px]">
+                      {i + 1}
+                    </div>
+                  ))}
+                </div>
               </div>
-              {/* Code Editor */}
+
+              {/* Code Editor - fixed height with overflow auto */}
               <textarea
                 ref={textareaRef}
                 value={sourceCode}
                 onChange={(e) => setSourceCode(e.target.value)}
                 onScroll={(e) => {
-                  // sinkronkan scroll vertikal ke kolom nomor baris
+                  // Sync scroll position to line numbers
                   if (lineNumbersRef.current) {
                     lineNumbersRef.current.scrollTop = e.currentTarget.scrollTop;
                   }
                 }}
                 wrap="off"
-                className="flex-1 h-96 px-3 py-2 font-mono text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] bg-transparent border-0 overflow-auto whitespace-pre text-left resize-none focus:outline-none leading-5"
+                className="flex-1 h-full pt-2 px-3 py-2 font-mono text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] bg-transparent border-0 overflow-auto whitespace-pre text-left resize-none focus:outline-none"
                 placeholder="Write your code here..."
                 disabled={isSubmitting}
-                style={{ lineHeight: "1.25rem" }}
+                style={{ lineHeight: "1.5rem" }}
               />
             </div>
           </div>
@@ -167,87 +214,8 @@ export default function CodeEditor({
           {isSubmitting ? "Submitting..." : "Submit Code"}
         </button>
 
-        {/* Error Message */}
-        {error && (
-          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-red-600 font-medium">❌ {error}</p>
-          </div>
-        )}
-
-        {/* Results */}
-        {result && (
-          <div className="mt-6 space-y-4">
-            <div
-              className={`p-4 rounded-md ${
-                result.passed
-                  ? "bg-green-50 border border-green-200"
-                  : "bg-red-50 border border-red-200"
-              }`}
-            >
-              <h3
-                className={`text-xl font-bold ${
-                  result.passed ? "text-green-600" : "text-red-600"
-                }`}
-              >
-                {result.passed
-                  ? "✅ All Test Cases Passed!"
-                  : "❌ Some Test Cases Failed"}
-              </h3>
-              <p className={getStatusColor(result.status)}>
-                Status: {formatStatus(result.status)}
-              </p>
-              {result.time !== undefined && (
-                <p className="text-gray-800 font-medium">
-                  Time: {result.time.toFixed(3)}s
-                </p>
-              )}
-              {result.memory !== undefined && (
-                <p className="text-gray-800 font-medium">
-                  Memory: {(result.memory / 1024).toFixed(2)} MB
-                </p>
-              )}
-            </div>
-
-            {/* Test Results */}
-            <div className="space-y-2">
-              <h4 className="font-semibold text-gray-900 text-lg">
-                Test Cases:
-              </h4>
-              {result.testResults.map((test, index) => (
-                <div
-                  key={index}
-                  className={`p-3 rounded-md border ${
-                    test.passed
-                      ? "bg-green-50 border-green-200"
-                      : "bg-red-50 border-red-200"
-                  }`}
-                >
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium text-gray-900">
-                      {test.passed ? "✅" : "❌"} Test Case {index + 1}
-                    </span>
-                    <span className={getStatusColor(test.status)}>
-                      {formatStatus(test.status)}
-                    </span>
-                  </div>
-                  {test.time !== undefined && (
-                    <p className="text-sm text-gray-800">
-                      Time: {test.time.toFixed(3)}s | Memory:{" "}
-                      {test.memory ? (test.memory / 1024).toFixed(2) : "N/A"} MB
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <div className="text-sm text-gray-700 bg-gray-50 p-3 rounded border border-gray-200">
-              Submission ID:{" "}
-              <span className="font-mono font-semibold">
-                {result.submissionId}
-              </span>
-            </div>
-          </div>
-        )}
+        {/* Results Section - Optional, untuk detail tambahan */}
+        
       </div>
     </div>
   );

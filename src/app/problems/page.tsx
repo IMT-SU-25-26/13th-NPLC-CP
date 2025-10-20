@@ -75,7 +75,7 @@ export default async function ProblemsPage() {
               <thead className="bg-[#18182a]/80">
                 <tr className="">
                   <th className="px-6 py-3 text-left text-xs font-bold text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] uppercase tracking-wider">
-                    Title
+                    Problem
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-bold text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] uppercase tracking-wider">
                     Difficulty
@@ -88,9 +88,6 @@ export default async function ProblemsPage() {
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-bold text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] uppercase tracking-wider">
                     Submissions
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] uppercase tracking-wider">
-                    Actions
                   </th>
                 </tr>
               </thead>
@@ -126,14 +123,6 @@ export default async function ProblemsPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-medium">
                       {problem._count.submissions}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-medium">
-                      <Link
-                        href={`/problems/${problem.slug}`}
-                        className="text-[#75E8F0] hover:underline [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-semibold text-base"
-                      >
-                        View
-                      </Link>
                     </td>
                   </tr>
                 ))}

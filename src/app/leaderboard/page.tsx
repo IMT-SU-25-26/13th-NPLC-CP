@@ -31,9 +31,7 @@ export default async function LeaderboardPage() {
       <div className="z-[0] absolute bottom-[-5rem] bg-[#97156A] w-[1100px] h-[900px] rounded-full blur-[100px]"></div>
       <div className="z-[3] w-full justify-start items-center flex flex-col">
         <div className="max-w-[75%] flex flex-col justify-center items-center gap-4 w-full mx-auto py-8 px-4">
-          <h1 className="text-4xl md:text-6xl font-bold text-[#FCF551] [text-shadow:_0_0_30px_rgba(252,245,81,0.8)] mb-4">
-            Leaderboard
-          </h1>
+          <Image src={"/logos/LeaderboardText.webp"} width={400} height={400} className="w-[40%] h-auto" alt="nplc-leaderboard"></Image>
           <Leaderboard />
         </div>
       </div>
