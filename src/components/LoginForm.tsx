@@ -13,6 +13,7 @@ export default function LoginForm() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,13 +31,19 @@ export default function LoginForm() {
       const result = await signIn("credentials", {
         email: formData.email,
         password: formData.password,
-        callbackUrl: "/problems",
-        redirect: true,
+        redirect: false,
       });
 
       if (result?.error) {
         setError(result.error);
+        setIsLoading(false);
+        setLoading(false);
         return;
+      }
+
+      if (result?.ok) {
+        setIsRedirecting(true);
+        window.location.href = "/problems";
       }
     } catch (err) {
       setError(
@@ -44,7 +51,6 @@ export default function LoginForm() {
           ? err.message
           : "Unable to reach the server. Please try again."
       );
-    } finally {
       setIsLoading(false);
       setLoading(false);
     }
@@ -167,7 +173,7 @@ export default function LoginForm() {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     />
                   </svg>
-                  Loading...
+                  {isRedirecting ? "Redirecting..." : "Loading..."}
                 </span>
               ) : (
                 <svg
