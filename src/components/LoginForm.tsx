@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 
@@ -57,46 +56,22 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen relative bg-gradient-to-b from-[#111114] to-[#090A1E] flex flex-col justify-center items-center overflow-hidden">
-      <div className="z-[3] absolute w-full h-full bg-gradient-to-b from-[0%] from-[#2a0335]/50 via-[43%] via-[#6258D1]/50 to-[100%] to-[#00CBC1]/50 blue-light-top"></div>
-      <div className="z-[0] absolute bottom-[-5rem] bg-[#97156A] w-full h-[90%] rounded-full blur-[100px]"></div>
-      <Image
-        src={"/backgrounds/BangunanDepanUngu.svg"}
-        alt="purple"
-        width={100}
-        height={100}
-        className="z-[2] w-full h-auto absolute bottom-[0]"
-      ></Image>
-      <Image
-        src={"/backgrounds/BangunanBelakangBiru.svg"}
-        alt="purple"
-        width={100}
-        height={100}
-        className=" z-[1] w-full h-auto absolute bottom-[0]"
-      ></Image>
-      <Image
-        src={"/backgrounds/Stairs.svg"}
-        alt="purple"
-        width={100}
-        height={100}
-        className="z-[4] w-full h-auto absolute bottom-[-2.5%]"
-      ></Image>
-      <div className="relative z-[5] max-w-md w-full space-y-6 backdrop-blur-2xl flex flex-col items-center justify-center rounded-xl shadow-lg border-[8px] border-[#FCE551] p-4">
-        <div>
-          <h2 className="text-center text-4xl font-extrabold text-white">
-            Login
-          </h2>
-        </div>
+    <>
+      <div>
+        <h2 className="text-center text-4xl font-extrabold text-white">
+          Login
+        </h2>
+      </div>
 
-        {error && (
-          <div
-            role="alert"
-            aria-live="polite"
-            className="w-[80%] rounded-md border-2 border-red-400 bg-red-50/80 text-red-700 px-3 py-2"
-          >
-            {error}
-          </div>
-        )}
+      {error && (
+        <div
+          role="alert"
+          aria-live="polite"
+          className="w-[80%] rounded-md border-2 border-red-400 bg-red-50/80 text-red-700 px-3 py-2"
+        >
+          {error}
+        </div>
+      )}
 
         <form className="space-y-6 w-[80%]" onSubmit={handleSubmit}>
           <div className="w-full">
@@ -243,7 +218,6 @@ export default function LoginForm() {
             </button>
           </div>
         </form>
-      </div>
-    </div>
+    </>
   );
 }
