@@ -114,7 +114,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
                           <p className="text-sm font-semibold text-white mb-2">
                             Input:
                           </p>
-                          <pre className="p-4 rounded border border-[#FCF551] text-sm overflow-x-auto text-[#75E8F0]">
+                          <pre className="p-4 rounded border border-[#FCF551] text-sm overflow-x-auto text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">
                             {testCase.input}
                           </pre>
                         </div>
@@ -122,7 +122,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
                           <p className="text-sm font-semibold text-white mb-2">
                             Expected Output:
                           </p>
-                          <pre className="p-4 rounded border border-[#FCF551] text-sm overflow-x-auto text-[#75E8F0]">
+                          <pre className="p-4 rounded border border-[#FCF551] text-sm overflow-x-auto text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)]">
                             {testCase.expectedOutput}
                           </pre>
                         </div>

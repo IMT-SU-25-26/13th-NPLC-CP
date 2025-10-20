@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 interface SubmitCodeProps {
   problemId: string;
@@ -40,6 +40,10 @@ export default function CodeEditor({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<SubmissionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // refs to sync scrolling between textarea and line numbers
+  const lineNumbersRef = useRef<HTMLDivElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const handleSubmit = async () => {
     if (!sourceCode.trim()) {
@@ -122,21 +126,30 @@ export default function CodeEditor({
           <div className="relative bg-[#18182a]/80 border-2 border-[#FCF551] rounded-none text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] overflow-x-auto whitespace-nowrap">
             <div className="flex">
               {/* Line Numbers */}
-              <div className="flex-shrink-0 p-3 bg-[#18182a]/80 border-r-2 border-[#FCF551] rounded-none text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] overflow-x-auto whitespace-nowrap">
+              <div
+                ref={lineNumbersRef}
+                className="flex-shrink-0 p-3 bg-[#18182a]/80 border-r-2 border-[#FCF551] rounded-none text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] overflow-auto h-96 select-none"
+                style={{ lineHeight: "1.25rem" }}
+              >
                 {sourceCode.split("\n").map((_, index) => (
-                  <div
-                    key={index}
-                    className="leading-5 text-right pr-2 min-w-[30px]"
-                  >
+                  <div key={index} className="leading-5 text-right pr-2 min-w-[30px]">
                     {index + 1}
                   </div>
                 ))}
               </div>
               {/* Code Editor */}
               <textarea
+                ref={textareaRef}
                 value={sourceCode}
                 onChange={(e) => setSourceCode(e.target.value)}
-                className="flex-1 h-96 px-3 py-2 font-mono text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] bg-transparent border-0 resize-none focus:outline-none leading-5"
+                onScroll={(e) => {
+                  // sinkronkan scroll vertikal ke kolom nomor baris
+                  if (lineNumbersRef.current) {
+                    lineNumbersRef.current.scrollTop = e.currentTarget.scrollTop;
+                  }
+                }}
+                wrap="off"
+                className="flex-1 h-96 px-3 py-2 font-mono text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] bg-transparent border-0 overflow-auto whitespace-pre text-left resize-none focus:outline-none leading-5"
                 placeholder="Write your code here..."
                 disabled={isSubmitting}
                 style={{ lineHeight: "1.25rem" }}
