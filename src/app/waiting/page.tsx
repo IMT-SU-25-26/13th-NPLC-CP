@@ -6,9 +6,5 @@ export default async function WaitingPage() {
   const contest = await getActiveContest();
   const status = contest?.status ?? ContestStatus.PENDING;
 
-  return (
-    <>
-      <Waiting status={status} />
-    </>
-  );
+  return <Waiting status={status} />;
 }
