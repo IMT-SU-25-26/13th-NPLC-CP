@@ -317,26 +317,20 @@ export async function main() {
     );
   }
 
-  // Seed a default contest if none exists
+  // Seed a default contest
   console.log("\n" + "=".repeat(50));
   console.log("Seeding contest...");
   console.log("=".repeat(50));
 
-  const existingContest = await prisma.contest.findFirst();
-
-  if (!existingContest) {
-    const contest = await prisma.contest.create({
-      data: {
-        name: "NPLC 13",
-        startTime: new Date(),
-        endTime: new Date(),
-        status: ContestStatus.PENDING,
-      },
-    });
-    console.log(`Created contest: ${contest.name}`);
-  } else {
-    console.log(`Contest already exists, skipping creation.`);
-  }
+  const contest = await prisma.contest.create({
+    data: {
+      name: "NPLC 13",
+      startTime: new Date(),
+      endTime: new Date(),
+      status: ContestStatus.PENDING,
+    },
+  });
+  console.log(`Created contest: ${contest.name}`);
 }
 
 main()

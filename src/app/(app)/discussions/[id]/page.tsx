@@ -1,4 +1,4 @@
-import DiscussionDetail from "@/components/pages/discussions/DiscussionDetail";
+import DiscussionDetail from "@/components/pages/app/discussions/DiscussionDetail";
 import { getDiscussionById } from "@/services/discussion";
 
 interface DiscussionPageProps {

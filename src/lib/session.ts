@@ -1,4 +1,4 @@
-import { getServerSession, type Session } from "next-auth";
+import { getServerSession } from "next-auth";
 import { authOptions } from "./auth";
 
 export const getAuthSession = () => {

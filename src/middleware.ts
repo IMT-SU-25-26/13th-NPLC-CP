@@ -7,7 +7,7 @@ const ROUTE_PERMISSIONS: Record<string, Role[]> = {
 };
 
 export default withAuth(
-  function middleware(req) {
+  async function middleware(req) {
     const token = req.nextauth.token;
     const { pathname } = req.nextUrl;
 
@@ -34,5 +34,10 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/problems/:path*", "/leaderboard/:path*", "/admin/:path*", "/discussions/:path*"],
+  matcher: [
+    "/problems/:path*",
+    "/leaderboard/:path*",
+    "/admin/:path*",
+    "/discussions/:path*",
+  ],
 };

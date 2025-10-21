@@ -1,13 +1,13 @@
 import { getDifficultyColor } from "@/utils/difficulty";
 import { FullProblem } from "@/types/db";
 
-interface ProblemPageProps {
+interface ProblemDetailProps {
   problem: FullProblem;
 }
 
-export default function ProblemDetail({ problem }: ProblemPageProps) {
+export default function ProblemDetail({ problem }: ProblemDetailProps) {
   return (
-    <div className="rounded-lg p-6 bg-black/15 backdrop-blur-2xl border-[#FCF551] border-3 shadow-white/15 shadow-2xl drop-shadow-2xl glow overflow-auto max-h-[calc(100vh-8rem)] lg:max-h-[calc(100vh-18rem)]">
+    <div className="p-6 bg-black/15 backdrop-blur-2xl border-[#FCF551] border-3 shadow-white/15 shadow-2xl drop-shadow-2xl glow overflow-auto h-[calc(100vh-12rem)] lg:h-[calc(100vh-20rem)]">
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-4 text-white">{problem.title}</h1>
         <div className="flex items-center gap-3">

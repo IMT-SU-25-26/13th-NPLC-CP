@@ -1,5 +1,5 @@
 import Link from "next/link";
-import ReplyForm from "@/components/pages/discussions/ReplyForm";
+import ReplyForm from "@/components/pages/app/discussions/ReplyForm";
 import { FullDiscussion } from "@/types/db";
 
 interface DiscussionDetailProps {

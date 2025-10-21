@@ -22,10 +22,7 @@ const TimerBox = ({ value, label }: { value: string; label: string }) => (
 );
 
 export default function ContestTimer() {
-  const { data, error } = useSWR<ContestState>(
-    "/api/contest/status",
-    fetcher
-  );
+  const { data, error } = useSWR<ContestState>("/api/contest/status", fetcher);
   const { mutate } = useSWRConfig();
   const [timeLeft, setTimeLeft] = useState(0);
 

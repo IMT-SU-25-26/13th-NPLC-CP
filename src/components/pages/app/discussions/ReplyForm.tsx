@@ -40,7 +40,7 @@ export default function ReplyForm({ discussionId }: ReplyFormProps) {
     <form onSubmit={handleSubmit} className="flex items-start gap-3 mt-2">
       <div className="flex-1">
         <textarea
-          placeholder="Tulis balasan..."
+          placeholder="Write a reply..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
           disabled={isSubmitting}

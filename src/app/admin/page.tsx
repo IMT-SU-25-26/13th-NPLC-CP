@@ -1,5 +1,5 @@
 import AdminDashboard from "@/components/pages/admin/AdminDashboard";
-import ContestTimer from "@/components/pages/leaderboard/ContestTimer";
+import ContestTimer from "@/components/pages/app/leaderboard/ContestTimer";
 import { getActiveContest } from "@/services/contest";
 
 export default async function AdminPage() {

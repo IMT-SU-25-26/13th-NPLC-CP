@@ -1,4 +1,4 @@
-import DiscussionTable from "@/components/pages/discussions/DiscussionTable";
+import DiscussionTable from "@/components/pages/app/discussions/DiscussionTable";
 import { getAllDiscussions } from "@/services/discussion";
 
 export default async function DiscussionsPage() {
