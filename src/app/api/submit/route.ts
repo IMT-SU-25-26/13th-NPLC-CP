@@ -1,13 +1,12 @@
 import prisma from "@/lib/prisma";
-import { authOptions } from "@/lib/auth";
 import { pusherServer } from "@/lib/pusher";
-import { getServerSession } from "next-auth";
+import { getAuthSession } from "@/lib/session";
 import { NextRequest, NextResponse } from "next/server";
 import { Status } from "@prisma/client";
 
 const LANGUAGE_MAP: Record<string, number> = {
   cpp: 54, // C++ (GCC 9.2.0)
-  java: 62, // Java (OpenJDK 13.0.1)  
+  java: 62, // Java (OpenJDK 13.0.1)
   python: 71, // Python (3.8.1)
 };
 
@@ -45,7 +44,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const session = await getServerSession(authOptions);
+    const session = await getAuthSession();
 
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

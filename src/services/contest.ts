@@ -1,29 +1,24 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { authOptions } from "@/lib/auth";
+import { getAuthSession } from "@/lib/session";
 import { pusherServer } from "@/lib/pusher";
 import { revalidatePath } from "next/cache";
-import { getServerSession } from "next-auth";
 import { ContestStatus } from "@prisma/client";
 
 export async function getActiveContest() {
-  let contest = await prisma.contest.findFirst();
+  const contest = await prisma.contest.findFirst();
+
   if (!contest) {
-    contest = await prisma.contest.create({
-      data: {
-        name: "NPLC 13",
-        startTime: new Date(),
-        endTime: new Date(),
-        status: ContestStatus.PENDING,
-      },
-    });
+    throw new Error("No active contest found.");
   }
+
   return contest;
 }
 
 export async function startContest(formData: FormData) {
-  const session = await getServerSession(authOptions);
+  const session = await getAuthSession();
+
   if (session?.user?.role !== "ADMIN") {
     throw new Error("Unauthorized");
   }
@@ -63,7 +58,8 @@ export async function startContest(formData: FormData) {
 }
 
 export async function pauseContest() {
-  const session = await getServerSession(authOptions);
+  const session = await getAuthSession();
+
   if (session?.user?.role !== "ADMIN") {
     throw new Error("Unauthorized");
   }
@@ -97,7 +93,8 @@ export async function pauseContest() {
 }
 
 export async function resumeContest() {
-  const session = await getServerSession(authOptions);
+  const session = await getAuthSession();
+
   if (session?.user?.role !== "ADMIN") {
     throw new Error("Unauthorized");
   }
@@ -134,7 +131,8 @@ export async function resumeContest() {
 }
 
 export async function freezeContest() {
-  const session = await getServerSession(authOptions);
+  const session = await getAuthSession();
+
   if (session?.user?.role !== "ADMIN") {
     throw new Error("Unauthorized");
   }
@@ -160,7 +158,8 @@ export async function freezeContest() {
 }
 
 export async function unfreezeContest() {
-  const session = await getServerSession(authOptions);
+  const session = await getAuthSession();
+
   if (session?.user?.role !== "ADMIN") {
     throw new Error("Unauthorized");
   }
@@ -186,7 +185,8 @@ export async function unfreezeContest() {
 }
 
 export async function endContest() {
-  const session = await getServerSession(authOptions);
+  const session = await getAuthSession();
+
   if (session?.user?.role !== "ADMIN") {
     throw new Error("Unauthorized");
   }
@@ -198,10 +198,12 @@ export async function endContest() {
   ) {
     throw new Error("Contest cannot be ended in its current state.");
   }
+
   const updatedContest = await prisma.contest.update({
     where: { id: contest.id },
     data: { status: ContestStatus.FINISHED, endTime: new Date() },
   });
+
   await pusherServer.trigger(
     "contest-channel",
     "status-update",

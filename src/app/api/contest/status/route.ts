@@ -1,17 +1,7 @@
-import prisma from "@/lib/prisma";
+import { getActiveContest } from "@/services/contest";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
-
-async function getActiveContest() {
-  const contest = await prisma.contest.findFirst();
-  if (!contest) {
-    throw new Error(
-      "Contest has not been seeded in the database. Please run 'pnpm prisma db seed'."
-    );
-  }
-  return contest;
-}
 
 export async function GET() {
   try {

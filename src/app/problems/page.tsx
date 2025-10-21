@@ -1,10 +1,9 @@
 import ProblemTable from "@/components/pages/problems/ProblemTable";
 import prisma from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getAuthSession } from "@/lib/session";
 
 export default async function ProblemsPage() {
-  const session = await getServerSession(authOptions);
+  const session = await getAuthSession();
 
   const problems = await prisma.problem.findMany({
     orderBy: {

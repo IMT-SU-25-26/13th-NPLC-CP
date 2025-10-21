@@ -1,8 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getAuthSession } from "@/lib/session";
 import { revalidatePath } from "next/cache";
 
 export async function getAllDiscussions() {
@@ -34,8 +33,23 @@ export async function getDiscussionById(id: string) {
   return discussion;
 }
 
+export async function getUserDiscussions(userId: string) {
+  const discussions = await prisma.discussion.findMany({
+    where: { authorId: userId },
+    include: {
+      author: true,
+      replies: {
+        include: {
+          author: true,
+        },
+      },
+    },
+  });
+  return discussions;
+}
+
 export async function createDiscussion(formData: FormData) {
-  const session = await getServerSession(authOptions);
+  const session = await getAuthSession();
 
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
@@ -60,7 +74,7 @@ export async function createDiscussion(formData: FormData) {
 }
 
 export async function createReply(formData: FormData) {
-  const session = await getServerSession(authOptions);
+  const session = await getAuthSession();
 
   if (!session?.user?.id) {
     throw new Error("Unauthorized");

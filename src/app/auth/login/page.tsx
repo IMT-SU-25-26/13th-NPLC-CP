@@ -1,7 +1,6 @@
 import LoginForm from "@/components/pages/auth/LoginForm";
-import { authOptions } from "@/lib/auth";
+import { getAuthSession } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
 import { Suspense } from "react";
 
 function LoginLoading() {
@@ -16,7 +15,7 @@ function LoginLoading() {
 }
 
 export default async function LoginPage() {
-  const session = await getServerSession(authOptions);
+  const session = await getAuthSession();
 
   if (session) {
     redirect("/problems");
