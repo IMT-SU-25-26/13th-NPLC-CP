@@ -103,6 +103,9 @@ export async function POST(request: NextRequest) {
       time?: number;
       memory?: number;
       status: Status;
+      compileOutput?: string | null;
+      stderr?: string | null;
+      stdout?: string | null;
     }> = [];
 
     for (const testCase of problem.testCases) {
@@ -151,30 +154,101 @@ export async function POST(request: NextRequest) {
 
       const statusId = result.status?.id || result.status_id || 0;
 
-      if (result.message) {
+      if (
+        result.message ||
+        result.compile_output ||
+        (result.stderr && statusId !== 3)
+      ) {
         console.error("Judge0 execution error:", {
           message: result.message,
+          compileOutput: result.compile_output,
+          stderr: result.stderr,
           statusId,
           token: result.token,
         });
-        throw new Error(`Judge0 execution error: ${result.message}`);
+
+        let errorStatus: Status = Status.INTERNAL_ERROR;
+        let errorMessage = result.message || "";
+
+        if (
+          result.message &&
+          (result.message.includes("language") ||
+            result.message.includes("Language"))
+        ) {
+          errorStatus = Status.INTERNAL_ERROR;
+          errorMessage = "Invalid language configuration";
+        } else if (
+          result.compile_output ||
+          (result.stderr && result.stderr.includes("SyntaxError"))
+        ) {
+          errorStatus = Status.COMPILATION_ERROR;
+          errorMessage =
+            result.compile_output ||
+            result.stderr ||
+            result.message ||
+            "Compilation error";
+        } else if (result.stderr && statusId >= 7 && statusId <= 12) {
+          errorStatus = mapJudge0Status(statusId);
+          errorMessage = result.stderr;
+        } else if (statusId === 6) {
+          errorStatus = Status.COMPILATION_ERROR;
+          errorMessage =
+            result.compile_output || result.message || "Compilation error";
+        }
+
+        await prisma.submission.update({
+          where: { id: submission.id },
+          data: {
+            status: errorStatus,
+            judge0Token: result.token,
+          },
+        });
+
+        return NextResponse.json({
+          submissionId: submission.id,
+          status: errorStatus,
+          testResults: [
+            {
+              passed: false,
+              status: errorStatus,
+              compileOutput: result.compile_output,
+              stderr: result.stderr,
+              stdout: result.stdout,
+            },
+          ],
+          passed: false,
+          error: errorMessage,
+          message: getStatusDescription(errorStatus),
+        });
       }
 
       const status = mapJudge0Status(statusId);
       const passed = statusId === 3;
 
+      let finalStatus = status;
+      if (
+        status === Status.INTERNAL_ERROR &&
+        (result.compile_output ||
+          (result.stderr && result.stderr.includes("SyntaxError")))
+      ) {
+        finalStatus = Status.COMPILATION_ERROR;
+      }
+
       testResults.push({
         passed,
         time: result.time ? parseFloat(result.time) : undefined,
         memory: result.memory ?? undefined,
-        status,
+        status: finalStatus,
+        compileOutput: result.compile_output,
+        stderr: result.stderr,
+        stdout: result.stdout,
       });
 
       if (!passed) {
         await prisma.submission.update({
           where: { id: submission.id },
           data: {
-            status,
+            status: finalStatus,
             time: result.time ? parseFloat(result.time) : undefined,
             memory: result.memory ?? undefined,
             judge0Token: result.token,
@@ -183,9 +257,13 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({
           submissionId: submission.id,
-          status,
+          status: finalStatus,
           testResults,
           passed: false,
+          compileOutput: result.compile_output,
+          stderr: result.stderr,
+          stdout: result.stdout,
+          message: getStatusDescription(finalStatus),
         });
       }
     }
@@ -304,5 +382,40 @@ function mapJudge0Status(statusId: number): Status {
       return Status.EXEC_FORMAT_ERROR;
     default:
       return Status.INTERNAL_ERROR;
+  }
+}
+
+function getStatusDescription(status: Status): string {
+  switch (status) {
+    case Status.PENDING:
+      return "Submission is pending";
+    case Status.PROCESSING:
+      return "Code is being processed";
+    case Status.ACCEPTED:
+      return "Accepted - All test cases passed";
+    case Status.WRONG_ANSWER:
+      return "Wrong Answer - Output doesn't match expected result";
+    case Status.TIME_LIMIT_EXCEEDED:
+      return "Time Limit Exceeded - Code took too long to execute";
+    case Status.COMPILATION_ERROR:
+      return "Compilation Error - Code failed to compile";
+    case Status.RUNTIME_ERROR_SIGSEGV:
+      return "Runtime Error - Segmentation fault (invalid memory access)";
+    case Status.RUNTIME_ERROR_SIGXFSZ:
+      return "Runtime Error - File size limit exceeded";
+    case Status.RUNTIME_ERROR_SIGFPE:
+      return "Runtime Error - Floating point exception";
+    case Status.RUNTIME_ERROR_SIGABRT:
+      return "Runtime Error - Program aborted";
+    case Status.RUNTIME_ERROR_NZEC:
+      return "Runtime Error - Non-zero exit code";
+    case Status.RUNTIME_ERROR_OTHER:
+      return "Runtime Error - Other runtime error";
+    case Status.INTERNAL_ERROR:
+      return "Internal Error - System error occurred";
+    case Status.EXEC_FORMAT_ERROR:
+      return "Execution Format Error - Invalid executable format";
+    default:
+      return "Unknown status";
   }
 }

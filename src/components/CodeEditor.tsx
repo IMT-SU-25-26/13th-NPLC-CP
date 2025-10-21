@@ -13,23 +13,29 @@ interface TestResult {
   time?: number;
   memory?: number;
   status: string;
+  compileOutput?: string | null;
+  stderr?: string | null;
+  stdout?: string | null;
 }
 
-interface SubmissionResult {
+interface SubmissionResponse {
   submissionId: string;
   status: string;
-  passed: boolean;
   testResults: TestResult[];
+  passed: boolean;
+  error?: string;
+  message?: string;
+  compileOutput?: string | null;
+  stderr?: string | null;
+  stdout?: string | null;
   time?: number;
   memory?: number;
 }
 
 const LANGUAGES = [
   { id: "cpp", name: "C++" },
-  // { id: "c", name: "C" },
   { id: "python", name: "Python" },
   { id: "java", name: "Java" },
-  // { id: "javascript", name: "JavaScript" },
 ];
 
 export default function CodeEditor({
@@ -39,10 +45,7 @@ export default function CodeEditor({
   const [sourceCode, setSourceCode] = useState("");
   const [language, setLanguage] = useState("cpp");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [result, setResult] = useState<SubmissionResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
-  // refs to sync scrolling between textarea and line numbers
   const lineNumbersRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -53,8 +56,6 @@ export default function CodeEditor({
     }
 
     setIsSubmitting(true);
-    setError(null);
-    setResult(null);
 
     try {
       const response = await fetch("/api/submit", {
@@ -70,15 +71,18 @@ export default function CodeEditor({
       });
 
       const contentType = response.headers.get("content-type") || "";
-      let data: any;
+      let data: SubmissionResponse;
 
       if (contentType.includes("application/json")) {
         try {
           data = await response.json();
-        } catch (err) {
+        } catch {
           const text = await response.text();
           throw new Error(
-            `Invalid JSON response from server. Response preview: ${text.slice(0, 1000)}`
+            `Invalid JSON response from server. Response preview: ${text.slice(
+              0,
+              1000
+            )}`
           );
         }
       } else {
@@ -91,36 +95,36 @@ export default function CodeEditor({
       }
 
       if (!response.ok) {
-        throw new Error(data?.error || `Submission failed (${response.status})`);
+        throw new Error(
+          data?.error || `Submission failed (${response.status})`
+        );
       }
 
-      setResult(data);
-
-      // Show success toast
       if (data.passed) {
         toast.success("All Test Cases Passed!", {
           description: `Status: ${data.status}`,
         });
       } else {
-        // Get failed test cases
         const failedTests = data.testResults
-          .map((test: TestResult, index: number) => 
+          .map((test: TestResult, index: number) =>
             !test.passed ? `Test Case ${index + 1}: ${test.status}` : null
           )
           .filter(Boolean);
 
         const failedDescription = failedTests.slice(0, 3).join("\n");
-        const moreTests = failedTests.length > 3 ? `\n...and ${failedTests.length - 3} more` : "";
+        const moreTests =
+          failedTests.length > 3
+            ? `\n...and ${failedTests.length - 3} more`
+            : "";
 
         toast.error("Some Test Cases Failed", {
           description: `${failedDescription}${moreTests}`,
-          duration: 6000, // Lebih lama untuk membaca info
+          duration: 6000,
         });
       }
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "An error occurred";
-      setError(errorMessage);
       toast.error("Submission Failed", {
         description: errorMessage,
       });
@@ -128,18 +132,6 @@ export default function CodeEditor({
       setIsSubmitting(false);
     }
   };
-
-  // const getStatusColor = (status: string) => {
-  //   if (status === "ACCEPTED") return "text-green-600";
-  //   if (status.includes("ERROR")) return "text-red-600";
-  //   if (status === "WRONG_ANSWER") return "text-orange-600";
-  //   if (status === "TIME_LIMIT_EXCEEDED") return "text-yellow-600";
-  //   return "text-gray-600";
-  // };
-
-  // const formatStatus = (status: string) => {
-  //   return status.replace(/_/g, " ");
-  // };
 
   return (
     <div className="w-full max-w-6xl mx-auto h-full min-h-0 flex flex-col space-y-4">
@@ -165,19 +157,17 @@ export default function CodeEditor({
           </select>
         </div>
 
-        {/* Code Editor - with fixed height */}
+        {/* Code Editor */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-white mb-2">
             Your Code
           </label>
           <div className="relative bg-[#18182a]/80 border-2 border-[#FCF551] rounded-none text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] overflow-hidden h-[400px]">
             <div className="flex h-full">
-              {/* Line Numbers - fixed height with overflow hidden */}
               <div
                 ref={lineNumbersRef}
                 tabIndex={-1}
                 onWheel={(e) => {
-                  // Prevent scrollbar on line numbers and forward wheel events to textarea
                   e.preventDefault();
                   if (textareaRef.current) {
                     textareaRef.current.scrollTop += e.deltaY;
@@ -187,23 +177,29 @@ export default function CodeEditor({
                 style={{ lineHeight: "1.5rem" }}
               >
                 <div className="px-3">
-                  {Array.from({ length: Math.max(sourceCode.split('\n').length, 1) }, (_, i) => (
-                    <div key={i} className="h-[1.5rem] text-right pr-2 min-w-[30px]">
-                      {i + 1}
-                    </div>
-                  ))}
+                  {Array.from(
+                    { length: Math.max(sourceCode.split("\n").length, 1) },
+                    (_, i) => (
+                      <div
+                        key={i}
+                        className="h-[1.5rem] text-right pr-2 min-w-[30px]"
+                      >
+                        {i + 1}
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
 
-              {/* Code Editor - fixed height with overflow auto */}
+              {/* Code Editor */}
               <textarea
                 ref={textareaRef}
                 value={sourceCode}
                 onChange={(e) => setSourceCode(e.target.value)}
                 onScroll={(e) => {
-                  // Sync scroll position to line numbers
                   if (lineNumbersRef.current) {
-                    lineNumbersRef.current.scrollTop = e.currentTarget.scrollTop;
+                    lineNumbersRef.current.scrollTop =
+                      e.currentTarget.scrollTop;
                   }
                 }}
                 wrap="off"
@@ -224,9 +220,6 @@ export default function CodeEditor({
         >
           {isSubmitting ? "Submitting..." : "Submit Code"}
         </button>
-
-        {/* Results Section - Optional, untuk detail tambahan */}
-        
       </div>
     </div>
   );
