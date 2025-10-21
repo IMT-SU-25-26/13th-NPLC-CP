@@ -5,7 +5,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { verifySync } from "@node-rs/bcrypt";
 import { Role } from "@prisma/client";
 
-// const appPath = "/cp";
+const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 1 day
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -65,35 +65,6 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  // cookies: {
-  //   sessionToken: {
-  //     name: `__Secure-cp-app.session-token`,
-  //     options: {
-  //       path: appPath,
-  //       httpOnly: true,
-  //       sameSite: "lax",
-  //       secure: process.env.NODE_ENV === "production",
-  //     },
-  //   },
-  //   callbackUrl: {
-  //     name: `__Secure-cp-app.callback-url`,
-  //     options: {
-  //       path: appPath,
-  //       httpOnly: true,
-  //       sameSite: "lax",
-  //       secure: process.env.NODE_ENV === "production",
-  //     },
-  //   },
-  //   csrfToken: {
-  //     name: `__Secure-cp-app.csrf-token`,
-  //     options: {
-  //       path: appPath,
-  //       httpOnly: true,
-  //       sameSite: "lax",
-  //       secure: process.env.NODE_ENV === "production",
-  //     },
-  //   },
-  // },
   session: {
     strategy: "jwt",
   },
@@ -119,7 +90,19 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.role = user.role;
         token.activeSessionToken = user.activeSessionToken;
+        token.sessionCreatedAt = Date.now();
       } else {
+        if (
+          token.sessionCreatedAt &&
+          Date.now() - token.sessionCreatedAt > SESSION_TIMEOUT
+        ) {
+          await prisma.user.update({
+            where: { id: token.id as string },
+            data: { activeSessionToken: null },
+          });
+          throw new Error("Session expired due to inactivity");
+        }
+
         const dbUser = await prisma.user.findUnique({
           where: { id: token.id as string },
         });
