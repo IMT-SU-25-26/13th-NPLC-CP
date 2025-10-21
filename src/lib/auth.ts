@@ -96,19 +96,7 @@ export const authOptions: NextAuthOptions = {
           token.sessionCreatedAt &&
           Date.now() - token.sessionCreatedAt > SESSION_TIMEOUT
         ) {
-          await prisma.user.update({
-            where: { id: token.id as string },
-            data: { activeSessionToken: null },
-          });
           throw new Error("Session expired due to inactivity");
-        }
-
-        const dbUser = await prisma.user.findUnique({
-          where: { id: token.id as string },
-        });
-
-        if (!dbUser || dbUser.activeSessionToken !== token.activeSessionToken) {
-          throw new Error("Invalid session");
         }
       }
 
