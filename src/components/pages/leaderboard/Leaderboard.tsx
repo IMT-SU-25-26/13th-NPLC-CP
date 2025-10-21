@@ -26,7 +26,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export default function Leaderboard() {
   const [currentPage, setCurrentPage] = useState(1);
   const { mutate } = useSWRConfig();
-  const limit = 10;
+  const limit = 5;
   const { data, error, isLoading } = useSWR<LeaderboardResponse>(
     `/api/leaderboard?page=${currentPage}&limit=${limit}`,
     fetcher,
