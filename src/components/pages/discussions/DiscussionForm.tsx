@@ -79,7 +79,7 @@ export default function DiscussionForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full px-6 py-3 bg-[#FCF551] text-[#18182a] font-bold rounded-md hover:bg-[#FCF551]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-6 py-3 bg-[#FCF551] text-[#18182a] font-bold rounded-md cursor-pointer hover:bg-[#FCF551]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? "Posting..." : "Post Question"}
         </button>

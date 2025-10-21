@@ -216,7 +216,7 @@ export default function CodeEditor({
         <button
           onClick={handleSubmit}
           disabled={isSubmitting}
-          className="w-full bg-[#d92fa3] text-white py-3 px-6 rounded-md hover:bg-[#752088] disabled:bg-gray-400 disabled:cursor-not-allowed font-medium transition-colors"
+          className="w-full bg-[#d92fa3] text-white py-3 px-6 rounded-md cursor-pointer hover:bg-[#752088] disabled:bg-gray-400 disabled:cursor-not-allowed font-medium transition-colors"
         >
           {isSubmitting ? "Submitting..." : "Submit Code"}
         </button>

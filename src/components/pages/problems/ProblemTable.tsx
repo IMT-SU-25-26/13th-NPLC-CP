@@ -1,7 +1,9 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
 import { getDifficultyBorderColor } from "@/utils/difficulty";
 import { Problem } from "@/types/db";
+import { useRouter } from "next/navigation";
 
 interface ProblemsPageProps {
   problems: Problem[];
@@ -12,6 +14,8 @@ export default function ProblemTable({
   problems,
   solvedProblemIds,
 }: ProblemsPageProps) {
+  const router = useRouter();
+
   return (
     <div className="z-[5] w-full justify-start items-center flex flex-col">
       <div className="max-w-[75%] flex flex-col justify-center items-center gap-4 w-full mx-auto py-8 px-4">
@@ -50,14 +54,10 @@ export default function ProblemTable({
                 <tr
                   key={problem.id}
                   className="hover:bg-[#222251] hover:cursor-pointer transition-colors relative"
+                  onClick={() => router.push(`/problems/${problem.slug}`)}
                 >
-                  <td className="px-6 py-4 whitespace-nowrap text-center">
-                    <Link
-                      href={`/problems/${problem.slug}`}
-                      className="text-[#75E8F0] hover:underline [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-semibold text-base"
-                    >
-                      {problem.title}
-                    </Link>
+                  <td className="px-6 py-4 whitespace-nowrap text-center text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-semibold text-base">
+                    {problem.title}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center">
                     <span

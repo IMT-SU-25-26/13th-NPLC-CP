@@ -1,11 +1,15 @@
-import Link from "next/link";
+"use client";
+
 import { FullDiscussion } from "@/types/db";
+import { useRouter } from "next/navigation";
 
 interface DiscussionsPageProps {
   discussions: FullDiscussion[];
 }
 
 export default function DiscussionTable({ discussions }: DiscussionsPageProps) {
+  const router = useRouter();
+  
   return (
     <div className="relative z-[50] w-full text-md md:text-2xl bg-[#18182a]/80 border-2 border-[#FCF551] rounded-lg text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] overflow-x-auto whitespace-nowrap">
       <table className="min-w-full divide-y divide-[#FCF551] w-full ">
@@ -33,14 +37,10 @@ export default function DiscussionTable({ discussions }: DiscussionsPageProps) {
             <tr
               key={discussion.id}
               className="hover:bg-[#222251] hover:cursor-pointer transition-colors relative"
+              onClick={() => router.push(`/discussions/${discussion.id}`)}
             >
-              <td className="px-6 py-4 max-w-[30ch] truncate">
-                <Link
-                  href={`/discussions/${discussion.id}`}
-                  className="text-[#75E8F0] hover:underline [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-semibold text-base"
-                >
-                  {discussion.title}
-                </Link>
+              <td className="px-6 py-4 max-w-[30ch] truncate text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-semibold text-base">
+                {discussion.title}
               </td>
               <td className="px-6 py-4 max-w-[40ch] truncate text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-medium">
                 {discussion.question}
