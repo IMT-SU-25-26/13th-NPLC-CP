@@ -18,7 +18,7 @@ export default function NavigationBar() {
           <div className="flex items-center gap-6">
             <Link href="/">
               <Image
-                src="/NPLCLogo.webp"
+                src="/logos/Logo.webp"
                 className="pointer-events-auto cursor-target w-[4rem] sm:w-[4rem] md:w-[6rem] lg:w-[8rem] xl:w-[12rem]"
                 alt="Logo"
                 width={200}
