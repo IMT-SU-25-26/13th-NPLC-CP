@@ -1,6 +1,9 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { revalidatePath } from "next/cache";
 
 export async function getAllDiscussions() {
   const discussion = await prisma.discussion.findMany({
@@ -31,41 +34,52 @@ export async function getDiscussionById(id: string) {
   return discussion;
 }
 
-export async function createDiscussion(data: {
-  question: string;
-  authorId: string;
-}) {
-  const discussion = await prisma.discussion.create({
+export async function createDiscussion(formData: FormData) {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  const title = formData.get("title") as string;
+  const question = formData.get("question") as string;
+
+  if (!title || !question) {
+    throw new Error("Title and question are required");
+  }
+
+  await prisma.discussion.create({
     data: {
-      question: data.question,
-      authorId: data.authorId,
-    },
-    include: {
-      author: true,
-      replies: {
-        include: {
-          author: true,
-        },
-      },
+      title,
+      question,
+      authorId: session.user.id,
     },
   });
-  return discussion;
+
+  revalidatePath("/discussions");
 }
 
-export async function createReply(data: {
-  content: string;
-  discussionId: string;
-  authorId: string;
-}) {
-  const reply = await prisma.reply.create({
+export async function createReply(formData: FormData) {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  const content = formData.get("content") as string;
+  const discussionId = formData.get("discussionId") as string;
+
+  if (!content || !discussionId) {
+    throw new Error("Content and discussionId are required");
+  }
+
+  await prisma.reply.create({
     data: {
-      content: data.content,
-      discussionId: data.discussionId,
-      authorId: data.authorId,
-    },
-    include: {
-      author: true,
+      content,
+      discussionId,
+      authorId: session.user.id,
     },
   });
-  return reply;
+
+  revalidatePath(`/discussions/${discussionId}`);
 }

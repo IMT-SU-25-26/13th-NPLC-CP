@@ -136,6 +136,7 @@ model Contest {
 
 model Discussion {
   id       String @id @default(cuid())
+  title    String @db.Text
   question String @db.Text
   authorId String
 

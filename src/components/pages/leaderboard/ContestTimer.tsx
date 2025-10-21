@@ -23,7 +23,7 @@ const TimerBox = ({ value, label }: { value: string; label: string }) => (
 
 export default function ContestTimer() {
   const { data, error } = useSWR<ContestState>(
-    "/api/admin/contest/status",
+    "/api/contest/status",
     fetcher
   );
   const { mutate } = useSWRConfig();
@@ -35,7 +35,7 @@ export default function ContestTimer() {
     });
     const channel = pusherClient.subscribe("contest-channel");
     channel.bind("status-update", (updatedContest: ContestState) => {
-      mutate("/api/admin/contest/status", updatedContest, false);
+      mutate("/api/contest/status", updatedContest, false);
     });
 
     return () => {

@@ -1,7 +1,8 @@
 import "./globals.css";
-import Provider from "@/components/SessionProvider";
-import NavigationBar from "@/components/NavigationBar";
-import { Toaster } from "sonner";
+import Toast from "@/components/layout/Toast";
+import Background from "@/components/layout/Background";
+import Provider from "@/components/layout/SessionProvider";
+import NavigationBar from "@/components/layout/NavigationBar";
 import { Geist, Geist_Mono } from "next/font/google";
 import type { Metadata } from "next";
 
@@ -28,33 +29,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen relative bg-gradient-to-b from-[#111114] to-[#090A1E] overflow-x-hidden`}
       >
+        <Background />
         <Provider>
           <NavigationBar />
-          {children}
-          <Toaster
-            position="bottom-right"
-            theme="dark"
-            richColors
-            duration={5000}
-            toastOptions={{
-              classNames: {
-                toast: "h-24 text-lg gap-4",
-                title: "text-lg font-bold",
-                description: "text-base",
-                actionButton: "text-base",
-                cancelButton: "text-base",
-                icon: "size-8 flex-shrink-0",
-              },
-              style: {
-                fontSize: "16px",
-                padding: "20px",
-                borderRadius: "8px",
-                gap: "16px",
-              },
-            }}
-          />
+          <div className="min-h-screen flex flex-col justify-center items-center">
+            {children}
+          </div>
+          <Toast />
         </Provider>
       </body>
     </html>

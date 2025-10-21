@@ -1,27 +1,8 @@
-import LoginForm from "@/components/LoginForm";
-import Link from "next/link";
+import LoginForm from "@/components/pages/auth/LoginForm";
 import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { Suspense } from "react";
-
-function AlreadyLoggedIn() {
-  return (
-    <>
-      <h2 className="text-center text-4xl font-extrabold text-white">
-        Already Logged In
-      </h2>
-      <p className="text-center text-lg text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,0.5)]">
-        You are already authenticated!
-      </p>
-      <Link
-        href="/problems"
-        className="text-[#FCF551] hover:text-[#c651fc] underline transition-colors duration-200"
-      >
-        Go to Problems
-      </Link>
-    </>
-  );
-}
 
 function LoginLoading() {
   return (
@@ -38,7 +19,7 @@ export default async function LoginPage() {
   const session = await getServerSession(authOptions);
 
   if (session) {
-    return <AlreadyLoggedIn />;
+    redirect("/problems");
   }
 
   return (

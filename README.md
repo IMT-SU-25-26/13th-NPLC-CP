@@ -1,5 +1,4 @@
 # Import Order Rules
-
 1. Default Imports First
 2. Named Imports Second
 3. Components First
@@ -14,7 +13,6 @@
 2. Use relative imports for local files within the same directory or nearby directories.
 
 # Code Structure Rules
-
 1. Components must start with a capital letter.
 2. Components must be exported as default exports (export default function ComponentName).
 3. Files must use .tsx extension for React components.

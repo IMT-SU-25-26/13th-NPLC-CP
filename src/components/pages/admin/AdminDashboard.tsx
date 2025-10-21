@@ -4,6 +4,14 @@ import useSWR from "swr";
 import Pusher from "pusher-js";
 import { useState, useEffect } from "react";
 import { Contest, ContestStatus } from "@prisma/client";
+import {
+  startContest,
+  pauseContest,
+  resumeContest,
+  freezeContest,
+  unfreezeContest,
+  endContest,
+} from "@/services/contest";
 
 type Action = "start" | "pause" | "resume" | "freeze" | "unfreeze" | "end";
 
@@ -15,7 +23,7 @@ export default function AdminDashboard({
   initialContestState: Contest | null;
 }) {
   const { data: contest, mutate } = useSWR<Contest>(
-    "/api/admin/contest/status",
+    "/api/contest/status",
     fetcher,
     {
       fallbackData: initialContestState || undefined,
@@ -47,15 +55,27 @@ export default function AdminDashboard({
     setIsLoading(action);
     setError(null);
     try {
-      const res = await fetch("/api/admin/contest", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action, durationHours }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to perform action");
+      switch (action) {
+        case "start":
+          const formData = new FormData();
+          formData.append("durationHours", durationHours.toString());
+          await startContest(formData);
+          break;
+        case "pause":
+          await pauseContest();
+          break;
+        case "resume":
+          await resumeContest();
+          break;
+        case "freeze":
+          await freezeContest();
+          break;
+        case "unfreeze":
+          await unfreezeContest();
+          break;
+        case "end":
+          await endContest();
+          break;
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -67,7 +87,7 @@ export default function AdminDashboard({
   const status = contest?.status || ContestStatus.PENDING;
 
   return (
-    <div className="max-w-lg mx-auto bg-gray-800 p-6 rounded-lg border border-gray-700">
+    <div className="max-w-2xl mx-auto bg-gray-800 p-6 rounded-lg border border-gray-700">
       <div className="mb-6 text-center">
         <p className="text-gray-400">Current Status:</p>
         <p className="text-2xl font-bold text-purple-400">{status}</p>
