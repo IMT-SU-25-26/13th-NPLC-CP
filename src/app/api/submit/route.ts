@@ -7,7 +7,7 @@ import { Status } from "@prisma/client";
 
 const LANGUAGE_MAP: Record<string, number> = {
   cpp: 54, // C++ (GCC 9.2.0)
-  java: 62, // Java (OpenJDK 13.0.1)
+  java: 62, // Java (OpenJDK 13.0.1)  
   python: 71, // Python (3.8.1)
 };
 

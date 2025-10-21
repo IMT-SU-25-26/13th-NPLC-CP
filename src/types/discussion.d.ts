@@ -1,14 +1,22 @@
 import { User } from "./user";
-export interface discussion {
+
+export interface Discussion {
     id: string;
-    title: string;
-    content: string;
+    question: string;
+    authorId: string;
     createdAt: Date;
-    user: User;
-    replies?: Array<{
-        id: string;
-        user: User;
-        content?: string;
-        createdAt?: Date;
-    }>;
+    updatedAt: Date;
+    author: User;
+    replies: Reply[];
+}
+
+export interface Reply {
+    id: string;
+    content: string;
+    authorId: string;
+    discussionId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    author: User;
+    discussion: Discussion;
 }

@@ -1,29 +1,10 @@
-// import { getAllDiscussions } from "@/lib/discussion";
 import Image from "next/image";
 import Link from "next/link";
+import { getAllDiscussions } from "@/services/discussion";
 
 export default async function DiscussionsPage() {
-  // const discussions = await getAllDiscussions;
-  const discussion = [
-    {
-      id: 1,
-      title: "How to solve problem A?",
-      content: "aku ga tau cara membuat ini gimana",
-      createdAt: new Date(),
-      user: {
-        name: "Obie",
-        role: "USER",
-      },
-      replies: [
-        {
-          user: {
-            name: "Bryan",
-            role: "ADMIN",
-          },
-        },
-      ],
-    },
-  ];
+  const discussions = await getAllDiscussions();
+
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-[#111114] to-[#090A1E] flex flex-col justify-center items-center overflow-hidden">
       <div className="z-[3] absolute w-full h-full bg-gradient-to-b from-[0%] from-[#2a0335]/50 via-[43%] via-[#6258D1]/50 to-[100%] to-[#00CBC1]/50 blue-light-top"></div>
@@ -75,32 +56,30 @@ export default async function DiscussionsPage() {
                 </tr>
               </thead>
               <tbody className="bg-[#18182a]/80 divide-y divide-[#FCF551]/75">
-                {discussion.map((d) => (
+                {discussions.map((discussion) => (
                   <tr
-                    key={d.id}
+                    key={discussion.id}
                     className="hover:bg-[#222251] hover:cursor-pointer transition-colors relative"
                   >
-                    {/* full-row link */}
-
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Link
-                        href={`/discussions/${d.id}`}
+                        href={`/discussions/${discussion.id}`}
                         className="text-[#75E8F0] hover:underline [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-semibold text-base"
                       >
-                        {d.title}
+                        {discussion.question}
                       </Link>
                     </td>
                     <td className="px-6 py-4 max-w-[40ch] truncate text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-medium">
-                      {d.content}
+                      {discussion.question}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-medium">
-                      {new Date(d.createdAt).toLocaleString()}
+                      {new Date(discussion.createdAt).toLocaleString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-medium">
-                      {d.user?.name ?? "Unknown"}
+                      {discussion.author?.name ?? "Unknown"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-[#75E8F0] [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-medium">
-                      {d.replies.length ?? "Unknown"}
+                      {discussion.replies?.length ?? 0}
                     </td>
                   </tr>
                 ))}

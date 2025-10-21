@@ -8,30 +8,12 @@ const languages = [
   { id: 62, name: "Java (OpenJDK 13.0.1)" },
 ];
 
-const users = [
+const adminUsers = [
   {
     name: "Admin User",
     email: "admin@example.com",
     password: "admin123456",
     role: Role.ADMIN,
-  },
-  {
-    name: "Test User",
-    email: "user@example.com",
-    password: "user123456",
-    role: Role.USER,
-  },
-  {
-    name: "Another User",
-    email: "another@example.com",
-    password: "another123456",
-    role: Role.USER,
-  },
-  {
-    name: "Yet Another User",
-    email: "yetanother@example.com",
-    password: "yetanother123456",
-    role: Role.USER,
   },
   {
     name: "Bryan",
@@ -240,43 +222,65 @@ Explanation: F(4) = F(3) + F(2) = 2 + 1 = 3.
   },
 ];
 
+async function seedUser(userData: {
+  name: string;
+  email: string;
+  password: string;
+  role: Role;
+}) {
+  const existingUser = await prisma.user.findUnique({
+    where: { email: userData.email },
+  });
+  if (!existingUser) {
+    try {
+      const hashedPassword = hashSync(userData.password, 10);
+
+      await prisma.user.create({
+        data: {
+          email: userData.email,
+          name: userData.name,
+          password: hashedPassword,
+          role: userData.role,
+          emailVerified: new Date(),
+        },
+      });
+
+      console.log(`Created user: ${userData.name} (${userData.email})`);
+    } catch (error) {
+      console.error(`Failed to create user ${userData.email}:`, error);
+    }
+  } else {
+    console.log(`User already exists: ${userData.name} (${userData.email})`);
+  }
+}
+
 export async function main() {
   // Seed users
   console.log("\n" + "=".repeat(50));
   console.log("Seeding users...");
   console.log("=".repeat(50));
-  for (const userData of users) {
-    const existingUser = await prisma.user.findUnique({
-      where: { email: userData.email },
-    });
 
-    if (!existingUser) {
-      try {
-        const hashedPassword = hashSync(userData.password, 10);
+  // Seed admin users
+  for (const userData of adminUsers) {
+    await seedUser(userData);
+  }
 
-        await prisma.user.create({
-          data: {
-            email: userData.email,
-            name: userData.name,
-            password: hashedPassword,
-            role: userData.role,
-            emailVerified: new Date(),
-          },
-        });
-
-        console.log(`Created user: ${userData.name} (${userData.email})`);
-      } catch (error) {
-        console.error(`Failed to create user ${userData.email}:`, error);
-      }
-    } else {
-      console.log(`User already exists: ${userData.name} (${userData.email})`);
-    }
+  // Seed generic users
+  for (let i = 1; i <= 40; i++) {
+    const userData = {
+      name: `Test User ${i}`,
+      email: `user${i}@example.com`,
+      password: "password123",
+      role: Role.USER,
+    };
+    await seedUser(userData);
   }
 
   // Seed languages
   console.log("\n" + "=".repeat(50));
   console.log("Seeding languages...");
   console.log("=".repeat(50));
+
   for (const lang of languages) {
     const language = await prisma.language.upsert({
       where: { id: lang.id },
@@ -293,6 +297,7 @@ export async function main() {
   console.log("\n" + "=".repeat(50));
   console.log("Seeding problems and test cases...");
   console.log("=".repeat(50));
+
   for (const problemData of problems) {
     const { testCases, ...problemInfo } = problemData;
 
@@ -316,7 +321,9 @@ export async function main() {
   console.log("\n" + "=".repeat(50));
   console.log("Seeding contest...");
   console.log("=".repeat(50));
+
   const existingContest = await prisma.contest.findFirst();
+
   if (!existingContest) {
     const contest = await prisma.contest.create({
       data: {
