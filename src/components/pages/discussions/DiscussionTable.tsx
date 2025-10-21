@@ -34,7 +34,7 @@ export default function DiscussionTable({ discussions }: DiscussionsPageProps) {
               key={discussion.id}
               className="hover:bg-[#222251] hover:cursor-pointer transition-colors relative"
             >
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-6 py-4 max-w-[30ch] truncate">
                 <Link
                   href={`/discussions/${discussion.id}`}
                   className="text-[#75E8F0] hover:underline [text-shadow:_0_0_20px_rgba(0,255,255,1)] font-semibold text-base"

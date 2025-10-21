@@ -5,7 +5,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { verifySync } from "@node-rs/bcrypt";
 import { Role } from "@prisma/client";
 
-const appPath = "/cp";
+// const appPath = "/cp";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -65,35 +65,35 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  cookies: {
-    sessionToken: {
-      name: `__Secure-cp-app.session-token`,
-      options: {
-        path: appPath,
-        httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-      },
-    },
-    callbackUrl: {
-      name: `__Secure-cp-app.callback-url`,
-      options: {
-        path: appPath,
-        httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-      },
-    },
-    csrfToken: {
-      name: `__Secure-cp-app.csrf-token`,
-      options: {
-        path: appPath,
-        httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-      },
-    },
-  },
+  // cookies: {
+  //   sessionToken: {
+  //     name: `__Secure-cp-app.session-token`,
+  //     options: {
+  //       path: appPath,
+  //       httpOnly: true,
+  //       sameSite: "lax",
+  //       secure: process.env.NODE_ENV === "production",
+  //     },
+  //   },
+  //   callbackUrl: {
+  //     name: `__Secure-cp-app.callback-url`,
+  //     options: {
+  //       path: appPath,
+  //       httpOnly: true,
+  //       sameSite: "lax",
+  //       secure: process.env.NODE_ENV === "production",
+  //     },
+  //   },
+  //   csrfToken: {
+  //     name: `__Secure-cp-app.csrf-token`,
+  //     options: {
+  //       path: appPath,
+  //       httpOnly: true,
+  //       sameSite: "lax",
+  //       secure: process.env.NODE_ENV === "production",
+  //     },
+  //   },
+  // },
   session: {
     strategy: "jwt",
   },
