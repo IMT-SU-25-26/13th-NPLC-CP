@@ -30,6 +30,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   submissions Submission[]
+  discussions Discussion[]
 }
 
 // COMPETITIVE PROGRAMMING MODELS
@@ -71,6 +72,7 @@ model Problem {
 
   testCases   TestCase[]
   submissions Submission[]
+  discussions Discussion[]
 }
 
 model TestCase {
@@ -130,4 +132,18 @@ model Contest {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Discussion {
+  id        String @id @default(cuid())
+  question  String @db.Text
+  answer    String @db.Text
+  authorId  String
+  problemId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author  User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
 }
