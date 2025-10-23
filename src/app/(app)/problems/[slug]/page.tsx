@@ -26,15 +26,16 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
   });
 
   const attemptedSubmission = session
-  ? await prisma.submission.findFirst({
-      where: {
-        userId: session.user.id,
-        status: "ACCEPTED",
-        problemId: problem?.id,
-      },
-      select: { sourceCode: true },
-    })
-  : null;
+    ? await prisma.submission.findFirst({
+        where: {
+          userId: session.user.id,
+          status: "ACCEPTED",
+          problemId: problem?.id,
+        },
+        orderBy: { createdAt: "desc" },
+        select: { sourceCode: true },
+      })
+    : null;
   const attemptedCode: string = attemptedSubmission?.sourceCode ?? "";
 
   if (!problem) {

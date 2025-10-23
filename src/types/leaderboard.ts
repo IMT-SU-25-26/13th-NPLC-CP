@@ -12,5 +12,6 @@ export interface LeaderboardResponse {
     page: number;
     limit: number;
     totalPages: number;
+    isFrozen?: boolean;
   };
 }

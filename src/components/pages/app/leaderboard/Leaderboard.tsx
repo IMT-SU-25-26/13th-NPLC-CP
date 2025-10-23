@@ -10,26 +10,43 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Leaderboard() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [isFrozen, setIsFrozen] = useState(false);
   const { mutate } = useSWRConfig();
   const limit = 5;
   const { data, error, isLoading } = useSWR<LeaderboardResponse>(
     `/api/leaderboard?page=${currentPage}&limit=${limit}`,
     fetcher,
-    { refreshInterval: 5000 }
+    { 
+      refreshInterval: isFrozen ? 0 : 5000 
+    }
   );
 
   useEffect(() => {
+    if (data?.meta?.isFrozen !== undefined) {
+      setIsFrozen(data.meta.isFrozen);
+    }
+  }, [data]);
+
+  useEffect(() => {
     pusherClient.subscribe("leaderboard-channel");
+    pusherClient.subscribe("contest-channel");
 
     const handleLeaderboardUpdate = () => {
       mutate(`/api/leaderboard?page=${currentPage}&limit=${limit}`);
     };
 
+    const handleContestStatusUpdate = () => {
+      mutate(`/api/leaderboard?page=${currentPage}&limit=${limit}`);
+    };
+
     pusherClient.bind("leaderboard-update", handleLeaderboardUpdate);
+    pusherClient.bind("status-update", handleContestStatusUpdate);
 
     return () => {
       pusherClient.unbind("leaderboard-update", handleLeaderboardUpdate);
+      pusherClient.unbind("status-update", handleContestStatusUpdate);
       pusherClient.unsubscribe("leaderboard-channel");
+      pusherClient.unsubscribe("contest-channel");
     };
   }, [mutate, currentPage]);
 
@@ -74,6 +91,13 @@ export default function Leaderboard() {
         className="w-[40%] h-auto"
         alt="nplc-leaderboard"
       ></Image>
+      {isFrozen && (
+        <div className="w-full text-center py-2 bg-yellow-500/20 border-2 border-yellow-500 rounded-none">
+          <span className="text-yellow-500 font-bold text-lg [text-shadow:_0_0_20px_rgba(255,255,0,0.8)]">
+            LEADERBOARD FROZEN
+          </span>
+        </div>
+      )}
       <div className="w-full flex flex-col gap-4">
         <div className="w-full text-md md:text-2xl bg-[#18182a]/80 border-2 border-[#FCF551] rounded-none text-[#75E8F0] overflow-x-auto">
           {!users || users.length === 0 ? (

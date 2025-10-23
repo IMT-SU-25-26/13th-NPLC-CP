@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { ContestStatus } from "@prisma/client";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -17,8 +18,35 @@ export async function GET(req: NextRequest) {
   const skip = (page - 1) * limit;
 
   try {
+    const contest = await prisma.contest.findFirst();
+    
+    if (contest?.status === ContestStatus.FROZEN && contest.frozenLeaderboard) {
+      const frozenData = contest.frozenLeaderboard as Array<{
+        id: string;
+        name: string | null;
+        score: number;
+      }>;
+      
+      const paginatedData = frozenData.slice(skip, skip + limit);
+      const totalUsers = frozenData.length;
+      
+      return NextResponse.json({
+        data: paginatedData,
+        meta: {
+          totalUsers,
+          page,
+          limit,
+          totalPages: Math.ceil(totalUsers / limit),
+          isFrozen: true,
+        },
+      });
+    }
+
     const [users, totalUsers] = await prisma.$transaction([
       prisma.user.findMany({
+        where: {
+          role: "USER",
+        },
         orderBy: [{ score: "desc" }, { lastSubmission: "asc" }],
         skip: skip,
         take: limit,
@@ -28,7 +56,11 @@ export async function GET(req: NextRequest) {
           score: true,
         },
       }),
-      prisma.user.count(),
+      prisma.user.count({
+        where: {
+          role: "USER",
+        },
+      }),
     ]);
 
     return NextResponse.json({
@@ -38,6 +70,7 @@ export async function GET(req: NextRequest) {
         page,
         limit,
         totalPages: Math.ceil(totalUsers / limit),
+        isFrozen: false,
       },
     });
   } catch (error) {

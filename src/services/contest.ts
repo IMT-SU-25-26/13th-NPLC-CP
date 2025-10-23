@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { getAuthSession } from "@/lib/session";
 import { pusherServer } from "@/lib/pusher";
 import { revalidatePath } from "next/cache";
-import { ContestStatus } from "@prisma/client";
+import { ContestStatus, Prisma } from "@prisma/client";
 
 export async function getActiveContest() {
   const contest = await prisma.contest.findFirst();
@@ -143,9 +143,25 @@ export async function freezeContest() {
     throw new Error("Contest is not running.");
   }
 
+  // Capture the current leaderboard state
+  const frozenLeaderboard = await prisma.user.findMany({
+    where: {
+      role: "USER",
+    },
+    orderBy: [{ score: "desc" }, { lastSubmission: "asc" }],
+    select: {
+      id: true,
+      name: true,
+      score: true,
+    },
+  });
+
   const updatedContest = await prisma.contest.update({
     where: { id: contest.id },
-    data: { status: ContestStatus.FROZEN },
+    data: {
+      status: ContestStatus.FROZEN,
+      frozenLeaderboard: frozenLeaderboard,
+    },
   });
 
   await pusherServer.trigger(
@@ -172,7 +188,10 @@ export async function unfreezeContest() {
 
   const updatedContest = await prisma.contest.update({
     where: { id: contest.id },
-    data: { status: ContestStatus.RUNNING },
+    data: {
+      status: ContestStatus.RUNNING,
+      frozenLeaderboard: Prisma.JsonNull,
+    },
   });
 
   await pusherServer.trigger(

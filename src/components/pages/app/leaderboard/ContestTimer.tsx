@@ -108,11 +108,6 @@ export default function ContestTimer() {
         <span className="text-xl font-bold">{statusMessage}</span>
       ) : (
         <div className="flex items-center gap-3">
-          {data?.status === "FROZEN" && (
-            <span className="text-xl font-bold text-cyan-400 animate-pulse">
-              FROZEN
-            </span>
-          )}
           <TimerBox value={h} label="HRS" />
           <span>:</span>
           <TimerBox value={m} label="MIN" />
