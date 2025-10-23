@@ -38,6 +38,7 @@
    - Page-specific components go in `components/pages/` organized by route structure
    - All components must start with a capital letter
    - Components must be exported as default exports
+   - Every page must use a component and must be imported exclusively in its respective `page.tsx` file to maintain clear separation of concerns and prevent unnecessary re-renders
 
 2. **Service Layer**
 
