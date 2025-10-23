@@ -1,10 +1,10 @@
 "use client";
 
+import LogoutConfirmation from "@/components/pages/auth/LogoutConfirmation";
 import Link from "next/link";
 import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import { useState } from "react";
-import LogoutConfirmation from "@/components/pages/auth/LogoutConfirmation";
 
 export default function NavigationBar() {
   const { data: session, status } = useSession();
