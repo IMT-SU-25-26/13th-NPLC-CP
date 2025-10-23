@@ -98,7 +98,9 @@
 8. **prisma/**
    - Database schema and migrations.
 9. **public/**
-   - Static assets (images, fonts, etc.).# Problem Solving Example
+   - Static assets (images, fonts, etc.).
+   
+# Problem Solving Example
 
 ## Example: Fibonacci Problem
 
