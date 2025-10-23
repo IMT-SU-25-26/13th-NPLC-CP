@@ -19,21 +19,33 @@ jobs:
           key: ${{ secrets.VPS_DEPLOY_KEY }}
           port: ${{ vars.VPS_PORT}}
           script: |
+            echo "Loading NVM..."
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+            echo ""
+            echo "Navigating to project directory..."
             cd ${{ vars.PROJECT_PATH }}
 
+            echo ""
             echo "Pulling latest changes..."
             git pull origin main
 
+            echo "" 
             echo "Installing dependencies..."
             pnpm install
 
+            echo ""
             echo "Running database migrations..."
             pnpm prisma:deploy
 
+            echo ""
             echo "Building new version..."
             pnpm build
 
+            echo ""
             echo "Reloading application..."
             pm2 reload ${{ vars.PM2_APP_NAME }}
 
+            echo ""
             echo "Deployment finished."
