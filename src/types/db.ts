@@ -5,9 +5,10 @@ import {
   Discussion,
   Reply,
   Contest,
+  Submission,
 } from "@prisma/client";
 
-export type { User, Problem, Discussion, Reply, Contest };
+export type { User, Problem, Discussion, Reply, Contest, Submission };
 
 // Discussion
 export const DiscussionInclude = Prisma.validator<Prisma.DiscussionInclude>()({
@@ -39,4 +40,13 @@ export const ProblemInclude = Prisma.validator<Prisma.ProblemInclude>()({
 
 export type FullProblem = Prisma.ProblemGetPayload<{
   include: typeof ProblemInclude;
+}>;
+
+// Submission
+export const SubmissionInclude = Prisma.validator<Prisma.SubmissionInclude>()({
+  user: true,
+});
+
+export type FullSubmission = Prisma.SubmissionGetPayload<{
+  include: typeof SubmissionInclude;
 }>;
