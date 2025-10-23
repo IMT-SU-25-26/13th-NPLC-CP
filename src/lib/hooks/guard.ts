@@ -32,7 +32,7 @@ export function useContestGuard() {
   useEffect(() => {
     const channel = pusherClient.subscribe("contest-channel");
 
-    channel.bind("status-update", (data: any) => {
+    channel.bind("status-update", (data: ContestStatusData) => {
       mutate({
         status: data.status,
         startTime: data.startTime,
