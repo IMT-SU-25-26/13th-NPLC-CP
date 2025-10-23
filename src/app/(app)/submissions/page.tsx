@@ -16,8 +16,6 @@ interface Submission {
 }
 
 export default function SubmissionHistoryPage() {
-  const params = useParams();
-  const slug = params.slug as string;
 
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);

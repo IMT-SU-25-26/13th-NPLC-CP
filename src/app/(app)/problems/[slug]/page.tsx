@@ -46,7 +46,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch justify-start">
       {/* Problem Description */}
-      <ProblemDetail problem={problem} slug={slug} />
+      <ProblemDetail problem={problem} />
 
       {/* Code Editor */}
       <div className="lg:sticky lg:top-8">
