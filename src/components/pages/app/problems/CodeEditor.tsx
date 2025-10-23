@@ -1,9 +1,9 @@
 "use client";
 
+import { TestResult } from "@/types/submission";
+import { submitCode } from "@/services/submission";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
-import { SubmissionResponse, TestResult } from "@/types/submission";
-import { submitCode } from "@/services/submission";
 
 interface SubmitCodeProps {
   problemId: string;
