@@ -1,71 +1,53 @@
+"use server";
+
 import prisma from "@/lib/prisma";
 import { pusherServer } from "@/lib/pusher";
 import { getAuthSession } from "@/lib/session";
-import { NextRequest, NextResponse } from "next/server";
+import { getLanguageId } from "@/utils/language";
+import {
+  SubmitCodeParams,
+  SubmitCodeResult,
+  Judge0Submission,
+  Judge0Response,
+} from "@/types/submission";
 import { Status } from "@prisma/client";
 
-const LANGUAGE_MAP: Record<string, number> = {
-  cpp: 54, // C++ (GCC 9.2.0)
-  java: 62, // Java (OpenJDK 13.0.1)
-  python: 71, // Python (3.8.1)
-};
-
-interface Judge0Submission {
-  source_code: string;
-  language_id: number;
-  stdin?: string;
-  expected_output?: string;
-  cpu_time_limit?: string;
-  memory_limit?: number;
-}
-
-interface Judge0Response {
-  token: string;
-  status?: {
-    id: number;
-    description: string;
-  };
-  status_id?: number;
-  stdout?: string | null;
-  stderr?: string | null;
-  compile_output?: string | null;
-  time?: string | null;
-  memory?: number | null;
-  message?: string;
-}
-
-export async function POST(request: NextRequest) {
+export async function submitCode({
+  problemId,
+  sourceCode,
+  language,
+}: SubmitCodeParams): Promise<SubmitCodeResult> {
   try {
     if (!process.env.JUDGE0_API_URL) {
       console.error("JUDGE0_API_URL is not configured");
-      return NextResponse.json(
-        { error: "Judge0 service is not configured" },
-        { status: 500 }
-      );
+      return {
+        success: false,
+        error: "Judge0 service is not configured",
+      };
     }
 
     const session = await getAuthSession();
 
     if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return {
+        success: false,
+        error: "Unauthorized",
+      };
     }
-
-    const body = await request.json();
-    const { problemId, sourceCode, language } = body;
 
     if (!problemId || !sourceCode || !language) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+      return {
+        success: false,
+        error: "Missing required fields",
+      };
     }
 
-    const languageId = LANGUAGE_MAP[language.toLowerCase()];
+    const languageId = getLanguageId(language);
     if (!languageId) {
-      return NextResponse.json(
-        { error: "Unsupported language" },
-        { status: 400 }
-      );
+      return {
+        success: false,
+        error: "Unsupported language",
+      };
     }
 
     const problem = await prisma.problem.findUnique({
@@ -74,11 +56,10 @@ export async function POST(request: NextRequest) {
     });
 
     if (!problem) {
-      return NextResponse.json({ error: "Problem not found" }, { status: 404 });
-    }
-
-    if (!problem) {
-      return NextResponse.json({ error: "Problem not found" }, { status: 404 });
+      return {
+        success: false,
+        error: "Problem not found",
+      };
     }
 
     await prisma.language.upsert({
@@ -203,7 +184,8 @@ export async function POST(request: NextRequest) {
           },
         });
 
-        return NextResponse.json({
+        return {
+          success: false,
           submissionId: submission.id,
           status: errorStatus,
           testResults: [
@@ -218,7 +200,7 @@ export async function POST(request: NextRequest) {
           passed: false,
           error: errorMessage,
           message: getStatusDescription(errorStatus),
-        });
+        };
       }
 
       const status = mapJudge0Status(statusId);
@@ -254,7 +236,8 @@ export async function POST(request: NextRequest) {
           },
         });
 
-        return NextResponse.json({
+        return {
+          success: false,
           submissionId: submission.id,
           status: finalStatus,
           testResults,
@@ -263,7 +246,7 @@ export async function POST(request: NextRequest) {
           stderr: result.stderr,
           stdout: result.stdout,
           message: getStatusDescription(finalStatus),
-        });
+        };
       }
     }
 
@@ -326,27 +309,26 @@ export async function POST(request: NextRequest) {
       );
     });
 
-    return NextResponse.json({
+    return {
+      success: true,
       submissionId: submission.id,
       status: Status.ACCEPTED,
       testResults,
       passed: true,
       time: avgTime,
       memory: maxMemory,
-    });
+    };
   } catch (error) {
     console.error("Submission error:", error);
 
     const errorMessage =
       error instanceof Error ? error.message : "Internal server error";
 
-    return NextResponse.json(
-      {
-        error: "Submission processing failed",
-        details: errorMessage,
-      },
-      { status: 500 }
-    );
+    return {
+      success: false,
+      error: "Submission processing failed",
+      message: errorMessage,
+    };
   }
 }
 

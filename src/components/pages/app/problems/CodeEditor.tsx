@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { SubmissionResponse, TestResult } from "@/types/submission";
+import { submitCode } from "@/services/submission";
 
 interface SubmitCodeProps {
   problemId: string;
@@ -23,7 +24,6 @@ export default function CodeEditor({ problemId, attemptedCode }: SubmitCodeProps
   const lineNumbersRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  // Fill in attempted code if available
   useEffect(() => {
     if (attemptedCode) {
       setSourceCode(attemptedCode);
@@ -39,46 +39,14 @@ export default function CodeEditor({ problemId, attemptedCode }: SubmitCodeProps
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          problemId,
-          sourceCode,
-          language,
-        }),
+      const data = await submitCode({
+        problemId,
+        sourceCode,
+        language,
       });
 
-      const contentType = response.headers.get("content-type") || "";
-      let data: SubmissionResponse;
-
-      if (contentType.includes("application/json")) {
-        try {
-          data = await response.json();
-        } catch {
-          const text = await response.text();
-          throw new Error(
-            `Invalid JSON response from server. Response preview: ${text.slice(
-              0,
-              1000
-            )}`
-          );
-        }
-      } else {
-        const text = await response.text();
-        throw new Error(
-          `Server returned non-JSON response (content-type: ${contentType}). Preview: ${text
-            .replace(/\s+/g, " ")
-            .slice(0, 1000)}`
-        );
-      }
-
-      if (!response.ok) {
-        throw new Error(
-          data?.error || `Submission failed (${response.status})`
-        );
+      if (!data.success) {
+        throw new Error(data.error || "Submission failed");
       }
 
       if (data.passed) {
@@ -86,11 +54,12 @@ export default function CodeEditor({ problemId, attemptedCode }: SubmitCodeProps
           description: `Status: ${data.status}`,
         });
       } else {
-        const failedTests = data.testResults
-          .map((test: TestResult, index: number) =>
-            !test.passed ? `Test Case ${index + 1}: ${test.status}` : null
-          )
-          .filter(Boolean);
+        const failedTests =
+          data.testResults
+            ?.map((test: TestResult, index: number) =>
+              !test.passed ? `Test Case ${index + 1}: ${test.status}` : null
+            )
+            .filter(Boolean) || [];
 
         const failedDescription = failedTests.slice(0, 3).join("\n");
         const moreTests =

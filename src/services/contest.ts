@@ -230,14 +230,3 @@ export async function endContest() {
   );
   revalidatePath("/admin");
 }
-
-export async function getContestStatus() {
-  const contest = await getActiveContest();
-
-  return {
-    status: contest.status,
-    startTime: contest.startTime.toISOString(),
-    endTime: contest.endTime.toISOString(),
-    serverTime: new Date().toISOString(),
-  };
-}

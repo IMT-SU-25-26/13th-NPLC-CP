@@ -38,12 +38,6 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid password");
         }
 
-        if (user.activeSessionToken) {
-          throw new Error(
-            "This account is already logged in on another device. Please log out from the other device first."
-          );
-        }
-
         const sessionToken = createId();
 
         const updatedUser = await prisma.user.update({
@@ -70,6 +64,7 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/auth/login",
+    error: "/auth/login",
   },
   events: {
     async signOut({ token }) {
@@ -97,6 +92,22 @@ export const authOptions: NextAuthOptions = {
           Date.now() - token.sessionCreatedAt > SESSION_TIMEOUT
         ) {
           throw new Error("Session expired due to inactivity");
+        }
+
+        if (token.id && token.activeSessionToken) {
+          const currentUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            select: { activeSessionToken: true },
+          });
+
+          if (
+            !currentUser ||
+            currentUser.activeSessionToken !== token.activeSessionToken
+          ) {
+            throw new Error(
+              "Session invalidated - logged in from another device"
+            );
+          }
         }
       }
 
