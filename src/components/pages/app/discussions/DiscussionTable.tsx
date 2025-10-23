@@ -3,11 +3,11 @@
 import { FullDiscussion } from "@/types/db";
 import { useRouter } from "next/navigation";
 
-interface DiscussionsPageProps {
+interface DiscussionsTableProps {
   discussions: FullDiscussion[];
 }
 
-export default function DiscussionTable({ discussions }: DiscussionsPageProps) {
+export default function DiscussionTable({ discussions }: DiscussionsTableProps) {
   const router = useRouter();
 
   return (

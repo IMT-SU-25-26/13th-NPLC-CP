@@ -96,122 +96,7 @@ export default function NavigationBar() {
                     </svg>
                   </span>
                 </Link>
-                <Link
-                  className="cursor-target pointer-events-auto w-full flex items-center"
-                  href="/problems"
-                >
-                  <span className="relative group inline-block">
-                    <svg
-                      width="240"
-                      height="68"
-                      viewBox="0 0 240 68"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-24 w-48"
-                    >
-                      <path
-                        d="M237.725 1.38439V19.2555L232.944 22.4684L232.434 22.8111V48.1608L232.943 48.5035L238.412 52.1852V66.6559H23.3789L1.40137 51.8785V1.38439H237.725Z"
-                        fill="none"
-                        fillOpacity="100"
-                        stroke="#FCF551"
-                        strokeWidth="2.30885"
-                        className="transition-colors duration-200 group-hover:fill-[#fcf551] group-hover:fill-opacity-100"
-                      />
-                      <foreignObject x="0" y="0" width="100%" height="100%">
-                        <div
-                          style={{
-                            backdropFilter: "blur(76.96px)",
-                            clipPath: "url(#bgblur_0_784_144_clip_path)",
-                            height: "100%",
-                            width: "100%",
-                          }}
-                        ></div>
-                      </foreignObject>
-                      <path
-                        d="M237.724 1.38428V19.2554L232.944 22.4683L232.433 22.811V48.1606L232.943 48.5034L238.412 52.1851V66.6558H23.3787L1.40112 51.8784V1.38428H237.724Z"
-                        fill="transparent"
-                        stroke="#FCF551"
-                        strokeWidth="2.30885"
-                        className="transition-colors duration-200 group-hover:fill-[#fcf551]"
-                      />
-                      <text
-                        x="120"
-                        y="38"
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        fill="currentColor"
-                        fontSize="18"
-                        fontWeight="500"
-                        className="text-[#FCF551] text-xl sm:text-xl md:text-2xl group-hover:text-[#661108]"
-                      >
-                        Problems
-                      </text>
-                      <defs>
-                        <clipPath id="bgblur_0_784_144_clip_path">
-                          <path d="M237.724 1.38428V19.2554L232.944 22.4683L232.433 22.811V48.1606L232.943 48.5034L238.412 52.1851V66.6558H23.3787L1.40112 51.8784V1.38428H237.724Z" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </span>
-                </Link>
-                <Link
-                  href={`/submissions`}
-                  className="cursor-target pointer-events-auto w-full flex items-center"
-                >
-                  <span className="relative group inline-block">
-                    <svg
-                      width="240"
-                      height="68"
-                      viewBox="0 0 240 68"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-24 sm:w-48"
-                    >
-                      <path
-                        d="M237.725 1.38439V19.2555L232.944 22.4684L232.434 22.8111V48.1608L232.943 48.5035L238.412 52.1852V66.6559H23.3789L1.40137 51.8785V1.38439H237.725Z"
-                        fill="none"
-                        fillOpacity="100"
-                        stroke="#FCF551"
-                        strokeWidth="2.30885"
-                        className="transition-colors duration-200 group-hover:fill-[#fcf551] group-hover:fill-opacity-100"
-                      />
-                      <foreignObject x="0" y="0" width="100%" height="100%">
-                        <div
-                          style={{
-                            backdropFilter: "blur(76.96px)",
-                            clipPath: "url(#bgblur_0_784_144_clip_path)",
-                            height: "100%",
-                            width: "100%",
-                          }}
-                        ></div>
-                      </foreignObject>
-                      <path
-                        d="M237.724 1.38428V19.2554L232.944 22.4683L232.433 22.811V48.1606L232.943 48.5034L238.412 52.1851V66.6558H23.3787L1.40112 51.8784V1.38428H237.724Z"
-                        fill="transparent"
-                        stroke="#FCF551"
-                        strokeWidth="2.30885"
-                        className="transition-colors duration-200 group-hover:fill-[#fcf551]"
-                      />
-                      <text
-                        x="120"
-                        y="38"
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        fill="currentColor"
-                        fontSize="18"
-                        fontWeight="500"
-                        className="text-[#FCF551] text-xl sm:text-xl md:text-2xl group-hover:text-[#661108]"
-                      >
-                        Submissions
-                      </text>
-                      <defs>
-                        <clipPath id="bgblur_0_784_144_clip_path">
-                          <path d="M237.724 1.38428V19.2554L232.944 22.4683L232.433 22.811V48.1606L232.943 48.5034L238.412 52.1851V66.6558H23.3787L1.40112 51.8784V1.38428H237.724Z" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </span>
-                </Link>
+
                 <Link
                   className="cursor-target pointer-events-auto w-full flex items-center"
                   href="/leaderboard"
@@ -270,6 +155,125 @@ export default function NavigationBar() {
                     </svg>
                   </span>
                 </Link>
+
+                <Link
+                  className="cursor-target pointer-events-auto w-full flex items-center"
+                  href="/problems"
+                >
+                  <span className="relative group inline-block">
+                    <svg
+                      width="240"
+                      height="68"
+                      viewBox="0 0 240 68"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-48"
+                    >
+                      <path
+                        d="M237.725 1.38439V19.2555L232.944 22.4684L232.434 22.8111V48.1608L232.943 48.5035L238.412 52.1852V66.6559H23.3789L1.40137 51.8785V1.38439H237.725Z"
+                        fill="none"
+                        fillOpacity="100"
+                        stroke="#FCF551"
+                        strokeWidth="2.30885"
+                        className="transition-colors duration-200 group-hover:fill-[#fcf551] group-hover:fill-opacity-100"
+                      />
+                      <foreignObject x="0" y="0" width="100%" height="100%">
+                        <div
+                          style={{
+                            backdropFilter: "blur(76.96px)",
+                            clipPath: "url(#bgblur_0_784_144_clip_path)",
+                            height: "100%",
+                            width: "100%",
+                          }}
+                        ></div>
+                      </foreignObject>
+                      <path
+                        d="M237.724 1.38428V19.2554L232.944 22.4683L232.433 22.811V48.1606L232.943 48.5034L238.412 52.1851V66.6558H23.3787L1.40112 51.8784V1.38428H237.724Z"
+                        fill="transparent"
+                        stroke="#FCF551"
+                        strokeWidth="2.30885"
+                        className="transition-colors duration-200 group-hover:fill-[#fcf551]"
+                      />
+                      <text
+                        x="120"
+                        y="38"
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fill="currentColor"
+                        fontSize="18"
+                        fontWeight="500"
+                        className="text-[#FCF551] text-xl sm:text-xl md:text-2xl group-hover:text-[#661108]"
+                      >
+                        Problems
+                      </text>
+                      <defs>
+                        <clipPath id="bgblur_0_784_144_clip_path">
+                          <path d="M237.724 1.38428V19.2554L232.944 22.4683L232.433 22.811V48.1606L232.943 48.5034L238.412 52.1851V66.6558H23.3787L1.40112 51.8784V1.38428H237.724Z" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </span>
+                </Link>
+
+                <Link
+                  href={`/submissions`}
+                  className="cursor-target pointer-events-auto w-full flex items-center"
+                >
+                  <span className="relative group inline-block">
+                    <svg
+                      width="240"
+                      height="68"
+                      viewBox="0 0 240 68"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-24 sm:w-48"
+                    >
+                      <path
+                        d="M237.725 1.38439V19.2555L232.944 22.4684L232.434 22.8111V48.1608L232.943 48.5035L238.412 52.1852V66.6559H23.3789L1.40137 51.8785V1.38439H237.725Z"
+                        fill="none"
+                        fillOpacity="100"
+                        stroke="#FCF551"
+                        strokeWidth="2.30885"
+                        className="transition-colors duration-200 group-hover:fill-[#fcf551] group-hover:fill-opacity-100"
+                      />
+                      <foreignObject x="0" y="0" width="100%" height="100%">
+                        <div
+                          style={{
+                            backdropFilter: "blur(76.96px)",
+                            clipPath: "url(#bgblur_0_784_144_clip_path)",
+                            height: "100%",
+                            width: "100%",
+                          }}
+                        ></div>
+                      </foreignObject>
+                      <path
+                        d="M237.724 1.38428V19.2554L232.944 22.4683L232.433 22.811V48.1606L232.943 48.5034L238.412 52.1851V66.6558H23.3787L1.40112 51.8784V1.38428H237.724Z"
+                        fill="transparent"
+                        stroke="#FCF551"
+                        strokeWidth="2.30885"
+                        className="transition-colors duration-200 group-hover:fill-[#fcf551]"
+                      />
+                      <text
+                        x="120"
+                        y="38"
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fill="currentColor"
+                        fontSize="18"
+                        fontWeight="500"
+                        className="text-[#FCF551] text-xl sm:text-xl md:text-2xl group-hover:text-[#661108]"
+                      >
+                        Submissions
+                      </text>
+                      <defs>
+                        <clipPath id="bgblur_0_784_144_clip_path">
+                          <path d="M237.724 1.38428V19.2554L232.944 22.4683L232.433 22.811V48.1606L232.943 48.5034L238.412 52.1851V66.6558H23.3787L1.40112 51.8784V1.38428H237.724Z" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </span>
+                </Link>
+
                 <button
                   onClick={() => setShowLogoutConfirm(true)}
                   className="all-button cursor-target group flex 

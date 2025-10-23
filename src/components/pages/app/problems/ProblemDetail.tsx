@@ -1,6 +1,5 @@
 import { getDifficultyColor } from "@/utils/difficulty";
 import { FullProblem } from "@/types/db";
-import Link from "next/link";
 
 interface ProblemDetailProps {
   problem: FullProblem;

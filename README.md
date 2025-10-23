@@ -23,7 +23,6 @@
 2. **Relative Imports**
 
    - Use `./` for files in the same directory
-   - Use `../` for files in parent directories
    - Avoid deep relative imports when absolute imports are cleaner
 
 3. **Import Patterns**
@@ -38,6 +37,7 @@
    - Page-specific components go in `components/pages/` organized by route structure
    - All components must start with a capital letter
    - Components must be exported as default exports
+   - Every page must use a component and must be imported exclusively in its respective `page.tsx` file to maintain clear separation of concerns and prevent unnecessary re-renders
 
 2. **Service Layer**
 
@@ -99,6 +99,54 @@
    - Database schema and migrations.
 9. **public/**
    - Static assets (images, fonts, etc.).
+   
+# Component and Page Integration Example
+
+## How Components and Pages Work Together
+
+### Server Page (app/(app)/submissions/page.tsx)
+```tsx
+import SubmissionTable from "@/components/pages/app/submissions/SubmissionTable";
+import { getSubmissionByUserId } from "@/services/submissions";
+import { getCurrentUserId } from "@/lib/session";
+
+export default async function SubmissionPage() {
+  const userId = await getCurrentUserId();
+  const submissions = await getSubmissionByUserId(userId);
+
+  return (
+    <div className="container">
+      <SubmissionTable submissions={submissions} />
+    </div>
+  );
+}
+```
+
+### Client Component (components/pages/app/submissions/SubmissionTable.tsx)
+```tsx
+"use client";
+
+interface SubmissionTableProps {
+  submissions: FullSubmission[];
+}
+
+export default function SubmissionTable({ submissions }: SubmissionTableProps) {
+  return (
+    <table>
+      <tbody>
+        {submissions.map((submission) => (
+          <tr key={submission.id}>
+            <td>{submission.status}</td>
+            <td>{submission.time}ms</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+```
+
+**Key Pattern**: Server pages fetch data and pass it to client components via props. Components never import services directly.
    
 # Problem Solving Example
 
