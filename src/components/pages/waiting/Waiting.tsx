@@ -50,7 +50,7 @@ export default function Waiting({
 
         {/* Title */}
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#75E8F0] [text-shadow:_0_0_30px_rgba(0,255,255,1)] mb-4">
-          {isPending ? "Contest Has Not Started Yet" : "Contest Has Ended"}
+          {isPending ? "Contest Has Not Started Yet" : isPaused ? "Contest Is Paused" : "Contest Has Ended"}
         </h1>
 
         {/* Description */}
