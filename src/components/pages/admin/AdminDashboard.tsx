@@ -87,7 +87,7 @@ export default function AdminDashboard({
   const status = contest?.status || ContestStatus.PENDING;
 
   return (
-    <div className="max-w-2xl mx-auto bg-gray-800 p-6 rounded-lg border border-gray-700">
+    <div className="max-w-2xl mx-auto bg-gray-800 p-6 rounded-lg border border-gray-700 mb-8">
       <div className="mb-6 text-center">
         <p className="text-gray-400">Current Status:</p>
         <p className="text-2xl font-bold text-purple-400">{status}</p>

@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { SubmissionResponse, TestResult } from "@/types/submission";
 
 interface SubmitCodeProps {
   problemId: string;
+  attemptedCode?: string;
 }
 
 const LANGUAGES = [
@@ -14,13 +15,20 @@ const LANGUAGES = [
   { id: "java", name: "Java" },
 ];
 
-export default function CodeEditor({ problemId }: SubmitCodeProps) {
+export default function CodeEditor({ problemId, attemptedCode }: SubmitCodeProps) {
   const [sourceCode, setSourceCode] = useState("");
   const [language, setLanguage] = useState("cpp");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const lineNumbersRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  // Fill in attempted code if available
+  useEffect(() => {
+    if (attemptedCode) {
+      setSourceCode(attemptedCode);
+    }
+  }, [attemptedCode]);
 
   const handleSubmit = async () => {
     if (!sourceCode.trim()) {
