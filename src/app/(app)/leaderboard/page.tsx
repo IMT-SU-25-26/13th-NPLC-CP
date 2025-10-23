@@ -1,8 +1,11 @@
 import Leaderboard from "@/components/pages/app/leaderboard/Leaderboard";
-import { checkContest } from "@/lib/guard";
+import { ContestGuard } from "@/components/layout/ContestGuard";
 
 export default async function LeaderboardPage() {
-  await checkContest();
-
-  return <Leaderboard />;
+  return (
+    <>
+      <ContestGuard />
+      <Leaderboard />
+    </>
+  );
 }

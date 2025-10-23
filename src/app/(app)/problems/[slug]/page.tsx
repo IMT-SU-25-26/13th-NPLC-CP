@@ -1,7 +1,7 @@
 import ProblemDetail from "@/components/pages/app/problems/ProblemDetail";
 import CodeEditor from "@/components/pages/app/problems/CodeEditor";
+import { ContestGuard } from "@/components/layout/ContestGuard";
 import prisma from "@/lib/prisma";
-import { checkContest } from "@/lib/guard";
 import { notFound } from "next/navigation";
 import { getAuthSession } from "@/lib/session";
 
@@ -12,8 +12,6 @@ interface ProblemPageProps {
 }
 
 export default async function ProblemPage({ params }: ProblemPageProps) {
-  await checkContest();
-
   const session = await getAuthSession();
 
   const { slug } = await params;
@@ -44,14 +42,17 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch justify-start">
-      {/* Problem Description */}
-      <ProblemDetail problem={problem} />
+    <>
+      <ContestGuard />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch justify-start">
+        {/* Problem Description */}
+        <ProblemDetail problem={problem} />
 
-      {/* Code Editor */}
-      <div className="lg:sticky lg:top-8">
-        <CodeEditor problemId={problem.id} attemptedCode={attemptedCode} />
+        {/* Code Editor */}
+        <div className="lg:sticky lg:top-8">
+          <CodeEditor problemId={problem.id} attemptedCode={attemptedCode} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -1,11 +1,9 @@
 import ProblemTable from "@/components/pages/app/problems/ProblemTable";
+import { ContestGuard } from "@/components/layout/ContestGuard";
 import prisma from "@/lib/prisma";
 import { getAuthSession } from "@/lib/session";
-import { checkContest } from "@/lib/guard";
 
 export default async function ProblemsPage() {
-  await checkContest();
-
   const session = await getAuthSession();
 
   const problems = await prisma.problem.findMany({
@@ -34,6 +32,9 @@ export default async function ProblemsPage() {
     : [];
 
   return (
-    <ProblemTable problems={problems} solvedProblemIds={solvedProblemIds} />
+    <>
+      <ContestGuard />
+      <ProblemTable problems={problems} solvedProblemIds={solvedProblemIds} />
+    </>
   );
 }
