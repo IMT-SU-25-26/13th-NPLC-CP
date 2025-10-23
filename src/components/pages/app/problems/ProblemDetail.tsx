@@ -1,11 +1,13 @@
 import { getDifficultyColor } from "@/utils/difficulty";
 import { FullProblem } from "@/types/db";
+import Link from "next/link";
 
 interface ProblemDetailProps {
   problem: FullProblem;
+  slug: string;
 }
 
-export default function ProblemDetail({ problem }: ProblemDetailProps) {
+export default function ProblemDetail({ problem, slug }: ProblemDetailProps) {
   return (
     <div className="p-6 bg-black/15 backdrop-blur-2xl border-[#FCF551] border-3 shadow-white/15 shadow-2xl drop-shadow-2xl glow overflow-auto h-[calc(100vh-12rem)] lg:h-[calc(100vh-20rem)]">
       <div className="mb-6">
@@ -24,6 +26,9 @@ export default function ProblemDetail({ problem }: ProblemDetailProps) {
           <span className="text-sm text-white font-medium">
             💾 Memory: {problem.memoryLimit}MB
           </span>
+           <Link href={`/problems/${slug}/history`} className="text-sm bg- font-medium p-1 px-4 bg-black/15 backdrop-blur-2xl border-[#FCF551] rounded-2xl border-1 shadow-white/15 shadow-2xl drop-shadow-2xl glow hover:bg-yellow-400/10 transition-all text-[#75E8F0] overflow-x-auto whitespace-nowrap">
+            📜 Submission History
+          </Link>
         </div>
       </div>
 

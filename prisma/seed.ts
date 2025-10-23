@@ -29,6 +29,183 @@ const adminUsers = [
   },
 ];
 
+const teams = [
+  {
+    name: "Santuy",
+    email: "santuy@gmail.com",
+    password: "santuydulugasi",
+    role: Role.USER,
+  },
+  {
+    name: "belajar renang",
+    email: "belajarrenang@gmail.com",
+    password: "renangdulu",
+    role: Role.USER,
+  },
+  {
+    name: "We love furina",
+    email: "welovefurina@gmail.com",
+    password: "yeswedo",
+    role: Role.USER,
+  },
+  {
+    name: "Kentank",
+    email: "kentank@gmail.com",
+    password: "kentangenak",
+    role: Role.USER,
+  },
+  {
+    name: "COBAAN",
+    email: "cobaan@gmail.com",
+    password: "cobainaja",
+    role: Role.USER,
+  },
+  {
+    name: "Cicak Goreng",
+    email: "cicakgoreng@gmail.com",
+    password: "sepertinyaenak",
+    role: Role.USER,
+  },
+  {
+    name: "Yang Itu",
+    email: "yangitu@gmail.com",
+    password: "yangmanamana",
+    role: Role.USER,
+  },
+  {
+    name: "Healtrio",
+    email: "healtrio@gmail.com",
+    password: "htrio4ever",
+    role: Role.USER,
+  },
+  {
+    name: "Foklor",
+    email: "foklor@gmail.com",
+    password: "fokalor",
+    role: Role.USER,
+  },
+  {
+    name: "Revo",
+    email: "revo@gmail.com",
+    password: "renovo",
+    role: Role.USER,
+  },
+  {
+    name: "Six Seven",
+    email: "sixseven@gmail.com",
+    password: "sixseven67",
+    role: Role.USER,
+  },
+  {
+    name: "Baygon drinker",
+    email: "baygondrinker@gmail.com",
+    password: "bdrinker888",
+    role: Role.USER,
+  },
+  {
+    name: "DKV",
+    email: "dkv@gmail.com",
+    password: "vcdgacor",
+    role: Role.USER,
+  },
+  {
+    name: "InfoMatiKah",
+    email: "infomatikah@gmail.com",
+    password: "kurangtaubang",
+    role: Role.USER,
+  },
+  {
+    name: "buatmamibangga",
+    email: "buatmamibangga@gmail.com",
+    password: "smgtya888",
+    role: Role.USER,
+  },
+  {
+    name: "keler",
+    email: "keler@gmail.com",
+    password: "kelerkelar888",
+    role: Role.USER,
+  },
+  {
+    name: "ANOMALI",
+    email: "anomali@gmail.com",
+    password: "anomalijenisapa888",
+    role: Role.USER,
+  },
+  {
+    name: "El Smasa",
+    email: "elsmasa@gmail.com",
+    password: "elprimo888",
+    role: Role.USER,
+  },
+  {
+    name: "Binary Quantum Codex",
+    email: "binaryquantumcodex@gmail.com",
+    password: "bquantumc888",
+    role: Role.USER,
+  },
+  {
+    name: "LBozoN0skill",
+    email: "lbozon0skill@gmail.com",
+    password: "lbns888",
+    role: Role.USER,
+  },
+  {
+    name: "Neu2daysago",
+    email: "neu2daysago@gmail.com",
+    password: "ntwodays888",
+    role: Role.USER,
+  },
+  {
+    name: "Solo Maxxing",
+    email: "solomaxing@gmail.com",
+    password: "soloplayer888",
+    role: Role.USER,
+  },
+  {
+    name: "capcincincau",
+    email: "capcincincau@gmail.com",
+    password: "capucina888",
+    role: Role.USER,
+  },
+  {
+    name: "tehtarik3",
+    email: "tehtarik3@gmail.com",
+    password: "memangsedap888",
+    role: Role.USER,
+  },
+  {
+    name: "NeuralDuo",
+    email: "neuralDuo@gmail.com",
+    password: "duoneural888",
+    role: Role.USER,
+  },
+  {
+    name: "SYEKH WITO AL QOHOL",
+    email: "syekhwitoalqohol@gmail.com",
+    password: "swaq888",
+    role: Role.USER,
+  },
+  {
+    name: "ambaXINGG",
+    email: "ambaxingg@gmail.com",
+    password: "amxing888",
+    role: Role.USER,
+  },
+  {
+    name: "Anton teknik elektro",
+    email: "antonteknikelektro@gmail.com",
+    password: "antekel888",
+    role: Role.USER,
+  },
+  {
+    name: "ThreeG",
+    email: "threeg@gmail.com",
+    password: "thgee888",
+    role: Role.USER,
+  }
+]
+
 const problems = [
   {
     slug: "two-sum",
@@ -265,16 +442,20 @@ export async function main() {
     await seedUser(userData);
   }
 
-  // Seed generic users
-  for (let i = 1; i <= 40; i++) {
-    const userData = {
-      name: `Test User ${i}`,
-      email: `user${i}@example.com`,
-      password: "password123",
-      role: Role.USER,
-    };
+  for (const userData of teams) {
     await seedUser(userData);
   }
+
+  // Seed generic users
+  // for (let i = 1; i <= 40; i++) {
+  //   const userData = {
+  //     name: `Test User ${i}`,
+  //     email: `user${i}@example.com`,
+  //     password: "password123",
+  //     role: Role.USER,
+  //   };
+  //   await seedUser(userData);
+  // }
 
   // Seed languages
   console.log("\n" + "=".repeat(50));
