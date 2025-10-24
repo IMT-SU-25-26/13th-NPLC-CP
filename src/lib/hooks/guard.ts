@@ -2,7 +2,7 @@
 
 import useSWR from "swr";
 import { pusherClient } from "@/lib/pusher";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { ContestStatus, Role } from "@prisma/client";
@@ -18,6 +18,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function useContestGuard() {
   const router = useRouter();
+  const pathname = usePathname();
   const { data: session } = useSession();
 
   const { data: contestStatus, mutate } = useSWR<ContestStatusData>(
@@ -51,15 +52,19 @@ export function useContestGuard() {
       return;
     }
 
-    if (
-      contestStatus &&
-      (contestStatus.status === ContestStatus.PENDING ||
-        contestStatus.status === ContestStatus.FINISHED ||
-        contestStatus.status === ContestStatus.PAUSED)
-    ) {
+    if (!contestStatus) {
+      return;
+    }
+
+    const shouldRedirectToWaiting =
+      contestStatus.status === ContestStatus.PENDING ||
+      contestStatus.status === ContestStatus.FINISHED ||
+      contestStatus.status === ContestStatus.PAUSED;
+
+    if (shouldRedirectToWaiting && pathname !== "/waiting") {
       router.push("/waiting");
     }
-  }, [contestStatus, session, router]);
+  }, [contestStatus, session, router, pathname]);
 
   return { contestStatus };
 }
