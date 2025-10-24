@@ -2,6 +2,7 @@
 
 import { ContestStatus } from "@prisma/client";
 import { pusherClient } from "@/lib/pusher";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface WaitingProps {
@@ -11,6 +12,7 @@ interface WaitingProps {
 export default function Waiting({
   status = ContestStatus.PENDING,
 }: WaitingProps) {
+  const router = useRouter();
   const [currentStatus, setCurrentStatus] = useState(status);
 
   useEffect(() => {
@@ -20,6 +22,12 @@ export default function Waiting({
         const data = await response.json();
         if (data.status) {
           setCurrentStatus(data.status);
+          if (
+            data.status === ContestStatus.RUNNING ||
+            data.status === ContestStatus.FROZEN
+          ) {
+            router.push("/problems");
+          }
         }
       } catch (error) {
         console.error("Failed to fetch contest status:", error);
@@ -30,6 +38,12 @@ export default function Waiting({
 
     channel.bind("status-update", (data: { status: ContestStatus }) => {
       setCurrentStatus(data.status);
+      if (
+        data.status === ContestStatus.RUNNING ||
+        data.status === ContestStatus.FROZEN
+      ) {
+        router.push("/problems");
+      }
     });
 
     fetchStatus();
@@ -37,7 +51,7 @@ export default function Waiting({
     return () => {
       pusherClient.unsubscribe("contest-channel");
     };
-  }, []);
+  }, [router]);
 
   const isPending = currentStatus === ContestStatus.PENDING;
   const isPaused = currentStatus === ContestStatus.PAUSED;

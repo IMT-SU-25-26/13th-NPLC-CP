@@ -25,8 +25,9 @@ export function useContestGuard() {
     "/api/contest/status",
     fetcher,
     {
-      refreshInterval: 30000,
-      revalidateOnFocus: true,
+      refreshInterval: 5000,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: true,
     }
   );
 
@@ -48,11 +49,11 @@ export function useContestGuard() {
   }, [mutate]);
 
   useEffect(() => {
-    if (session?.user?.role === Role.ADMIN) {
-      return;
-    }
-
-    if (!contestStatus) {
+    if (
+      !contestStatus ||
+      session?.user?.role === Role.ADMIN ||
+      pathname === "/waiting"
+    ) {
       return;
     }
 
@@ -61,7 +62,7 @@ export function useContestGuard() {
       contestStatus.status === ContestStatus.FINISHED ||
       contestStatus.status === ContestStatus.PAUSED;
 
-    if (shouldRedirectToWaiting && pathname !== "/waiting") {
+    if (shouldRedirectToWaiting) {
       router.push("/waiting");
     }
   }, [contestStatus, session, router, pathname]);
