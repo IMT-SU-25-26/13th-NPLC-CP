@@ -93,7 +93,8 @@ export default function AdminDashboard({
         <p className="text-2xl font-bold text-purple-400">{status}</p>
       </div>
 
-      {status === ContestStatus.PENDING && (
+      {(status === ContestStatus.PENDING ||
+        status === ContestStatus.FINISHED) && (
         <div className="flex items-center gap-4 mb-4">
           <label htmlFor="duration" className="text-white">
             Duration (hours):
@@ -111,10 +112,13 @@ export default function AdminDashboard({
       <div className="grid grid-cols-2 gap-4">
         <button
           onClick={() => handleAction("start")}
-          disabled={isLoading !== null || status !== "PENDING"}
+          disabled={
+            isLoading !== null ||
+            (status !== "PENDING" && status !== "FINISHED")
+          }
           className="btn-admin bg-green-600 hover:bg-green-700 disabled:bg-gray-500"
         >
-          Start
+          {status === "FINISHED" ? "Restart" : "Start"}
         </button>
         <button
           onClick={() => handleAction("end")}
