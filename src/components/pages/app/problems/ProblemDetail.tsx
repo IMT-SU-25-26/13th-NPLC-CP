@@ -28,9 +28,10 @@ export default function ProblemDetail({ problem }: ProblemDetailProps) {
       </div>
 
       <div className="prose max-w-none">
-        <div className="whitespace-pre-wrap text-white leading-relaxed">
-          {problem.description}
-        </div>
+        <div
+          className="whitespace-pre-wrap text-white leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: problem.description }}
+        />
       </div>
 
       {problem.testCases.length > 0 && (
