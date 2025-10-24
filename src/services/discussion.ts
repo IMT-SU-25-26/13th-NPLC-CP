@@ -71,6 +71,7 @@ export async function createDiscussion(formData: FormData) {
   });
 
   revalidatePath("/discussions");
+  revalidatePath("/admin");
 }
 
 export async function createReply(formData: FormData) {
