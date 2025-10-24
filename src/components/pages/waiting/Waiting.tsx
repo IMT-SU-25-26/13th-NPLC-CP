@@ -14,6 +14,10 @@ export default function Waiting({
   const [currentStatus, setCurrentStatus] = useState(status);
 
   useEffect(() => {
+    setCurrentStatus(status);
+  }, [status]);
+
+  useEffect(() => {
     const channel = pusherClient.subscribe("contest-channel");
 
     channel.bind("status-update", (data: { status: ContestStatus }) => {
@@ -27,7 +31,7 @@ export default function Waiting({
 
   const isPending = currentStatus === ContestStatus.PENDING;
   const isPaused = currentStatus === ContestStatus.PAUSED;
-  const isRunning = currentStatus === ContestStatus.RUNNING;
+  const isFinished = currentStatus === ContestStatus.FINISHED;
 
   return (
     <div className="relative z-[100] w-[90%] md:w-[70%] lg:w-[60%] xl:w-[50%] backdrop-blur-2xl flex flex-col items-center justify-center gap-6 p-8 lg:p-12 rounded-xl shadow-lg border-8 border-[#FCF551]">
@@ -73,9 +77,9 @@ export default function Waiting({
             ? "Contest Has Not Started Yet"
             : isPaused
             ? "Contest Is Paused"
-            : isRunning
-            ? "Contest Is Running"
-            : "Contest Has Ended"}
+            : isFinished
+            ? "Contest Has Ended"
+            : "Contest Is Running"}
         </h1>
 
         {/* Description */}
@@ -84,9 +88,9 @@ export default function Waiting({
             ? "The competition hasn't begun yet. Please wait for the admin to start the contest."
             : isPaused
             ? "The competition is currently paused. Please wait for the admin to resume the contest."
-            : isRunning
-            ? "The competition is currently running. Please navigate to the problems page to continue, good luck!"
-            : "The competition has concluded. Thank you for participating!"}
+            : isFinished
+            ? "The competition has concluded. Thank you for participating!"
+            : "The competition is currently running. Please navigate to the problems page to continue, good luck!"}
         </p>
       </div>
     </div>
