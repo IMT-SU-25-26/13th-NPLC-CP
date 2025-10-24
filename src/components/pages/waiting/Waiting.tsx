@@ -1,4 +1,9 @@
+"use client";
+
 import { ContestStatus } from "@prisma/client";
+import { pusherClient } from "@/lib/pusher";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface WaitingProps {
   status?: ContestStatus;
@@ -7,9 +12,24 @@ interface WaitingProps {
 export default function Waiting({
   status = ContestStatus.PENDING,
 }: WaitingProps) {
-  const isPending = status === ContestStatus.PENDING;
-  const isPaused = status === ContestStatus.PAUSED;
-  const isRunning = status === ContestStatus.RUNNING;
+  const router = useRouter();
+  const [currentStatus, setCurrentStatus] = useState(status);
+
+  useEffect(() => {
+    const channel = pusherClient.subscribe("contest-channel");
+
+    channel.bind("status-update", (data: { status: ContestStatus }) => {
+      setCurrentStatus(data.status);
+    });
+
+    return () => {
+      pusherClient.unsubscribe("contest-channel");
+    };
+  }, []);
+
+  const isPending = currentStatus === ContestStatus.PENDING;
+  const isPaused = currentStatus === ContestStatus.PAUSED;
+  const isRunning = currentStatus === ContestStatus.RUNNING;
 
   return (
     <div className="relative z-[100] w-[90%] md:w-[70%] lg:w-[60%] xl:w-[50%] backdrop-blur-2xl flex flex-col items-center justify-center gap-6 p-8 lg:p-12 rounded-xl shadow-lg border-8 border-[#FCF551]">
