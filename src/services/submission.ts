@@ -131,6 +131,18 @@ export async function submitCode({
       }
 
       const result: Judge0Response = await submitResponse.json();
+      
+      console.log("Judge0 response:", {
+        status_id: result.status?.id || result.status_id,
+        status_description: result.status?.description,
+        message: result.message,
+        compile_output: result.compile_output,
+        stderr: result.stderr,
+        stdout: result.stdout,
+        time: result.time,
+        memory: result.memory,
+        token: result.token,
+      });
 
       const statusId = result.status?.id || result.status_id || 0;
 
@@ -185,7 +197,7 @@ export async function submitCode({
         });
 
         return {
-          success: false,
+          success: true, 
           submissionId: submission.id,
           status: errorStatus,
           testResults: [
@@ -225,6 +237,13 @@ export async function submitCode({
         stdout: result.stdout,
       });
 
+      const testCaseNumber = testResults.length;
+      console.log(`Test Case ${testCaseNumber}: ${passed ? '✓ PASSED' : '✗ FAILED'}`, {
+        status: finalStatus,
+        time: result.time,
+        memory: result.memory,
+      });
+
       if (!passed) {
         await prisma.submission.update({
           where: { id: submission.id },
@@ -237,7 +256,7 @@ export async function submitCode({
         });
 
         return {
-          success: false,
+          success: true, 
           submissionId: submission.id,
           status: finalStatus,
           testResults,
