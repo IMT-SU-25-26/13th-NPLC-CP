@@ -14,15 +14,25 @@ export default function Waiting({
   const [currentStatus, setCurrentStatus] = useState(status);
 
   useEffect(() => {
-    setCurrentStatus(status);
-  }, [status]);
+    const fetchStatus = async () => {
+      try {
+        const response = await fetch("/api/contest/status");
+        const data = await response.json();
+        if (data.status) {
+          setCurrentStatus(data.status);
+        }
+      } catch (error) {
+        console.error("Failed to fetch contest status:", error);
+      }
+    };
 
-  useEffect(() => {
     const channel = pusherClient.subscribe("contest-channel");
 
     channel.bind("status-update", (data: { status: ContestStatus }) => {
       setCurrentStatus(data.status);
     });
+
+    fetchStatus();
 
     return () => {
       pusherClient.unsubscribe("contest-channel");
