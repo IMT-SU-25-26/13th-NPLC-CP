@@ -6,6 +6,9 @@ import { revalidatePath } from "next/cache";
 
 export async function getAllDiscussions() {
   const discussion = await prisma.discussion.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
     include: {
       author: true,
       replies: {
@@ -70,8 +73,8 @@ export async function createDiscussion(formData: FormData) {
     },
   });
 
-  revalidatePath("/discussions");
   revalidatePath("/admin");
+  revalidatePath("/discussions");
 }
 
 export async function createReply(formData: FormData) {
@@ -96,5 +99,7 @@ export async function createReply(formData: FormData) {
     },
   });
 
+  revalidatePath("/admin");
+  revalidatePath("/discussions");
   revalidatePath(`/discussions/${discussionId}`);
 }

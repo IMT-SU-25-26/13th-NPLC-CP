@@ -5,16 +5,22 @@ import { FullDiscussion } from "@/types/db";
 interface DiscussionDetailProps {
   discussion: FullDiscussion;
   discussionId: string;
+  currentUser: {
+    id: string;
+    role: string;
+  };
 }
 
 export default function DiscussionDetail({
   discussion,
   discussionId,
+  currentUser,
 }: DiscussionDetailProps) {
-  const adminReplies =
-    discussion.replies?.filter((r) => r.author.role === "ADMIN") || [];
-  const userReplies =
-    discussion.replies?.filter((r) => r.author.role !== "ADMIN") || [];
+  const sortedReplies = discussion.replies?.sort((a, b) => {
+    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+  }) || [];
+
+  const canReply = currentUser.role === "ADMIN" || currentUser.id === discussion.authorId;
 
   return (
     <div className="z-[3] w-full justify-start items-center flex flex-col">
@@ -36,61 +42,65 @@ export default function DiscussionDetail({
                     : ""}
                 </span>
               </div>
-              <p className="text-sm text-[#DFF7FA] mt-1">
+              <p className="text-sm text-[#DFF7FA] mt-1 whitespace-pre-wrap">
                 {discussion.question}
               </p>
             </div>
 
-            {/* Admin Replies */}
-            {adminReplies.map((reply, idx) => (
-              <div
-                key={reply.id || idx}
-                className="flex flex-col gap-1 border-l-4 border-[#FCF551] pl-4 bg-[#23233a]/60 rounded"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-[#FCF551] text-sm md:text-base">
-                    Admin
-                  </span>
-                  <Link
-                    href="#"
-                    className="font-semibold text-white hover:underline text-sm md:text-base"
-                  >
-                    {reply.author?.name || "Admin"}
-                  </Link>
-                  <span className="text-[#B9C0FF] text-xs">
-                    •{" "}
-                    {reply.createdAt
-                      ? new Date(reply.createdAt).toLocaleString()
-                      : ""}
-                  </span>
+            {sortedReplies.map((reply, idx) => {
+              const isAdmin = reply.author.role === "ADMIN";
+              return isAdmin ? (
+                <div
+                  key={reply.id || idx}
+                  className="flex flex-col gap-1 border-l-4 border-[#FCF551] pl-4 bg-[#23233a]/60 rounded"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-[#FCF551] text-sm md:text-base">
+                      Admin
+                    </span>
+                    <Link
+                      href="#"
+                      className="font-semibold text-white hover:underline text-sm md:text-base"
+                    >
+                      {reply.author?.name || "Admin"}
+                    </Link>
+                    <span className="text-[#B9C0FF] text-xs">
+                      •{" "}
+                      {reply.createdAt
+                        ? new Date(reply.createdAt).toLocaleString()
+                        : ""}
+                    </span>
+                  </div>
+                  <p className="text-sm text-[#DFF7FA] mt-1 whitespace-pre-wrap">{reply.content}</p>
                 </div>
-                <p className="text-sm text-[#DFF7FA] mt-1">{reply.content}</p>
-              </div>
-            ))}
-
-            {/* User Replies */}
-            {userReplies.map((reply, idx) => (
-              <div key={reply.id || idx} className="flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <Link
-                    href="#"
-                    className="font-semibold text-white hover:underline text-sm md:text-base"
-                  >
-                    {reply.author?.name || "User"}
-                  </Link>
-                  <span className="text-[#B9C0FF] text-xs">
-                    •{" "}
-                    {reply.createdAt
-                      ? new Date(reply.createdAt).toLocaleString()
-                      : ""}
-                  </span>
+              ) : (
+                <div key={reply.id || idx} className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href="#"
+                      className="font-semibold text-white hover:underline text-sm md:text-base"
+                    >
+                      {reply.author?.name || "User"}
+                    </Link>
+                    <span className="text-[#B9C0FF] text-xs">
+                      •{" "}
+                      {reply.createdAt
+                        ? new Date(reply.createdAt).toLocaleString()
+                        : ""}
+                    </span>
+                  </div>
+                  <p className="text-sm text-[#DFF7FA] mt-1 whitespace-pre-wrap">{reply.content}</p>
                 </div>
-                <p className="text-sm text-[#DFF7FA] mt-1">{reply.content}</p>
-              </div>
-            ))}
+              );
+            })}
 
-            {/* Reply Input */}
-            <ReplyForm discussionId={discussionId} />
+            {canReply ? (
+              <ReplyForm discussionId={discussionId} />
+            ) : (
+              <div className="text-center text-sm text-[#9fb7bd] italic mt-2 p-3 bg-[#23233a]/40 rounded border border-[#3f3f61]">
+                Only the discussion author and admins can reply to this discussion.
+              </div>
+            )}
           </div>
         </div>
       </div>
