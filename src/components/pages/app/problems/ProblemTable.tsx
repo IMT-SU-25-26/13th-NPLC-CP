@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { getDifficultyBorderColor } from "@/utils/difficulty";
+import { getDifficultyBorderColor } from "@/lib/utils/difficulty";
 import { Problem } from "@/types/db";
 import { useRouter } from "next/navigation";
 

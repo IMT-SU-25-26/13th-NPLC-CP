@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createReply } from "@/services/discussion";
+import { createReply } from "@/lib/services/discussion";
 
 interface ReplyFormProps {
   discussionId: string;

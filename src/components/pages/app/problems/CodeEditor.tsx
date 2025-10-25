@@ -1,7 +1,7 @@
 "use client";
 
 import { TestResult } from "@/types/submission";
-import { submitCode } from "@/services/submission";
+import { submitCode } from "@/lib/services/submission";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 

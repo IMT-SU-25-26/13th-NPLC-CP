@@ -1,5 +1,5 @@
 import Waiting from "@/components/pages/waiting/Waiting";
-import { getActiveContest } from "@/services/contest";
+import { getActiveContest } from "@/lib/services/contest";
 import { ContestStatus } from "@prisma/client";
 
 export default async function WaitingPage() {

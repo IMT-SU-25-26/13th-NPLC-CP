@@ -1,5 +1,5 @@
 import DiscussionDetail from "@/components/pages/app/discussions/DiscussionDetail";
-import { getDiscussionById } from "@/services/discussion";
+import { getDiscussionById } from "@/lib/services/discussion";
 import { getCurrentUser } from "@/lib/session";
 
 interface DiscussionPageProps {

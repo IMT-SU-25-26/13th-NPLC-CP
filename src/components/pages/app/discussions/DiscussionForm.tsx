@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createDiscussion } from "@/services/discussion";
+import { createDiscussion } from "@/lib/services/discussion";
 
 export default function DiscussionForm() {
   const [title, setTitle] = useState("");

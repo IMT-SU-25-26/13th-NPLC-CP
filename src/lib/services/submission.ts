@@ -1,9 +1,9 @@
 "use server";
 
-import prisma from "@/lib/prisma";
-import { pusherServer } from "@/lib/pusher";
-import { getAuthSession } from "@/lib/session";
-import { getLanguageId } from "@/utils/language";
+import prisma from "@/lib/core/prisma";
+import { pusherServer } from "@/lib/core/pusher";
+import { getAuthSession } from "@/lib/core/session";
+import { getLanguageId } from "@/lib/utils/language";
 import {
   SubmitCodeParams,
   SubmitCodeResult,
