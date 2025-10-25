@@ -32,7 +32,7 @@ export default function AdminDashboard({
 
   const [isLoading, setIsLoading] = useState<Action | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [durationHours, setDurationHours] = useState(5);
+  const [durationHours, setDurationHours] = useState(2);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -122,9 +122,7 @@ export default function AdminDashboard({
         </button>
         <button
           onClick={() => handleAction("end")}
-          disabled={
-            isLoading !== null || status === "FINISHED" || status === "PENDING"
-          }
+          disabled={true}
           className="btn-admin bg-red-600 hover:bg-red-700 disabled:bg-gray-500"
         >
           End
