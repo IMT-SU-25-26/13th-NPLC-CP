@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import prisma from "@/lib/core/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { ContestStatus } from "@prisma/client";
 

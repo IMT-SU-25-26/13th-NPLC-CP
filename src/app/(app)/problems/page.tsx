@@ -1,7 +1,7 @@
+import prisma from "@/lib/core/prisma";
 import ProblemTable from "@/components/pages/app/problems/ProblemTable";
+import { getAuthSession } from "@/lib/core/session";
 import { ContestGuard } from "@/components/layout/ContestGuard";
-import prisma from "@/lib/prisma";
-import { getAuthSession } from "@/lib/session";
 
 export default async function ProblemsPage() {
   const session = await getAuthSession();

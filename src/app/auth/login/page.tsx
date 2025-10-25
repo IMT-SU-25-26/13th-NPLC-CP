@@ -1,5 +1,5 @@
 import LoginForm from "@/components/pages/auth/LoginForm";
-import { getAuthSession } from "@/lib/session";
+import { getAuthSession } from "@/lib/core/session";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
