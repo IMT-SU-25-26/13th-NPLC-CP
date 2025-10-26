@@ -33,7 +33,10 @@ export async function startContest(formData: FormData) {
   const contest = await getActiveContest();
   const now = new Date();
 
-  if (contest.status !== ContestStatus.PENDING && contest.status !== ContestStatus.FINISHED) {
+  if (
+    contest.status !== ContestStatus.PENDING &&
+    contest.status !== ContestStatus.FINISHED
+  ) {
     throw new Error("Contest has already started.");
   }
 
