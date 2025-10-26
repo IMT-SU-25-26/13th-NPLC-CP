@@ -1,6 +1,6 @@
 import { Toaster } from "sonner";
 
-export default function Toast() {
+export function Toast() {
   return (
     <Toaster
       position="bottom-right"

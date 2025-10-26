@@ -5,7 +5,7 @@ interface ProblemDetailProps {
   problem: FullProblem;
 }
 
-export default function ProblemDetail({ problem }: ProblemDetailProps) {
+export function ProblemDetail({ problem }: ProblemDetailProps) {
   return (
     <div className="p-6 bg-black/15 backdrop-blur-2xl border-[#FCF551] border-3 shadow-white/15 shadow-2xl drop-shadow-2xl glow overflow-auto h-[calc(100vh-12rem)] lg:h-[calc(100vh-20rem)]">
       <div className="mb-6">

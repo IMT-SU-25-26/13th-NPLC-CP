@@ -1,17 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { FullSubmission } from "@/types/db";
+import React, { useState } from "react";
+import { getLanguageName } from "@/utils/language";
 import { getStatusColor } from "@/utils/status";
 import { formatStatus } from "@/utils/status";
-import { getLanguageName } from "@/utils/language";
-import React, { useState } from "react";
+import { FullSubmission } from "@/types/db";
 
 interface SubmissionTableProps {
   submissions: FullSubmission[];
 }
 
-export default function SubmissionTable({ submissions }: SubmissionTableProps) {
+export function SubmissionTable({ submissions }: SubmissionTableProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const toggleExpand = (id: string) => {

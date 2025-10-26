@@ -1,6 +1,6 @@
 import Link from "next/link";
-import ReplyForm from "@/components/pages/app/discussions/ReplyForm";
 import { FullDiscussion } from "@/types/db";
+import { ReplyForm } from "@/components/app/discussions/reply-form";
 
 interface DiscussionDetailProps {
   discussion: FullDiscussion;
@@ -11,7 +11,7 @@ interface DiscussionDetailProps {
   };
 }
 
-export default function DiscussionDetail({
+export function DiscussionDetail({
   discussion,
   discussionId,
   currentUser,

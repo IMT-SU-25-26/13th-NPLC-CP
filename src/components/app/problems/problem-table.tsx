@@ -1,16 +1,16 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { getDifficultyBorderColor } from "@/utils/difficulty";
 import { Problem } from "@/types/db";
-import { useRouter } from "next/navigation";
 
 interface ProblemTableProps {
   problems: Problem[];
   solvedProblemIds: string[];
 }
 
-export default function ProblemTable({
+export function ProblemTable({
   problems,
   solvedProblemIds,
 }: ProblemTableProps) {

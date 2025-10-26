@@ -2,23 +2,36 @@
 
 1. **Default Imports First**
 
-   - `import ComponentName from '@/components/...'` (internal components)
+   - `import Link from 'next/link'` (next.js components)
    - `import React from 'react'` (external libraries)
 
 2. **Named Imports Second**
 
-   - `import { functionName, typeName } from '@/lib/...'` (internal named imports)
    - `import { useState, useEffect } from 'react'` (external named imports)
+   - `import { functionName, typeName } from '@/lib/...'` (internal named imports)
+   - `import { MyComponent } from '@/components/...'` (internal named imports)
 
 3. **Internal vs External**
-   - Internal imports (project files) before external imports (libraries)
+
+   - External imports (libraries) before internal imports (project files)
+
+4. **Named Imports Order**
+
+   - next.js components first
+   - external libraries second
+   - lib files third
+   - services fourth
+   - utils fifth
+   - types sixth
+   - components last
+   - prisma imports should always be at the very end
 
 # Import Path Rules
 
 1. **Absolute Imports**
 
    - Always use `@/` for all imports from `src/` directory
-   - Import components with full paths: `@/components/pages/app/discussions/DiscussionTable`
+   - Import components with full paths: `@/components/app/discussions/discussion-table`
 
 2. **Relative Imports**
 
@@ -34,9 +47,9 @@
 1. **Components Organization**
 
    - Layout components (NavigationBar, Background, providers) go in `components/layout/`
-   - Page-specific components go in `components/pages/` organized by route structure
+   - App page components go in `components/app/` organized by feature (discussions, contests, submissions, etc.)
    - All components must start with a capital letter
-   - Components must be exported as default exports
+   - Components must be exported as named exports
    - Every page must use a component and must be imported exclusively in its respective `page.tsx` file to maintain clear separation of concerns and prevent unnecessary re-renders
 
 2. **Service Layer**
@@ -73,40 +86,65 @@
    - Keep API logic minimal - delegate to services when possible
 
 7. **File Naming**
+
    - Use PascalCase for component names (DiscussionTable)
+   - Use kebab-case for component file names (discussion-table.tsx)
    - Use camelCase for utility functions and services
    - Type definition files should match their feature name
 
 # Folder Structure Explanation
 
 1. **src/**
+
    - Contains all source code files.
-2. **app/**
+
+2. **prisma/**
+
+   - Database schema and migrations.
+
+3. **public/**
+
+   - Static assets (images, fonts, etc.).
+
+4. **app/**
+
    - Next.js routing and layout files.
-3. **components/**
+
+5. **components/**
+
    - Reusable UI components.
    - **layout/** - Layout components (navigation, backgrounds, providers).
-   - **pages/** - Page-specific components organized by route.
-4. **lib/**
+   - **app/** - Page-specific components organized by route.
+   - **[route]/** - Components for root-level routes (admin, auth, waiting, etc.).
+
+6. **lib/**
+
    - Core utility libraries and configurations (database, auth, external services).
-5. **services/**
+
+7. **hooks/**
+
+   - Custom React hooks.
+
+8. **services/**
+
    - Business logic and API services.
-6. **types/**
+
+9. **types/**
+
    - TypeScript type definitions.
-7. **utils/**
-   - Helper functions and utilities.
-8. **prisma/**
-   - Database schema and migrations.
-9. **public/**
-   - Static assets (images, fonts, etc.).
-   
+
+10. **utils/**
+
+- Helper functions and utilities.
+
 # Component and Page Integration Example
 
 ## How Components and Pages Work Together
 
 ### Server Page (app/(app)/submissions/page.tsx)
+
 ```tsx
-import SubmissionTable from "@/components/pages/app/submissions/SubmissionTable";
+import { SubmissionTable } from "@/components/pages/app/submissions/submission-table";
 import { getSubmissionByUserId } from "@/services/submissions";
 import { getCurrentUserId } from "@/lib/session";
 
@@ -122,7 +160,8 @@ export default async function SubmissionPage() {
 }
 ```
 
-### Client Component (components/pages/app/submissions/SubmissionTable.tsx)
+### Client Component (components/app/submissions/submission-table.tsx)
+
 ```tsx
 "use client";
 
@@ -130,7 +169,7 @@ interface SubmissionTableProps {
   submissions: FullSubmission[];
 }
 
-export default function SubmissionTable({ submissions }: SubmissionTableProps) {
+export function SubmissionTable({ submissions }: SubmissionTableProps) {
   return (
     <table>
       <tbody>
@@ -147,7 +186,7 @@ export default function SubmissionTable({ submissions }: SubmissionTableProps) {
 ```
 
 **Key Pattern**: Server pages fetch data and pass it to client components via props. Components never import services directly.
-   
+
 # Problem Solving Example
 
 ## Example: Fibonacci Problem

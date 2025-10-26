@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createDiscussion } from "@/services/discussion";
 
-export default function DiscussionForm() {
+export function DiscussionForm() {
   const [title, setTitle] = useState("");
   const [question, setQuestion] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);

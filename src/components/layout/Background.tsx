@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function Background() {
+export function Background() {
   return (
     <>
       <div className="z-[3] fixed w-full h-full bg-gradient-to-b from-[0%] from-[#2a0335]/50 via-[43%] via-[#6258D1]/50 to-[100%] to-[#00CBC1]/50 blue-light-top pointer-events-none"></div>

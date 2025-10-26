@@ -1,9 +1,9 @@
 "use client";
 
-import { TestResult } from "@/types/submission";
-import { submitCode } from "@/services/submission";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
+import { TestResult } from "@/types/submission";
+import { submitCode } from "@/services/submission";
 
 interface SubmitCodeProps {
   problemId: string;
@@ -16,7 +16,7 @@ const LANGUAGES = [
   { id: "java", name: "Java" },
 ];
 
-export default function CodeEditor({ problemId, attemptedCode }: SubmitCodeProps) {
+export function CodeEditor({ problemId, attemptedCode }: SubmitCodeProps) {
   const [sourceCode, setSourceCode] = useState("");
   const [language, setLanguage] = useState("cpp");
   const [isSubmitting, setIsSubmitting] = useState(false);

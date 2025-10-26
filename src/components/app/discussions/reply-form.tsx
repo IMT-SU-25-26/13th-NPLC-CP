@@ -7,7 +7,7 @@ interface ReplyFormProps {
   discussionId: string;
 }
 
-export default function ReplyForm({ discussionId }: ReplyFormProps) {
+export function ReplyForm({ discussionId }: ReplyFormProps) {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 

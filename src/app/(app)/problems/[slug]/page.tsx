@@ -1,9 +1,9 @@
 import prisma from "@/lib/prisma";
-import CodeEditor from "@/components/pages/app/problems/CodeEditor";
-import ProblemDetail from "@/components/pages/app/problems/ProblemDetail";
-import { getAuthSession } from "@/lib/session";
-import { ContestGuard } from "@/components/layout/ContestGuard";
 import { notFound } from "next/navigation";
+import { getAuthSession } from "@/lib/session";
+import { ContestGuard } from "@/components/layout/contest-guard";
+import { ProblemDetail } from "@/components/app/problems/problem-detail";
+import { CodeEditor } from "@/components/app/problems/code-editor";
 
 interface ProblemPageProps {
   params: Promise<{

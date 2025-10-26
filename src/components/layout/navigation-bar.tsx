@@ -1,12 +1,12 @@
 "use client";
 
-import LogoutConfirmation from "@/components/pages/auth/LogoutConfirmation";
 import Link from "next/link";
 import Image from "next/image";
-import { useSession, signOut } from "next-auth/react";
 import { useState } from "react";
+import { useSession, signOut } from "next-auth/react";
+import { LogoutConfirmation } from "@/components/auth/logout-confirmation";
 
-export default function NavigationBar() {
+export function NavigationBar() {
   const { data: session, status } = useSession();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 

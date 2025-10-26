@@ -1,7 +1,7 @@
-import SubmissionTable from "@/components/pages/app/submissions/SubmissionTable";
 import { getCurrentUserId } from "@/lib/session";
 import { getSubmissionByUserId } from "@/services/submissions";
-import { ContestGuard } from "@/components/layout/ContestGuard";
+import { ContestGuard } from "@/components/layout/contest-guard";
+import { SubmissionTable } from "@/components/app/submissions/submission-table";
 
 export default async function SubmissionPage() {
   const userId = await getCurrentUserId();

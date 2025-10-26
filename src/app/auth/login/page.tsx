@@ -1,7 +1,7 @@
-import LoginForm from "@/components/pages/auth/LoginForm";
-import { getAuthSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
+import { getAuthSession } from "@/lib/session";
+import { LoginForm } from "@/components/auth/login-form";
 
 function LoginLoading() {
   return (

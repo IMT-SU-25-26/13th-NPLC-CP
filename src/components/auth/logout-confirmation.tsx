@@ -6,7 +6,7 @@ interface LogoutConfirmModalProps {
   onConfirm: () => void;
 }
 
-export default function LogoutConfirmation({
+export function LogoutConfirmation({
   isOpen,
   onClose,
   onConfirm,

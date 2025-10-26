@@ -3,7 +3,6 @@
 import useSWR from "swr";
 import Pusher from "pusher-js";
 import { useState, useEffect } from "react";
-import { Contest, ContestStatus } from "@prisma/client";
 import {
   startContest,
   pauseContest,
@@ -12,12 +11,13 @@ import {
   unfreezeContest,
   endContest,
 } from "@/services/contest";
+import { Contest, ContestStatus } from "@prisma/client";
 
 type Action = "start" | "pause" | "resume" | "freeze" | "unfreeze" | "end";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export default function AdminDashboard({
+export function AdminDashboard({
   initialContestState,
 }: {
   initialContestState: Contest | null;

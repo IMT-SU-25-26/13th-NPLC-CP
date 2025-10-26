@@ -21,7 +21,7 @@ const TimerBox = ({ value, label }: { value: string; label: string }) => (
   </div>
 );
 
-export default function ContestTimer() {
+export function ContestTimer() {
   const { data, error } = useSWR<ContestState>("/api/contest/status", fetcher);
   const { mutate } = useSWRConfig();
   const [timeLeft, setTimeLeft] = useState(0);

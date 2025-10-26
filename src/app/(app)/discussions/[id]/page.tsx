@@ -1,6 +1,6 @@
-import DiscussionDetail from "@/components/pages/app/discussions/DiscussionDetail";
 import { getCurrentUser } from "@/lib/session";
 import { getDiscussionById } from "@/services/discussion";
+import { DiscussionDetail } from "@/components/app/discussions/discussion-detail";
 
 interface DiscussionPageProps {
   params: Promise<{

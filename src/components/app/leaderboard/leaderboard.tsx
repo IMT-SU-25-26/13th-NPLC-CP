@@ -8,7 +8,7 @@ import { LeaderboardResponse } from "@/types/leaderboard";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export default function Leaderboard() {
+export function Leaderboard() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isFrozen, setIsFrozen] = useState(false);
   const { mutate } = useSWRConfig();

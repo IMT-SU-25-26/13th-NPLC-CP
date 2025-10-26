@@ -1,10 +1,10 @@
 "use client";
 
 import useSWR from "swr";
-import { pusherClient } from "@/lib/pusher";
 import { useRouter, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
+import { pusherClient } from "@/lib/pusher";
 import { ContestStatus, Role } from "@prisma/client";
 
 interface ContestStatusData {

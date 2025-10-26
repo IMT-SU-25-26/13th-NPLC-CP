@@ -1,9 +1,9 @@
 import prisma from "./prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { NextAuthOptions } from "next-auth";
-import { Role } from "@prisma/client";
 import { verifySync } from "@node-rs/bcrypt";
 import { createId } from "@paralleldrive/cuid2";
+import { Role } from "@prisma/client";
 
 const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 1 day
 

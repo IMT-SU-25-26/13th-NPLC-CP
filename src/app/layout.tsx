@@ -1,9 +1,9 @@
 import "./globals.css";
-import Toast from "@/components/layout/Toast";
-import Background from "@/components/layout/Background";
-import Provider from "@/components/layout/SessionProvider";
-import NavigationBar from "@/components/layout/NavigationBar";
 import { Geist, Geist_Mono } from "next/font/google";
+import { NavigationBar } from "@/components/layout/navigation-bar";
+import { Background } from "@/components/layout/background";
+import { Provider } from "@/components/layout/session-provider";
+import { Toast } from "@/components/layout/toast";
 import type { Metadata } from "next";
 
 const geistSans = Geist({

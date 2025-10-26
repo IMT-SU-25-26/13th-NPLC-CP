@@ -1,13 +1,13 @@
 "use client";
 
-import { FullDiscussion } from "@/types/db";
 import { useRouter } from "next/navigation";
+import { FullDiscussion } from "@/types/db";
 
 interface DiscussionsTableProps {
   discussions: FullDiscussion[];
 }
 
-export default function DiscussionTable({ discussions }: DiscussionsTableProps) {
+export function DiscussionTable({ discussions }: DiscussionsTableProps) {
   const router = useRouter();
 
   return (

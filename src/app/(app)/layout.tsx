@@ -1,4 +1,4 @@
-import ContestTimer from "@/components/pages/app/leaderboard/ContestTimer";
+import { ContestTimer } from "@/components/app/leaderboard/contest-timer";
 
 export default function MainLayout({
   children,

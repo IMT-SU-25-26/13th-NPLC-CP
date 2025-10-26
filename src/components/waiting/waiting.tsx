@@ -1,17 +1,15 @@
 "use client";
 
-import { ContestStatus } from "@prisma/client";
-import { pusherClient } from "@/lib/pusher";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { pusherClient } from "@/lib/pusher";
+import { ContestStatus } from "@prisma/client";
 
 interface WaitingProps {
   status?: ContestStatus;
 }
 
-export default function Waiting({
-  status = ContestStatus.PENDING,
-}: WaitingProps) {
+export function Waiting({ status = ContestStatus.PENDING }: WaitingProps) {
   const router = useRouter();
   const [currentStatus, setCurrentStatus] = useState(status);
 
