@@ -3,7 +3,7 @@
 import Image from "next/image";
 import useSWR, { useSWRConfig } from "swr";
 import { useEffect, useState } from "react";
-import { pusherClient } from "@/lib/core/pusher";
+import { pusherClient } from "@/lib/pusher";
 import { LeaderboardResponse } from "@/types/leaderboard";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());

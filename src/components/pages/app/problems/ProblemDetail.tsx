@@ -1,4 +1,4 @@
-import { getDifficultyColor } from "@/lib/utils/difficulty";
+import { getDifficultyColor } from "@/utils/difficulty";
 import { FullProblem } from "@/types/db";
 
 interface ProblemDetailProps {

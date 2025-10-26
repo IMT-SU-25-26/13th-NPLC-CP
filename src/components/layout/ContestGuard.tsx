@@ -1,6 +1,6 @@
 "use client";
 
-import { useContestGuard } from "@/lib/hooks/guard";
+import { useContestGuard } from "@/hooks/guard";
 
 export function ContestGuard() {
   useContestGuard();

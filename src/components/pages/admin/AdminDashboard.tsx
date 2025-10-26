@@ -11,7 +11,7 @@ import {
   freezeContest,
   unfreezeContest,
   endContest,
-} from "@/lib/services/contest";
+} from "@/services/contest";
 
 type Action = "start" | "pause" | "resume" | "freeze" | "unfreeze" | "end";
 

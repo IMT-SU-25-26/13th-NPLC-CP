@@ -1,7 +1,7 @@
-import prisma from "@/lib/core/prisma";
+import prisma from "@/lib/prisma";
 import CodeEditor from "@/components/pages/app/problems/CodeEditor";
 import ProblemDetail from "@/components/pages/app/problems/ProblemDetail";
-import { getAuthSession } from "@/lib/core/session";
+import { getAuthSession } from "@/lib/session";
 import { ContestGuard } from "@/components/layout/ContestGuard";
 import { notFound } from "next/navigation";
 

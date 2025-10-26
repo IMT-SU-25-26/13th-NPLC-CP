@@ -1,7 +1,7 @@
 import DiscussionForm from "@/components/pages/app/discussions/DiscussionForm";
 import DiscussionTable from "@/components/pages/app/discussions/DiscussionTable";
-import { getCurrentUserId } from "@/lib/core/session";
-import { getUserDiscussions } from "@/lib/services/discussion";
+import { getCurrentUserId } from "@/lib/session";
+import { getUserDiscussions } from "@/services/discussion";
 
 export default async function UserDiscussionsPage() {
   const userId = await getCurrentUserId();

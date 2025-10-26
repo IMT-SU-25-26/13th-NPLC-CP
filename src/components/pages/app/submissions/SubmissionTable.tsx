@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { FullSubmission } from "@/types/db";
-import { getStatusColor } from "@/lib/utils/status";
-import { formatStatus } from "@/lib/utils/status";
-import { getLanguageName } from "@/lib/utils/language";
+import { getStatusColor } from "@/utils/status";
+import { formatStatus } from "@/utils/status";
+import { getLanguageName } from "@/utils/language";
 import React, { useState } from "react";
 
 interface SubmissionTableProps {

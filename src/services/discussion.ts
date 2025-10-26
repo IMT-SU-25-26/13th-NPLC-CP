@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "@/lib/core/prisma";
-import { getAuthSession } from "@/lib/core/session";
+import prisma from "@/lib/prisma";
+import { getAuthSession } from "@/lib/session";
 import { revalidatePath } from "next/cache";
 
 export async function getAllDiscussions() {

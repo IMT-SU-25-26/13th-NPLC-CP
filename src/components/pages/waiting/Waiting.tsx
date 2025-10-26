@@ -1,7 +1,7 @@
 "use client";
 
 import { ContestStatus } from "@prisma/client";
-import { pusherClient } from "@/lib/core/pusher";
+import { pusherClient } from "@/lib/pusher";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 

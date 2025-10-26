@@ -1,8 +1,8 @@
 import AdminDashboard from "@/components/pages/admin/AdminDashboard";
 import DiscussionTable from "@/components/pages/app/discussions/DiscussionTable";
 import ContestTimer from "@/components/pages/app/leaderboard/ContestTimer";
-import { getActiveContest } from "@/lib/services/contest";
-import { getAllDiscussions } from "@/lib/services/discussion";
+import { getActiveContest } from "@/services/contest";
+import { getAllDiscussions } from "@/services/discussion";
 
 export default async function AdminPage() {
   const initialContestState = await getActiveContest();
