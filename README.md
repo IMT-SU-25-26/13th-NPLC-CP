@@ -135,7 +135,7 @@
 
 10. **utils/**
 
-- Helper functions and utilities.
+   - Helper functions and utilities.
 
 # Component and Page Integration Example
 
