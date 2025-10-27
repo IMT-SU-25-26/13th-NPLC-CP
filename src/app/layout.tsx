@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { NavigationBar } from "@/components/layout/navigation-bar";
 import { Background } from "@/components/layout/background";
 import { Provider } from "@/components/layout/session-provider";
-import { Toast } from "@/components/layout/toast";
+import { Toaster } from "@/components/layout/toaster";
 import type { Metadata } from "next";
 
 const geistSans = Geist({
@@ -37,7 +37,7 @@ export default function RootLayout({
           <div className="min-h-screen flex flex-col justify-center items-center">
             {children}
           </div>
-          <Toast />
+          <Toaster />
         </Provider>
       </body>
     </html>
