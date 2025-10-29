@@ -30,6 +30,70 @@ export function CodeEditor({ problemId, attemptedCode }: SubmitCodeProps) {
     }
   }, [attemptedCode]);
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key !== "Tab") return;
+
+    e.preventDefault();
+    const ta = textareaRef.current;
+    if (!ta) return;
+
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const value = sourceCode;
+    const tab = "\t";
+
+    if (start === end) {
+      // Insert single tab at caret
+      const newValue = value.slice(0, start) + tab + value.slice(end);
+      setSourceCode(newValue);
+      // update cursor after state update
+      requestAnimationFrame(() => {
+        if (textareaRef.current) {
+          textareaRef.current.selectionStart = textareaRef.current.selectionEnd =
+            start + tab.length;
+        }
+      });
+    } else {
+      // Indent / Unindent selected lines
+      const selected = value.slice(start, end);
+      const lines = selected.split("\n");
+
+      if (!e.shiftKey) {
+        // Indent: add tab to each line
+        const indented = lines.map((l) => tab + l).join("\n");
+        const newValue = value.slice(0, start) + indented + value.slice(end);
+        setSourceCode(newValue);
+
+        const addedLength = indented.length - selected.length;
+        requestAnimationFrame(() => {
+          if (textareaRef.current) {
+            textareaRef.current.selectionStart = start;
+            textareaRef.current.selectionEnd = end + addedLength;
+          }
+        });
+      } else {
+        // Unindent: remove leading tab or up to 4 spaces
+        const unindentedLines = lines.map((l) => {
+          if (l.startsWith(tab)) return l.slice(tab.length);
+          return l.replace(/^ {1,4}/, "");
+        });
+        const unindented = unindentedLines.join("\n");
+        const newValue = value.slice(0, start) + unindented + value.slice(end);
+        setSourceCode(newValue);
+
+        const removedLength = selected.length - unindented.length;
+        requestAnimationFrame(() => {
+          if (textareaRef.current) {
+            textareaRef.current.selectionStart = start;
+            textareaRef.current.selectionEnd = end - removedLength;
+          }
+        });
+      }
+    }
+
+    // keep line numbers scroll synced (existing behavior handles scroll)
+  };
+
   const handleSubmit = async () => {
     if (!sourceCode.trim()) {
       toast.error("Please write some code first!");
@@ -143,6 +207,7 @@ export function CodeEditor({ problemId, attemptedCode }: SubmitCodeProps) {
               ref={textareaRef}
               value={sourceCode}
               onChange={(e) => setSourceCode(e.target.value)}
+              onKeyDown={handleKeyDown}
               onScroll={(e) => {
                 if (lineNumbersRef.current) {
                   lineNumbersRef.current.scrollTop = e.currentTarget.scrollTop;
