@@ -15,14 +15,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup PNPM
-      - uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v3
         with:
-          version: 10
+          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "25"
+          node-version: "20"
           cache: "pnpm"
 
       - name: Install Dependencies
@@ -40,7 +40,7 @@ jobs:
           NEXT_PUBLIC_SOKETI_PATH: ${{ secrets.NEXT_PUBLIC_SOKETI_PATH }}
 
       - name: Package Deployment Files
-        run: zip -r deploy.zip .next public package.json pnpm-lock.yaml next.config.ts
+        run: zip -r deploy.zip .next public package.json pnpm-lock.yaml
 
       - name: Copy Files to VPS
         uses: appleboy/scp-action@v1.0.3
@@ -50,7 +50,7 @@ jobs:
           key: ${{ secrets.VPS_DEPLOY_KEY }}
           port: ${{ vars.VPS_PORT }}
           source: "deploy.zip"
-          target: "{{ vars.PROJECT_PATH }}"
+          target: ${{ vars.PROJECT_PATH }}
 
       - name: Deploy on VPS
         uses: appleboy/ssh-action@v1.0.3
