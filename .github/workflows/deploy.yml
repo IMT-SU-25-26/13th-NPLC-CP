@@ -43,7 +43,7 @@ jobs:
         run: zip -r deploy.zip .next public package.json pnpm-lock.yaml
 
       - name: Copy Files to VPS
-        uses: appleboy/scp-action@v1.0.3
+        uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
@@ -53,7 +53,7 @@ jobs:
           target: ${{ vars.PROJECT_PATH }}
 
       - name: Deploy on VPS
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
