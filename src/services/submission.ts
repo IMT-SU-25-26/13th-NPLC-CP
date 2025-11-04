@@ -146,6 +146,43 @@ export async function submitCode({
 
       const statusId = result.status?.id || result.status_id || 0;
 
+      // ✅ CHECK MEMORY LIMIT FIRST - Sebelum pengecekan status lainnya
+      if (result.memory && result.memory > problem.memoryLimit * 1024) {
+        console.log(
+          `❌ Memory Limit Exceeded: ${result.memory} MB > ${
+            problem.memoryLimit * 1024
+          } MB`
+        );
+
+        await prisma.submission.update({
+          where: { id: submission.id },
+          data: {
+            status: Status.MEMORY_LIMIT_EXCEEDED,
+            memory: result.memory,
+            judge0Token: result.token,
+          },
+        });
+
+        return {
+          success: true,
+          submissionId: submission.id,
+          status: Status.MEMORY_LIMIT_EXCEEDED,
+          testResults: [
+            {
+              passed: false,
+              memory: result.memory,
+              status: Status.MEMORY_LIMIT_EXCEEDED,
+              stderr: result.stderr,
+              stdout: result.stdout,
+            },
+          ],
+          passed: false,
+          error: "Memory Limit Exceeded",
+          message: getStatusDescription(Status.MEMORY_LIMIT_EXCEEDED),
+        };
+      }
+
+      // Setelah itu baru check error lainnya
       if (
         result.message ||
         result.compile_output ||
@@ -159,30 +196,13 @@ export async function submitCode({
           token: result.token,
         });
 
-        let errorStatus: Status = Status.INTERNAL_ERROR;
-        let errorMessage = result.message || "";
+        let errorMessage = result.message || "Execution error";
+        let errorStatus = mapJudge0Status(statusId);
 
         if (
-          result.message &&
-          (result.message.includes("language") ||
-            result.message.includes("Language"))
-        ) {
-          errorStatus = Status.INTERNAL_ERROR;
-          errorMessage = "Invalid language configuration";
-        } else if (
           result.compile_output ||
           (result.stderr && result.stderr.includes("SyntaxError"))
         ) {
-          errorStatus = Status.COMPILATION_ERROR;
-          errorMessage =
-            result.compile_output ||
-            result.stderr ||
-            result.message ||
-            "Compilation error";
-        } else if (result.stderr && statusId >= 7 && statusId <= 12) {
-          errorStatus = mapJudge0Status(statusId);
-          errorMessage = result.stderr;
-        } else if (statusId === 6) {
           errorStatus = Status.COMPILATION_ERROR;
           errorMessage =
             result.compile_output || result.message || "Compilation error";
@@ -244,6 +264,7 @@ export async function submitCode({
           status: finalStatus,
           time: result.time,
           memory: result.memory,
+          memoryLimit: problem.memoryLimit * 1024, // ✅ Tambahkan log ini
         }
       );
 
@@ -383,6 +404,8 @@ function mapJudge0Status(statusId: number): Status {
       return Status.INTERNAL_ERROR;
     case 14:
       return Status.EXEC_FORMAT_ERROR;
+    case 15: // Judge0 status ID untuk memory limit exceeded
+      return Status.MEMORY_LIMIT_EXCEEDED;
     default:
       return Status.INTERNAL_ERROR;
   }
@@ -400,6 +423,8 @@ function getStatusDescription(status: Status): string {
       return "Wrong Answer - Output doesn't match expected result";
     case Status.TIME_LIMIT_EXCEEDED:
       return "Time Limit Exceeded - Code took too long to execute";
+    case Status.MEMORY_LIMIT_EXCEEDED:
+      return "Memory Limit Exceeded - Code used too much memory";
     case Status.COMPILATION_ERROR:
       return "Compilation Error - Code failed to compile";
     case Status.RUNTIME_ERROR_SIGSEGV:
