@@ -40,7 +40,7 @@ jobs:
           NEXT_PUBLIC_SOKETI_PATH: ${{ secrets.NEXT_PUBLIC_SOKETI_PATH }}
 
       - name: Package Deployment Files
-        run: zip -r deploy.zip .next public package.json pnpm-lock.yaml
+        run: zip -r deploy.zip .next public package.json pnpm-lock.yaml pnpm-workspace.yaml prisma
 
       - name: Copy Files to VPS
         uses: appleboy/scp-action@v1
