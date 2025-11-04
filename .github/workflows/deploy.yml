@@ -71,7 +71,7 @@ jobs:
             unzip -o deploy.zip
 
             echo "🧹 Installing --prod dependencies..."
-            pnpm install --prod
+            pnpm install --prod --ignore-scripts
 
             echo "🗄️ Running database migrations..."
             pnpm prisma:deploy
