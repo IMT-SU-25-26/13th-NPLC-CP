@@ -33,30 +33,14 @@ export function Waiting({ status = ContestStatus.PENDING }: WaitingProps) {
     };
 
     const channel = pusherClient.subscribe("contest-channel");
-    console.log("Subscribed to contest-channel");
 
-    // Add connection debugging
-    pusherClient.connection.bind('connected', () => {
-      console.log('Pusher connected successfully');
-    });
-
-    pusherClient.connection.bind('error', (err: any) => {
-      console.log('Pusher connection error:', err);
-    });
-
-    pusherClient.connection.bind('disconnected', () => {
-      console.log('Pusher disconnected');
-    });
-
-    channel.bind("status-update", (data: any) => {
-      console.log("Raw Pusher data received:", data);
-      console.log("Pusher status update received:", data?.status);
+    channel.bind("status-update", (data: { status: ContestStatus }) => {
+      console.log("Pusher status update received:", data.status);
       setCurrentStatus(data.status);
       if (
         data.status === ContestStatus.RUNNING ||
         data.status === ContestStatus.FROZEN
       ) {
-        console.log("Redirecting to /problems due to status:", data.status);
         router.push("/problems");
         router.refresh();
       }
@@ -65,7 +49,6 @@ export function Waiting({ status = ContestStatus.PENDING }: WaitingProps) {
     fetchStatus();
 
     return () => {
-      console.log("Unsubscribing from contest-channel");
       pusherClient.unsubscribe("contest-channel");
     };
   }, [router]);
