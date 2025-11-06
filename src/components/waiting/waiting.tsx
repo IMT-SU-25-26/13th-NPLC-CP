@@ -35,12 +35,14 @@ export function Waiting({ status = ContestStatus.PENDING }: WaitingProps) {
     const channel = pusherClient.subscribe("contest-channel");
 
     channel.bind("status-update", (data: { status: ContestStatus }) => {
+      console.log("Pusher status update received:", data.status);
       setCurrentStatus(data.status);
       if (
         data.status === ContestStatus.RUNNING ||
         data.status === ContestStatus.FROZEN
       ) {
         router.push("/problems");
+        router.refresh();
       }
     });
 

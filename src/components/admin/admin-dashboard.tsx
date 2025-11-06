@@ -10,10 +10,11 @@ import {
   freezeContest,
   unfreezeContest,
   endContest,
+  setPendingContest,
 } from "@/services/contest";
 import { Contest, ContestStatus } from "@prisma/client";
 
-type Action = "start" | "pause" | "resume" | "freeze" | "unfreeze" | "end";
+type Action = "start" | "pause" | "resume" | "freeze" | "unfreeze" | "end" | "setPending";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -76,6 +77,9 @@ export function AdminDashboard({
         case "end":
           await endContest();
           break;
+        case "setPending":
+          await setPendingContest();
+          break;
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -122,7 +126,11 @@ export function AdminDashboard({
         </button>
         <button
           onClick={() => handleAction("end")}
-          disabled={true}
+          disabled={
+            isLoading !== null ||
+            status === "PENDING" ||
+            status === "FINISHED"
+          }
           className="btn-admin bg-red-600 hover:bg-red-700 disabled:bg-gray-500"
         >
           End
@@ -156,6 +164,13 @@ export function AdminDashboard({
           className="btn-admin bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-500"
         >
           Unfreeze
+        </button>
+        <button
+          onClick={() => handleAction("setPending")}
+          disabled={isLoading !== null || status === "PENDING"}
+          className="btn-admin col-span-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-500"
+        >
+          Set to Pending
         </button>
       </div>
 

@@ -233,3 +233,35 @@ export async function endContest() {
   );
   revalidatePath("/admin");
 }
+
+export async function setPendingContest() {
+  const session = await getAuthSession();
+
+  if (session?.user?.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  const contest = await getActiveContest();
+
+  if (contest.status === ContestStatus.PENDING) {
+    throw new Error("Contest is already pending.");
+  }
+
+  const updatedContest = await prisma.contest.update({
+    where: { id: contest.id },
+    data: {
+      status: ContestStatus.PENDING,
+      pausedTime: null,
+      totalPausedDuration: 0,
+      statusBeforePause: null,
+      frozenLeaderboard: Prisma.JsonNull,
+    },
+  });
+
+  await pusherServer.trigger(
+    "contest-channel",
+    "status-update",
+    updatedContest
+  );
+  revalidatePath("/admin");
+}
